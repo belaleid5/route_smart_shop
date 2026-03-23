@@ -58,8 +58,8 @@ class _CustomTextFormPasswordState extends State<CustomTextFormPassword> {
        maxLines: 1,
       suffix: SvgPicture.asset(
         _isPasswordVisible
-            ?  AppImages.eyeOpen
-            : AppImages.visibilityIcon,
+            ?  AppImages.logoSmartShop
+            : AppImages.logoSmartShop,
 
         color: context.colors.icon,
       ),

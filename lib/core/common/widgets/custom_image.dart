@@ -197,7 +197,7 @@ class ErrorImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      fallbackPath ?? AppImages.errorImage,
+      fallbackPath ?? AppImages.noNetwork,
       height: errorHeight ?? 92,
       width: errorWidth ?? 92,
       fit: fit ?? BoxFit.cover,
