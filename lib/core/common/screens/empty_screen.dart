@@ -11,7 +11,7 @@ class EmptyScreen extends StatelessWidget {
       body: Center(
         child: CustomImage(
           imageType: ImagesType.asset,
-          imagePath: AppImages.emptyImage,
+            imagePath: AppImages.logoSmartShop,
         ),
       ),
     );

@@ -10,6 +10,7 @@ import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/helper/app_responsive.dart';
 import 'package:route_smart/core/language/app_localizations_setup.dart';
 import 'package:route_smart/core/routes/app_routes.dart';
+import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
 import 'package:route_smart/core/services/shared_pref/shared_pref.dart';
 
@@ -45,6 +46,7 @@ class RouteSmartShopApp extends StatelessWidget {
                   return MaterialApp(
                     debugShowCheckedModeBanner:
                         EnvVariable.instance.isDebugMode,
+                    initialRoute: AppRoutesNames.splashPage,
                     onGenerateRoute: AppRouter.onGenerateRoute,
                     theme: AppTheme.light,
                     darkTheme: AppTheme.dark,
