@@ -6,4 +6,10 @@ class AppImages {
   static const String appStore = 'assets/images/appStore.png';
   static const String playStore = 'assets/images/playStore.png';
   static const String logoAppSvg = 'assets/images/LogoSection.svg';
+
+  //onBoarding screen
+
+  static const String carContainer = 'assets/images/containerCar.svg';
+  static const String shopIcon = "assets/images/ShopIconSvg.svg";
+  static const String orderConfirmIcon = 'assets/images/confirmIconSection.svg';
 }
