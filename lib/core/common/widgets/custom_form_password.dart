@@ -56,13 +56,8 @@ class _CustomTextFormPasswordState extends State<CustomTextFormPassword> {
       autofocus: widget.autofocus,
       focusNode: widget.focusNode, 
        maxLines: 1,
-      suffix: SvgPicture.asset(
-        _isPasswordVisible
-            ?  AppImages.logoSmartShop
-            : AppImages.logoSmartShop,
-
-        color: context.colors.icon,
-      ),
+      suffix: Icon(_isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+        size: 20,),
       suffixColor: context.colors.icon,
       suffixPressed: _togglePasswordVisibility,
     );
