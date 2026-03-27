@@ -5,6 +5,8 @@ static const String baseUrl = "https://ecommerce.routemisr.com/api/v1/";
   // ✅ endpoints بدون / في الأول
   static const String signup = 'auth/signup';
   static const String signin = 'auth/signin';
+static const String forgotPassword = 'auth/forgotPasswords';
+static const String verifyResetCode = 'auth/verifyResetCode';
 
   // ================== Products ==================
   static const String products = 'products';
