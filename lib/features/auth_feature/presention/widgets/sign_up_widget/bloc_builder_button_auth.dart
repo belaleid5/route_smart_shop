@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/features/auth_feature/presention/manger/register_bloc.dart';
-import 'package:route_smart/features/auth_feature/presention/manger/register_state.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_state.dart';
 
 class BlocBuilderButtonAuth extends StatelessWidget {
   const BlocBuilderButtonAuth({super.key, this.onSubmit});
@@ -20,7 +21,7 @@ class BlocBuilderButtonAuth extends StatelessWidget {
         return ElevatedButton(
           onPressed: isLoading ? null : onSubmit,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF6C63FF),
+            backgroundColor: context.color.primary,
             minimumSize: const Size(double.infinity, 56),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

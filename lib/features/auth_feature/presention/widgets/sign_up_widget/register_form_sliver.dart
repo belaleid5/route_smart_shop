@@ -4,16 +4,18 @@ import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/common/widgets/custom_form_password.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
-import 'package:route_smart/features/auth_feature/presention/manger/register_bloc.dart';
-import 'package:route_smart/features/auth_feature/presention/manger/register_event.dart';
-import 'package:route_smart/features/auth_feature/presention/manger/register_state.dart';
-import 'package:route_smart/features/auth_feature/presention/widgets/bloc_builder_button_auth.dart';
-import 'package:route_smart/features/auth_feature/presention/widgets/custom_form_field_phone_number.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_event.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_state.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/bloc_builder_button_auth.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/custom_form_field_phone_number.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/custom_text_go_to.dart';
-import 'package:route_smart/features/auth_feature/presention/widgets/widget_custom_check_box_agree_terms.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/widget_custom_check_box_agree_terms.dart';
 
 class RegisterFormSliver extends StatefulWidget {
   const RegisterFormSliver({super.key});
@@ -119,7 +121,10 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
 
                   verticalSpace(25),
 
-                  const CustomTexGoTo().animateBottomToTop(),
+                  CustomTexGoTo(
+                    onTap: () =>
+                        context.pushReplacementNamed(AppRoutesNames.signIn),
+                  ).animateBottomToTop(),
                 ],
               ),
             ),
@@ -132,8 +137,11 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
   void _onStateChanged(BuildContext context, RegisterState state) {
     state.whenOrNull(
       success: (data) {
-        CustomToast.showSuccess(context, data.message ?? "Account Created Successfully");
-        // context.go(AppRoutes.home);
+        CustomToast.showSuccess(
+          context,
+          data.message ?? "Account Created Successfully",
+        );
+            context.pushNamedAndRemoveUntil(AppRoutesNames.signIn);
       },
       error: (message) {
         CustomToast.showError(context, message);
