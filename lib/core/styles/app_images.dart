@@ -12,4 +12,7 @@ class AppImages {
   static const String carContainer = 'assets/images/containerCar.svg';
   static const String shopIcon = "assets/images/ShopIconSvg.svg";
   static const String orderConfirmIcon = 'assets/images/confirmIconSection.svg';
+
+static const String googleIcon = "assets/images/google.svg";
+  static const String appleIcon = 'assets/images/apple.svg';
 }

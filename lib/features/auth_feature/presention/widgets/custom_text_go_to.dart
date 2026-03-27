@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class CustomTexGoTo extends StatelessWidget {
   const CustomTexGoTo({
     super.key,
+    this.textNextTo,
+    this.title,
+    required this.onTap,
   });
 
+  final String? textNextTo;
+  final String? title;
+  final void Function() onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,13 +19,16 @@ class CustomTexGoTo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Already have an account? ', style: TextStyle(color: Colors.grey)),
+          Text(
+            title ?? 'Already have an account? ',
+            style: TextStyle(color: Colors.grey),
+          ),
           GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Text(
-              'Login',
+            onTap: onTap,
+            child: Text(
+              textNextTo ?? 'Login',
               style: TextStyle(
-                color: Color(0xFF6C63FF),
+                color: context.color.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
