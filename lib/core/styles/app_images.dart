@@ -1,5 +1,5 @@
 class AppImages {
-  static const String noNetwork = 'assets/icons/router.png';
+  static const String noNetwork = 'assets/images/apple.svg';
  
   //splash screen
   static const String logoSmartShop = 'assets/icons/logoSmartShop.png';
@@ -15,4 +15,5 @@ class AppImages {
 
 static const String googleIcon = "assets/images/google.svg";
   static const String appleIcon = 'assets/images/apple.svg';
+  static const String fashionImage = 'assets/images/apple.svg';
 }

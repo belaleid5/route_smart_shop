@@ -1,19 +1,19 @@
 abstract final class ApiConstants {
-static const String baseUrl = "https://ecommerce.routemisr.com/api/v1/";
+  static const String baseUrl = "https://ecommerce.routemisr.com/api/v1/";
 
   // ================== Auth ==================
-  // ✅ endpoints بدون / في الأول
   static const String signup = 'auth/signup';
   static const String signin = 'auth/signin';
-static const String forgotPassword = 'auth/forgotPasswords';
-static const String verifyResetCode = 'auth/verifyResetCode';
+  static const String forgotPassword = 'auth/forgotPasswords';
+  static const String verifyResetCode = 'auth/verifyResetCode';
+  static const String resetPassword = 'auth/resetPassword';
 
   // ================== Products ==================
   static const String products = 'products';
 
   // ================== Categories ==================
   static const String categories = 'categories';
-
+static const String brands = 'brands';
   // ================== Cart ==================
   static const String cart = 'cart';
 

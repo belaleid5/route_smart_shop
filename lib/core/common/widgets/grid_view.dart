@@ -1,10 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/loading_widget.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class PaginatedGridView<T> extends StatefulWidget {
-
   const PaginatedGridView({
     super.key,
     this.itemCount = 0,
@@ -139,7 +139,7 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
               ),
-              child: const Icon(Icons.arrow_upward, color: Colors.white),
+              child: Icon(Icons.arrow_upward, color: context.color.white),
             ),
           ),
       ],

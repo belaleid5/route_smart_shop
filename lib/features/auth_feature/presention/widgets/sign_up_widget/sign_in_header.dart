@@ -40,7 +40,10 @@ class SignInHeaderSliver extends StatelessWidget {
 
             Text(
               'Sign in to continue shopping',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              style: context.textStyle.copyWith(
+                fontSize: 16,
+                color: context.color.textSecondary,
+              ),
             ).animateRightLeft(
               duration: const Duration(milliseconds: 500),
               isFromStart: false,

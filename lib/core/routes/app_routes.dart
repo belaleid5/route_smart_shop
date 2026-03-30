@@ -5,13 +5,20 @@ import 'package:route_smart/core/common/screens/empty_screen.dart';
 import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/reset_password/reset_password_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/forgot_passwod.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/register_page.dart';
+import 'package:route_smart/features/auth_feature/presention/pages/reset_password_page.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/sign_in.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/verication_code_page.dart';
+import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/product/product_event.dart';
+import 'package:route_smart/features/home/presention/pages/home_screen.dart';
 import 'package:route_smart/features/on_boarding/presention/pages/onboarding_page.dart';
 import 'package:route_smart/features/splash/presention/pages/splash_page.dart';
 
@@ -67,7 +74,35 @@ class AppRouter {
           child: const VerifyCodePage(),
           ),
         );
+ case AppRoutesNames.reset_password:
+        return CustomPageRoute(
+          settings: settings,
+          page: BlocProvider(
+          create: (context) => sl<ResetPasswordBloc>(),
+          child: const ResetPasswordPage(),
+          ),
+        );
 
+         case AppRoutesNames.home:
+        return CustomPageRoute(
+          settings: settings,
+        page:  MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => sl<CategoriesBloc>(),
+              ),
+               BlocProvider(
+                create: (context) => sl<BrandsBloc>(),
+              ),
+             
+              BlocProvider(
+                create: (context) => sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
+              ),
+            ],
+            child: HomeScreen(),
+          ), 
+         
+        );
 
 
       default:

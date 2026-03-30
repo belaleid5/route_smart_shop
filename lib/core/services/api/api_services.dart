@@ -4,10 +4,15 @@ import 'package:route_smart/core/constants/api_constants.dart';
 import 'package:route_smart/features/auth_feature/data/models/auth_response_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/forgot_password/forgot_password_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/message_response_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_request_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_response.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/response_verification_code_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/verification_code_request_model.dart';
+import 'package:route_smart/features/home/data/models/brand_response_model.dart';
+import 'package:route_smart/features/home/data/models/category_response_model.dart';
+import 'package:route_smart/features/home/data/models/product_response_model.dart';
 
 part 'api_services.g.dart';
 
@@ -35,4 +40,41 @@ abstract class ApiService {
   Future<VerificationCodeResponseModel> verifyResetCode(
     @Body() VerificationCodeRequestModel forgotPasswordRequest,
   );
+
+
+  @PUT(ApiConstants.resetPassword)
+  Future<ResetPasswordResponse> resetPassword(
+    @Body() ResetPasswordRequestModel resetPasswordRequest,
+  );
+
+
+
+
+
+
+
+
+
+  //Home requests
+  @GET(ApiConstants.categories)
+  Future<CategoryResponseModel> getCategories(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
+
+
+  @GET(ApiConstants.products)
+  Future<ProductResponseModel> getProducts(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  
+  );
+
+
+ @GET(ApiConstants.brands)
+  Future<BrandResponseModel> getBrands(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
+
 }
