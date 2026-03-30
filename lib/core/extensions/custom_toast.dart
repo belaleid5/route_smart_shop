@@ -31,8 +31,9 @@ class CustomToast {
             duration: duration,
             onDismissed: () {
               debugPrint('    Dismissing toast');
-              overlayEntry..remove()
-              ..dispose();
+              overlayEntry
+                ..remove()
+                ..dispose();
             },
           );
         },
@@ -99,21 +100,12 @@ class _ToastWidgetState extends State<_ToastWidget>
       duration: const Duration(milliseconds: 300),
     );
 
-    _slideAnimation =
-        Tween<Offset>(
-          begin: const Offset(0, -1.2),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeOutCubic,
-          ),
-        );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     await _controller.forward();
     debugPrint('    Animation started');
@@ -186,9 +178,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(12),
                 border: isDark
-                    ? Border.all(
-                        color: Colors.white.withOpacity(0.1),
-                      )
+                    ? Border.all(color: Colors.white.withOpacity(0.1))
                     : null,
                 boxShadow: [
                   BoxShadow(
@@ -215,17 +205,13 @@ class _ToastWidgetState extends State<_ToastWidget>
                       color: config.color.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(
-                      config.icon,
-                      color: config.color,
-                      size: 20,
-                    ),
+                    child: Icon(config.icon, color: config.color, size: 20),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       widget.message,
-                      style: TextStyle(
+                      style: context.textStyle.copyWith(
                         color: context.color.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -239,11 +225,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        size: 18,
-                        color: closeIconColor,
-                      ),
+                      child: Icon(Icons.close, size: 18, color: closeIconColor),
                     ),
                   ),
                 ],
@@ -257,10 +239,7 @@ class _ToastWidgetState extends State<_ToastWidget>
 }
 
 class ToastConfig {
-  const ToastConfig({
-    required this.color,
-    required this.icon,
-  });
+  const ToastConfig({required this.color, required this.icon});
 
   final Color color;
   final IconData icon;

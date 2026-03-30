@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class CustomFormFieldPhoneNumber extends StatelessWidget {
   const CustomFormFieldPhoneNumber({
@@ -29,7 +30,10 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
                 border: Border.all(color: MyColors.light.stroke),
                 borderRadius: BorderRadius.circular(10.67),
               ),
-              child: const Text('+20', style: TextStyle(fontWeight: FontWeight.bold)),
+              child:  Text(
+                '+20',
+                style: context.textStyle.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(

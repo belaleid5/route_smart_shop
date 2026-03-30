@@ -272,8 +272,14 @@ class ShimmerGridItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ShimmerWidget.card(
-          height: imageHeight,
+        ClipRRect(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16)
+          ),
+          child: ShimmerWidget.card(
+            height: imageHeight,
+          ),
         ),
         const SizedBox(height: 12),
         ShimmerWidget.text(),

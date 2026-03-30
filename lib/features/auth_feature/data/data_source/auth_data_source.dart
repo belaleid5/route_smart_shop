@@ -2,6 +2,8 @@ import 'package:route_smart/core/services/api/api_services.dart';
 import 'package:route_smart/features/auth_feature/data/models/auth_response_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/forgot_password/forgot_password_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/message_response_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_request_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_response.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/response_verification_code_model.dart';
@@ -18,6 +20,10 @@ abstract class AuthRemoteDataSource {
 
   Future<VerificationCodeResponseModel> verifyCode(
     VerificationCodeRequestModel verifyResetCodeRequest,
+  );
+
+  Future<ResetPasswordResponse> resetPassword(
+    ResetPasswordRequestModel resetPasswordCodeRequest,
   );
 }
 
@@ -50,5 +56,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     VerificationCodeRequestModel verifyResetCodeRequest,
   ) async {
     return await _apiService.verifyResetCode(verifyResetCodeRequest);
+  }
+
+  @override
+  Future<ResetPasswordResponse> resetPassword(
+    ResetPasswordRequestModel resetPasswordCodeRequest,
+  ) async {
+    return await _apiService.resetPassword(resetPasswordCodeRequest);
   }
 }

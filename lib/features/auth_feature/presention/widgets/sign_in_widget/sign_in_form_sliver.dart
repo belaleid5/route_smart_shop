@@ -6,10 +6,12 @@ import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/common/widgets/custom_form_password.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
-import 'package:route_smart/core/helper/navigator_extenstion.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
+import 'package:route_smart/core/services/flutter_secure.dart';
+import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_request_model.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_event.dart';
@@ -102,9 +104,16 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
 
   void _onStateChanged(BuildContext context, SignInState state) {
     state.whenOrNull(
-      success: (data) {
+      success: (data) async{
+        final token = data.token; 
+
+        if (token != null) {
+         
+          await SecureStorage().setString(PrefKeys.accessToken, token);
+        }
+        // ignore: use_build_context_synchronously
         CustomToast.showSuccess(context, data.message ?? "Welcome Back!");
-        // context.go(AppRoutes.home);
+         context.pushNamedAndRemoveUntil(AppRoutesNames.home);
       },
       error: (message) {
         CustomToast.showError(context, message);

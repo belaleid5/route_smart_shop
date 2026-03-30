@@ -4,6 +4,8 @@ import 'package:route_smart/features/auth_feature/data/data_source/auth_data_sou
 import 'package:route_smart/features/auth_feature/data/models/auth_response_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/forgot_password/forgot_password_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/message_response_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_request_model.dart';
+import 'package:route_smart/features/auth_feature/data/models/reset_password/reset_password_response.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/response_verification_code_model.dart';
@@ -70,6 +72,34 @@ class AuthRepositoryImpl {
   ) async {
     try {
       final response = await _remoteDataSource.signIn(signInRequest);
+
+      return ApiResult.success(response);
+    } catch (error) {
+      final errorHandler = ErrorHandler.handle(error);
+      final errorMessage =
+          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
+      return ApiResult.failure(errorMessage);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Future<ApiResult<ResetPasswordResponse>> resetPassword(
+    ResetPasswordRequestModel resetPasswordRequest,
+  ) async {
+    try {
+      final response = await _remoteDataSource.resetPassword(resetPasswordRequest);
 
       return ApiResult.success(response);
     } catch (error) {

@@ -21,13 +21,17 @@ class CustomTexGoTo extends StatelessWidget {
         children: [
           Text(
             title ?? 'Already have an account? ',
-            style: TextStyle(color: Colors.grey),
+            style: context.textStyle.copyWith(
+              fontSize: 14,
+              color: context.color.textSecondary,
+            ),
           ),
           GestureDetector(
             onTap: onTap,
             child: Text(
               textNextTo ?? 'Login',
-              style: TextStyle(
+              style: context.textStyle.copyWith(
+                fontSize: 14,
                 color: context.color.primary,
                 fontWeight: FontWeight.bold,
               ),

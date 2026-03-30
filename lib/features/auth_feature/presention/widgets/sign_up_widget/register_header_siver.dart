@@ -45,7 +45,10 @@ class RegisterHeaderSliver extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Sign up to get started',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: context.textStyle.copyWith(
+                fontSize: 16,
+                color: context.color.textSecondary,
+              ),
             ).animateRightLeft(),
           ],
         ),
