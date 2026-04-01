@@ -21,7 +21,10 @@ class AuthSocialSliver extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     'OR CONTINUE WITH',
-                    style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                    style: context.textStyle.copyWith(
+                      color: Colors.grey.shade400,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 const Expanded(child: Divider()),

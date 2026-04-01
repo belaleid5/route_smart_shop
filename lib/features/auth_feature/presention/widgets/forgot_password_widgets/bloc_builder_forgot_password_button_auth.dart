@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_state.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/button_auth.dart';
 
 class BlocBuilderForgotPasswordButtonAuth extends StatelessWidget {
   const BlocBuilderForgotPasswordButtonAuth({super.key, this.onSubmit});
@@ -18,30 +18,12 @@ class BlocBuilderForgotPasswordButtonAuth extends StatelessWidget {
           orElse: () => false,
         );
 
-        return ElevatedButton(
-          onPressed: isLoading ? null : onSubmit,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: context.color.primary,
-            minimumSize: const Size(double.infinity, 56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: isLoading
-              ? const SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: Colors.white,
-                  ),
-                )
-              : const Text(
-                  'Send Reset Code',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
+        return ButtonAuth(isLoading: isLoading, onSubmit: onSubmit, 
+        text: 'Send Reset ',
         ).animateShimmer();
       },
     );
   }
 }
+
+

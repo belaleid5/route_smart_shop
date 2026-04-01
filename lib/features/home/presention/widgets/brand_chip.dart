@@ -1,0 +1,59 @@
+import 'package:flutter/widgets.dart';
+import 'package:route_smart/core/common/widgets/custom_image.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/features/home/data/models/brand_response_model.dart';
+
+class BrandChip extends StatelessWidget {
+  final BrandData brand;
+
+  const BrandChip({super.key, required this.brand});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        debugPrint('Tapped on Brand: ${brand.name}');
+      },
+      child: Container(
+        constraints: const BoxConstraints(minWidth: 110),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: context.color.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: context.color.textSecondary.withOpacity(0.2),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: context.color.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomImage(
+              imageType: ImagesType.network,
+              imagePath: brand.image!,
+              width: 32,
+              height: 50,
+              boxFit: BoxFit.fill,
+            ),
+            horizontalSpace(10),
+            Text(
+              brand.name!,
+              style: context.textStyle.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: context.color.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

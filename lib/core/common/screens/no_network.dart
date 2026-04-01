@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class NoNetwork extends StatelessWidget {
@@ -17,9 +18,12 @@ class NoNetwork extends StatelessWidget {
               width: 100,
             ), // Use your no network image here
             const SizedBox(height: 20),
-            const Text(
+             Text(
               'No Network Connection',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: context.textStyle.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 10),
             const Text(

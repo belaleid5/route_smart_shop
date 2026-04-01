@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/on_boarding/data/models/onboarding_model.dart';
 
 class OnboardingFloatingBadge extends StatelessWidget {
@@ -40,9 +41,11 @@ class _BadgeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = badge.isDark ? _darkBackground : Colors.white;
-    final contentColor = badge.isDark ? Colors.white : _darkTextColor;
-    final iconColor = badge.isDark ? Colors.white : _lightIconColor;
+    final backgroundColor = badge.isDark
+        ? _darkBackground
+        : context.color.white;
+    final contentColor = badge.isDark ? context.color.white : _darkTextColor;
+    final iconColor = badge.isDark ? context.color.white : _lightIconColor;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -65,7 +68,7 @@ class _BadgeChip extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               badge.label,
-              style: TextStyle(
+              style: context.textStyle.copyWith(
                 fontSize: 12,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.0,

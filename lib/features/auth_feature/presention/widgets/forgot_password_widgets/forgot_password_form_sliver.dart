@@ -70,14 +70,16 @@ class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
 
                   TextButton.icon(
                     onPressed: () => context.pop(),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.arrow_back,
                       size: 18,
-                      color: Colors.black54,
+                      color: context.color.black,
                     ),
-                    label: const Text(
+                    label: Text(
                       'Back to Login',
-                      style: TextStyle(color: Colors.black54),
+                      style: context.textStyle.copyWith(
+                        color: context.color.black,
+                      ),
                     ),
                   ).animateBottomToTop(),
                 ],

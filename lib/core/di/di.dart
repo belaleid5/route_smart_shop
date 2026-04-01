@@ -6,15 +6,22 @@ import 'package:route_smart/core/services/api/api_services.dart';
 import 'package:route_smart/features/auth_feature/data/data_source/auth_data_source.dart';
 import 'package:route_smart/features/auth_feature/data/repo/auth_repo.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
+import 'package:route_smart/features/auth_feature/presention/manger/reset_password/reset_password_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
+import 'package:route_smart/features/home/data/data_source/home_data_source.dart';
+import 'package:route_smart/features/home/data/repo/home_repo.dart';
+import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 
 Future<void> setupDI() async {
   await _initCore();
   await _initAuth();
+ await _initHome();
 }
 
 Future<void> _initCore() async {
@@ -46,5 +53,22 @@ Future<void> _initAuth() async {
   sl.registerFactory(() => RegisterBloc(sl<AuthRepositoryImpl>()));
   sl.registerFactory(() => ForgotPasswordBloc(sl<AuthRepositoryImpl>()));
   sl.registerFactory(() => VerifyCodeBloc(sl<AuthRepositoryImpl>()));
+  sl.registerFactory(() => ResetPasswordBloc(sl<AuthRepositoryImpl>()));
+}
 
+
+//home
+
+Future<void> _initHome() async {
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(sl<ApiService>()),
+  );
+
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepository(sl<HomeRemoteDataSource>()), 
+  );
+
+  sl.registerFactory(() => CategoriesBloc(sl<HomeRepository>()));
+   sl.registerFactory(() => BrandsBloc(sl<HomeRepository>()));
+   sl.registerFactory(() => ProductsBloc(sl<HomeRepository>()));
 }

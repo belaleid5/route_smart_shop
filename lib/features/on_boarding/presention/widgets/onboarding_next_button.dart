@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 
 /// Primary CTA button for the onboarding flow.
 ///
@@ -30,7 +31,7 @@ class OnboardingNextButton extends StatelessWidget {
           onPressed: onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: _backgroundColor,
-            foregroundColor: Colors.white,
+            foregroundColor: context.color.white,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
@@ -41,7 +42,7 @@ class OnboardingNextButton extends StatelessWidget {
             children: [
               Text(
                 isLastPage ? 'Get Started' : 'Next',
-                style: const TextStyle(
+                style:  context.textStyle.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,

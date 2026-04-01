@@ -40,7 +40,9 @@ class AdaptiveInputField extends StatelessWidget {
     this.isPassword = false,
     this.inputFormatters,
     this.textCapitalization = TextCapitalization.words,
+    this.borderColor, // إضافة المتغير هنا
   });
+
   final BuildContext context;
   final TextEditingController controller;
   final String? title;
@@ -75,9 +77,13 @@ class AdaptiveInputField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final double radius;
   final bool doOnTapOutside;
+  final Color? borderColor; // تعريف المتغير
 
   @override
   Widget build(BuildContext context) {
+    // تحديد لون الحواف الافتراضي إذا لم يتم تمريره
+    final Color effectiveBorderColor = borderColor ?? MyColors.light.stroke;
+
     return Column(
       crossAxisAlignment: crossAxisAlignment!,
       children: [
@@ -114,7 +120,6 @@ class AdaptiveInputField extends StatelessWidget {
             fontWeight: FontWeight.w400,
             fontSize: 14,
           ),
-
           initialValue: initialValue,
           decoration: InputDecoration(
             icon: textFormFieldIcon,
@@ -131,34 +136,49 @@ class AdaptiveInputField extends StatelessWidget {
               fontSize: 14,
             ),
             errorStyle: Theme.of(context).textTheme.labelLarge,
+
+            // الحالة العادية
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyColors.light.stroke),
+              borderSide: BorderSide(color: effectiveBorderColor),
               borderRadius: BorderRadius.circular(radius),
             ),
+
+            // حالة التركيز (Focus)
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: MyColors.light.black.withValues(alpha: 0.2),
+                color:
+                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(radius),
             ),
+
+            // حالة الخطأ
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: MyColors.light.black.withValues(alpha: 0.2),
+                color:
+                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(radius),
             ),
+
+            // حالة التركيز مع وجود خطأ
             focusedErrorBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: MyColors.light.black.withValues(alpha: 0.2),
+                color:
+                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(radius),
             ),
+
+            // حالة التعطيل (Disabled)
             disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: MyColors.light.black.withValues(alpha: 0.2),
+                color:
+                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(radius),
             ),
+
             prefixIcon: prefix,
             suffixIcon: suffix != null
                 ? IconButton(

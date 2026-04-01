@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
-import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/on_boarding/data/models/onboarding_viewmodel.dart';
 
 import '../refators/onboarding_body.dart';
@@ -14,7 +14,7 @@ class OnboardingPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => OnboardingViewModel(),
       child: Scaffold(
-        backgroundColor: context.colors.background,
+        backgroundColor: context.color.background,
         body: SafeArea(child: OnboardingBody()),
       ),
     );
