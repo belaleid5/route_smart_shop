@@ -170,9 +170,18 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<CategoryResponseModel> getCategories(int page, int limit) async {
+  Future<CategoryResponseModel> getCategories(
+    int page,
+    int limit,
+    String? keyword,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'keyword': keyword,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CategoryResponseModel>(
@@ -197,9 +206,30 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<ProductResponseModel> getProducts(int page, int limit) async {
+  Future<ProductResponseModel> getProducts(
+    int page,
+    int limit,
+    String? sort,
+    String? keyword,
+    String? category,
+    String? brand,
+    String? subcategory,
+    String? priceGte,
+    String? priceLte,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'sort': sort,
+      r'keyword': keyword,
+      r'category': category,
+      r'brand': brand,
+      r'subcategory': subcategory,
+      r'price[gte]': priceGte,
+      r'price[lte]': priceLte,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<ProductResponseModel>(
@@ -224,9 +254,18 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<BrandResponseModel> getBrands(int page, int limit) async {
+  Future<BrandResponseModel> getBrands(
+    int page,
+    int limit,
+    String? keyword,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'keyword': keyword,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<BrandResponseModel>(

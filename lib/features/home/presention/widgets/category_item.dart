@@ -7,7 +7,7 @@ import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/app_images.dart';
-import 'package:route_smart/features/home/data/models/category_response_model.dart';
+import 'package:route_smart/core/common/data/model/category_response_model.dart';
 
 class CategoryItem extends StatelessWidget {
   const CategoryItem({super.key, required this.category});

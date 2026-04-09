@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/data/repo/all_data_products_repo.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
-import 'package:route_smart/features/home/data/models/category_response_model.dart';
-import 'package:route_smart/features/home/data/repo/home_repo.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_state.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
-  final HomeRepository _homeRepository;
-  int _currentPage = 1; 
+  final AllDataProductsRepository _homeRepository;
+  int _currentPage = 1;
 
   CategoriesBloc(this._homeRepository)
     : super(const CategoriesState.initial()) {
@@ -30,8 +30,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       orElse: () => emit(const CategoriesState.loading()),
     );
 
-
-    final result = await _homeRepository.getCategories(_currentPage);
+    final result = await _homeRepository.getCategories(_currentPage, null);
 
     result.when(
       success: (response) {
