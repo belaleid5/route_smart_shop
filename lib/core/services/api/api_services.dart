@@ -10,9 +10,9 @@ import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_re
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/response_verification_code_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/verification_code_request_model.dart';
-import 'package:route_smart/features/home/data/models/brand_response_model.dart';
-import 'package:route_smart/features/home/data/models/category_response_model.dart';
-import 'package:route_smart/features/home/data/models/product_response_model.dart';
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/data/model/product_response_model.dart';
 
 part 'api_services.g.dart';
 
@@ -21,60 +21,50 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   @POST(ApiConstants.signup)
-  Future<AuthResponseModel> register(
-    @Body() RegisterRequestModel registerRequest,
-  );
+  Future<AuthResponseModel> register(@Body() RegisterRequestModel registerRequest);
 
   @POST(ApiConstants.signin)
-  Future<AuthResponseModel> signIn(
-    @Body() SignInRequestModel signInRequest,
-  );
+  Future<AuthResponseModel> signIn(@Body() SignInRequestModel signInRequest);
 
-   @POST(ApiConstants.forgotPassword)
+  @POST(ApiConstants.forgotPassword)
   Future<MessageResponseModel> forgotPassword(
     @Body() ForgotPasswordRequestModel forgotPasswordRequest,
   );
 
-
-   @POST(ApiConstants.verifyResetCode)
+  @POST(ApiConstants.verifyResetCode)
   Future<VerificationCodeResponseModel> verifyResetCode(
     @Body() VerificationCodeRequestModel forgotPasswordRequest,
   );
-
 
   @PUT(ApiConstants.resetPassword)
   Future<ResetPasswordResponse> resetPassword(
     @Body() ResetPasswordRequestModel resetPasswordRequest,
   );
 
-
-
-
-
-
-
-
-
-  //Home requests
   @GET(ApiConstants.categories)
   Future<CategoryResponseModel> getCategories(
-    @Query("page") int page,
-    @Query("limit") int limit,
+    @Query("page")    int     page,
+    @Query("limit")   int     limit,
+    @Query("keyword") String? keyword,
   );
-
 
   @GET(ApiConstants.products)
   Future<ProductResponseModel> getProducts(
-    @Query("page") int page,
-    @Query("limit") int limit,
-  
+    @Query("page")        int     page,
+    @Query("limit")       int     limit,
+    @Query("sort")        String? sort,
+    @Query("keyword")     String? keyword,
+    @Query("category")    String? category,
+    @Query("brand")       String? brand,
+    @Query("subcategory") String? subcategory,
+    @Query("price[gte]")  String? priceGte,
+    @Query("price[lte]")  String? priceLte,
   );
 
-
- @GET(ApiConstants.brands)
+  @GET(ApiConstants.brands)
   Future<BrandResponseModel> getBrands(
-    @Query("page") int page,
-    @Query("limit") int limit,
+    @Query("page")    int     page,
+    @Query("limit")   int     limit,
+    @Query("keyword") String? keyword,
   );
-
 }

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
-import 'package:route_smart/features/home/data/models/brand_response_model.dart';
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 
 class BrandChip extends StatelessWidget {
   final BrandData brand;

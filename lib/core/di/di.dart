@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_smart/core/app/app_cubit/app_cubit_cubit.dart';
+import 'package:route_smart/core/common/data/data_source/all_products_data_source.dart';
+import 'package:route_smart/core/common/data/repo/all_data_products_repo.dart';
 import 'package:route_smart/core/constants/api_constants.dart';
 import 'package:route_smart/core/services/api/api_services.dart';
 import 'package:route_smart/features/auth_feature/data/data_source/auth_data_source.dart';
@@ -10,18 +12,17 @@ import 'package:route_smart/features/auth_feature/presention/manger/reset_passwo
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
-import 'package:route_smart/features/home/data/data_source/home_data_source.dart';
-import 'package:route_smart/features/home/data/repo/home_repo.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
+import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 
 Future<void> setupDI() async {
   await _initCore();
   await _initAuth();
- await _initHome();
+  await _initHome();
 }
 
 Future<void> _initCore() async {
@@ -56,19 +57,19 @@ Future<void> _initAuth() async {
   sl.registerFactory(() => ResetPasswordBloc(sl<AuthRepositoryImpl>()));
 }
 
-
 //home
 
 Future<void> _initHome() async {
-  sl.registerLazySingleton<HomeRemoteDataSource>(
-    () => HomeRemoteDataSourceImpl(sl<ApiService>()),
+  sl.registerLazySingleton<AllDataProductsRemoteDataSource>(
+    () => AllDataProductsRemoteDataSourceImpl(sl<ApiService>()),
   );
 
-  sl.registerLazySingleton<HomeRepository>(
-    () => HomeRepository(sl<HomeRemoteDataSource>()), 
+  sl.registerLazySingleton<AllDataProductsRepository>(
+    () => AllDataProductsRepository(sl<AllDataProductsRemoteDataSource>()),
   );
 
-  sl.registerFactory(() => CategoriesBloc(sl<HomeRepository>()));
-   sl.registerFactory(() => BrandsBloc(sl<HomeRepository>()));
-   sl.registerFactory(() => ProductsBloc(sl<HomeRepository>()));
+  sl.registerFactory(() => CategoriesBloc(sl<AllDataProductsRepository>()));
+  sl.registerFactory(() => BrandsBloc(sl<AllDataProductsRepository>()));
+  sl.registerFactory(() => ProductsBloc(sl<AllDataProductsRepository>()));
+  sl.registerFactory(() => SearchBloc(sl<AllDataProductsRepository>()));
 }

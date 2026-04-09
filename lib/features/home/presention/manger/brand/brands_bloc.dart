@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:route_smart/core/common/data/repo/all_data_products_repo.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
-import 'package:route_smart/features/home/data/models/brand_response_model.dart';
-import 'package:route_smart/features/home/data/repo/home_repo.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_state.dart';
 
 class BrandsBloc extends Bloc<BrandsEvent, BrandsState> {
-  final HomeRepository _homeRepository;
+  final AllDataProductsRepository _homeRepository;
   int _currentPage = 1;
 
   BrandsBloc(this._homeRepository) : super(const BrandsState.initial()) {
@@ -29,7 +29,8 @@ class BrandsBloc extends Bloc<BrandsEvent, BrandsState> {
       orElse: () => emit(const BrandsState.loading()),
     );
 
-    final result = await _homeRepository.getBrands(_currentPage);
+    final result = await _homeRepository.getBrands(_currentPage,
+    null);
 
     result.when(
       success: (response) {

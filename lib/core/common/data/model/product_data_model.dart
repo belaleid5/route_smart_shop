@@ -18,8 +18,10 @@ class ProductDataModel {
   final int? price;
   final int? priceAfterDiscount;
   final String? imageCover;
+  
   final Category? category;
   final Brand? brand;
+  
   final double? ratingsAverage;
   final String? createdAt;
   final String? updatedAt;

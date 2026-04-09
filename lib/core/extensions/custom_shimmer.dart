@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Custom shimmer loading widget
@@ -169,22 +170,14 @@ class ShimmerWidget extends StatelessWidget {
 
     // Default gradients
     const shimmerGradientLight = LinearGradient(
-      colors: [
-        Color(0xFFEBEBF4),
-        Color(0xFFF4F4F4),
-        Color(0xFFEBEBF4),
-      ],
+      colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
       stops: [0.1, 0.3, 0.4],
       begin: Alignment(-1, -0.3),
       end: Alignment(1, 0.3),
     );
 
     const shimmerGradientDark = LinearGradient(
-      colors: [
-        Color(0xFF1C1C1C),
-        Color(0xFF2C2C2C),
-        Color(0xFF1C1C1C),
-      ],
+      colors: [Color(0xFF1C1C1C), Color(0xFF2C2C2C), Color(0xFF1C1C1C)],
       stops: [0.1, 0.3, 0.4],
       begin: Alignment(-1, -0.3),
       end: Alignment(1, 0.3),
@@ -202,10 +195,7 @@ class ShimmerWidget extends StatelessWidget {
 
 /// Brand carousel item shimmer
 class ShimmerBrandItem extends StatelessWidget {
-  const ShimmerBrandItem({
-    super.key,
-    this.size = 80,
-  });
+  const ShimmerBrandItem({super.key, this.size = 80});
 
   final double size;
 
@@ -214,7 +204,7 @@ class ShimmerBrandItem extends StatelessWidget {
     return Column(
       children: [
         ShimmerWidget.circular(size: size),
-        const SizedBox(height: 8),
+        verticalSpace(8),
         ShimmerWidget.text(width: 60, height: 14),
       ],
     );
@@ -260,10 +250,7 @@ class ShimmerListTile extends StatelessWidget {
 
 /// Grid item shimmer (image + text)
 class ShimmerGridItem extends StatelessWidget {
-  const ShimmerGridItem({
-    super.key,
-    this.imageHeight = 150,
-  });
+  const ShimmerGridItem({super.key, this.imageHeight = 14});
 
   final double imageHeight;
 
@@ -275,16 +262,14 @@ class ShimmerGridItem extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadiusGeometry.only(
             topLeft: Radius.circular(16),
-            topRight: Radius.circular(16)
+            topRight: Radius.circular(16),
           ),
-          child: ShimmerWidget.card(
-            height: imageHeight,
-          ),
+          child: ShimmerWidget.card(height: imageHeight),
         ),
-        const SizedBox(height: 12),
+        verticalSpace(8),
         ShimmerWidget.text(),
-        const SizedBox(height: 8),
-        ShimmerWidget.text(width: 100, height: 14),
+        verticalSpace(8),
+        ShimmerWidget.text(width: 100, height: 12),
       ],
     );
   }
