@@ -3,9 +3,9 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 
-class HomeSearchBar extends StatelessWidget {
+class SearchBar extends StatelessWidget {
   final TextEditingController controller;
-  const HomeSearchBar({super.key, required this.controller});
+  const SearchBar({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +16,5 @@ class HomeSearchBar extends StatelessWidget {
       prefix: Icon(Icons.search, color: context.colors.primary),
       radius: 30.0,
     ).animateBottomToTop(duration: const Duration(milliseconds: 600));
-    
   }
 }

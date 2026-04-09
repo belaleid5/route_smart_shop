@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/smooth_list_view.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/features/home/data/models/brand_response_model.dart';
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 import 'package:route_smart/features/home/presention/widgets/brand_chip.dart';
 import 'package:route_smart/features/home/presention/widgets/brand_loading_chip.dart';
 

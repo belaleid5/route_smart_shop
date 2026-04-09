@@ -15,11 +15,16 @@ import 'package:route_smart/features/auth_feature/presention/pages/reset_passwor
 import 'package:route_smart/features/auth_feature/presention/pages/sign_in.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/verication_code_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
+import 'package:route_smart/features/home/presention/manger/categroy/categories_event.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_event.dart';
 import 'package:route_smart/features/home/presention/pages/home_screen.dart';
 import 'package:route_smart/features/on_boarding/presention/pages/onboarding_page.dart';
+import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
+import 'package:route_smart/features/search/presention/manger/search_event.dart';
+import 'package:route_smart/features/search/presention/pages/search_screen.dart';
 import 'package:route_smart/features/splash/presention/pages/splash_page.dart';
 
 class AppRouter {
@@ -82,6 +87,33 @@ class AppRouter {
           child: const ResetPasswordPage(),
           ),
         );
+
+case AppRoutesNames.search:
+        return CustomPageRoute(
+          settings: settings,
+          page:MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => sl<CategoriesBloc>()..add(const CategoriesEvent.getCategories()),
+              ),
+               BlocProvider(
+                create: (context) => sl<BrandsBloc>()..add(const BrandsEvent.getBrands()),
+              ),
+             
+              BlocProvider(
+                create: (context) => sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
+              ),
+              BlocProvider(
+          create: (context) => sl<SearchBloc>()..add(const SearchEvent.search()),
+     
+          ),
+            ], 
+                 child: const SearchScreen(), 
+          
+          ) ,
+          
+        );
+
 
          case AppRoutesNames.home:
         return CustomPageRoute(

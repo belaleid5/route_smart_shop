@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/features/home/data/models/product_data_model.dart';
+import 'package:route_smart/core/common/data/model/product_data_model.dart';
 
 part 'product_state.freezed.dart';
 
