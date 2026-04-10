@@ -1,0 +1,61 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'wishlist_response_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+WishlistResponseModel _$WishlistResponseModelFromJson(
+  Map<String, dynamic> json,
+) => WishlistResponseModel(
+  statusMsg: json['statusMsg'] as String,
+  message: json['message'] as String,
+  data: (json['data'] as List<dynamic>)
+      .map((e) => WishlistItemModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$WishlistResponseModelToJson(
+  WishlistResponseModel instance,
+) => <String, dynamic>{
+  'statusMsg': instance.statusMsg,
+  'message': instance.message,
+  'data': instance.data,
+};
+
+WishlistItemModel _$WishlistItemModelFromJson(Map<String, dynamic> json) =>
+    WishlistItemModel(
+      id: json['id'] as String,
+      product: ProductInfoModel.fromJson(
+        json['product'] as Map<String, dynamic>,
+      ),
+      createdAt: json['createdAt'] as String,
+    );
+
+Map<String, dynamic> _$WishlistItemModelToJson(WishlistItemModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'product': instance.product,
+      'createdAt': instance.createdAt,
+    };
+
+ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
+    ProductInfoModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      imageCover: json['imageCover'] as String,
+      price: (json['price'] as num).toInt(),
+      description: json['description'] as String?,
+      ratingsAverage: (json['ratingsAverage'] as num?)?.toDouble(),
+    );
+
+Map<String, dynamic> _$ProductInfoModelToJson(ProductInfoModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'imageCover': instance.imageCover,
+      'price': instance.price,
+      'description': instance.description,
+      'ratingsAverage': instance.ratingsAverage,
+    };
