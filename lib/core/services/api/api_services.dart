@@ -13,6 +13,8 @@ import 'package:route_smart/features/auth_feature/data/models/verfication_code_m
 import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 import 'package:route_smart/core/common/data/model/category_response_model.dart';
 import 'package:route_smart/core/common/data/model/product_response_model.dart';
+import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
+import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 
 part 'api_services.g.dart';
 
@@ -66,5 +68,27 @@ abstract class ApiService {
     @Query("page")    int     page,
     @Query("limit")   int     limit,
     @Query("keyword") String? keyword,
+  );
+
+
+
+
+
+   // 🆕 Wishlist endpoints
+  @GET(ApiConstants.wishlist)
+  Future<WishlistResponseModel> getWishlist(
+    @Header('token') String token,
+  );
+  
+
+  @POST(ApiConstants.addToWishlist)
+  Future<MessageResponseModel> addToWishlist(
+    @Header('token') String token,
+    @Body() WishlistRequestModel request,
+  );
+
+  @DELETE(ApiConstants.removeFromWishlist)
+  Future<MessageResponseModel> removeFromWishlist(
+    @Path("productId") String productId,
   );
 }
