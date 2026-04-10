@@ -1,9 +1,11 @@
+// core/services/api/dio_factory.dart
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:route_smart/core/constants/api_constants.dart';
+import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
-import 'package:route_smart/core/services/shared_pref/shared_pref.dart';
 
 class DioFactory {
   DioFactory._();
@@ -14,24 +16,26 @@ class DioFactory {
     const timeOut = Duration(seconds: 30);
 
     if (dio == null) {
-      dio = Dio();
-      dio!
-        ..options.baseUrl = ApiConstants
-            .baseUrl // 👈 أهم إضافة
-        ..options.connectTimeout = timeOut
-        ..options.receiveTimeout = timeOut
-        ..options.headers = {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        };
+      dio = Dio(
+        BaseOptions(
+          baseUrl: ApiConstants.baseUrl,
+          connectTimeout: timeOut,
+          receiveTimeout: timeOut,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
-      addDioInterceptor();
+      _addInterceptors();
     }
+
     return dio!;
   }
 
-  static void addDioInterceptor() {
-    // 1. Logger Interceptor
+  static void _addInterceptors() {
+    // ── Logger ──────────────────────────────────
     dio?.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,
@@ -41,31 +45,47 @@ class DioFactory {
       ),
     );
 
-    // 2. Auth & Logic Interceptor
+    // ── Auth ────────────────────────────────────
     dio?.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          // جلب التوكن - تأكد أن SharedPref جاهز
-          final token = SharedPref().getString(PrefKeys.accessToken);
+        onRequest: (options, handler) async {
+          final isPublic = _isPublicRoute(options.path);
 
-          // تحديد المسارات التي لا تحتاج توكن بدقة من الـ Constants
-          final isPublic =
-              options.path.contains('auth/signup') ||
-              options.path.contains('auth/signin');
+          if (!isPublic) {
+            // ✅ await لأن SecureStorage async
+            final token = await SecureStorage().getString(
+              PrefKeys.accessToken,
+            );
 
-          if (!isPublic && token != null && token.isNotEmpty) {
-            options.headers['token'] =
-                token; // سيرفر Route غالباً يستخدم 'token' وليس 'Authorization'
+            if (token != null && token.isNotEmpty) {
+              options.headers['token'] = token;
+              debugPrint('✅ Token added: $token');
+            } else {
+              debugPrint('❌ No token found');
+            }
           }
 
           return handler.next(options);
         },
         onError: (error, handler) {
-          // تحويل الخطأ لرسالة مفهومة قبل تمريره للـ Repository
-          debugPrint("❌ Full Path: ${error.requestOptions.uri}");
+          debugPrint('❌ Error: ${error.requestOptions.uri}');
+          debugPrint('❌ Status: ${error.response?.statusCode}');
           return handler.next(error);
         },
       ),
     );
+  }
+
+  // ── Public routes (no token needed) ──────────
+  static bool _isPublicRoute(String path) {
+    const publicRoutes = [
+      'auth/signup',
+      'auth/signin',
+      'auth/forgotPasswords',
+      'auth/verifyResetCode',
+      'auth/resetPassword',
+    ];
+
+    return publicRoutes.any((route) => path.contains(route));
   }
 }

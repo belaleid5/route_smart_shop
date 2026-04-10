@@ -76,10 +76,14 @@ abstract class ApiService {
 
    // 🆕 Wishlist endpoints
   @GET(ApiConstants.wishlist)
-  Future<WishlistResponseModel> getWishlist();
+  Future<WishlistResponseModel> getWishlist(
+    @Header('token') String token,
+  );
+  
 
   @POST(ApiConstants.addToWishlist)
   Future<MessageResponseModel> addToWishlist(
+    @Header('token') String token,
     @Body() WishlistRequestModel request,
   );
 

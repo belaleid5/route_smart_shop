@@ -46,7 +46,7 @@ class RouteSmartShopApp extends StatelessWidget {
                   return MaterialApp(
                     debugShowCheckedModeBanner:
                         EnvVariable.instance.isDebugMode,
-                    initialRoute: AppRoutesNames.home,
+                    initialRoute: AppRoutesNames.wishlist,
                     onGenerateRoute: AppRouter.onGenerateRoute,
                     theme: AppTheme.light,
                     darkTheme: AppTheme.dark,

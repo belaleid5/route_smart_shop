@@ -1,5 +1,6 @@
 // lib/features/search/presentation/widgets/search_tab_content.dart
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/product/product_grid_view.dart';
 import 'package:route_smart/features/search/presention/manger/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
@@ -16,7 +17,8 @@ class SearchTabContent extends StatelessWidget {
     return switch (state.params.activeTab) {
       SearchTab.products => GridViewProducts(
         products: state.products,
-        hasReachedMax: state.isLoadingMore,
+        hasReachedMax: state.isLoadingMore, 
+        onProductTap: (ProductDataModel value) {  },
       ),
       SearchTab.categories => SearchCategoriesList(
         categories: state.categories,

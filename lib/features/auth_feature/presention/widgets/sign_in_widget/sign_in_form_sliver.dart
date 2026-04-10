@@ -113,7 +113,7 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
         }
         // ignore: use_build_context_synchronously
         CustomToast.showSuccess(context, data.message ?? "Welcome Back!");
-         context.pushNamedAndRemoveUntil(AppRoutesNames.home);
+         context.pushNamedAndRemoveUntil(AppRoutesNames.wishlist);
       },
       error: (message) {
         CustomToast.showError(context, message);

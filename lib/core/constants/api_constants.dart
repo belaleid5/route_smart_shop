@@ -8,9 +8,9 @@ abstract final class ApiConstants {
   static const String verifyResetCode = 'auth/verifyResetCode';
   static const String resetPassword = 'auth/resetPassword';
    // Wishlist
-  static const String wishlist = "/api/wishlist";
-  static const String addToWishlist = "/api/wishlist";
-  static const String removeFromWishlist = "/api/wishlist/{productId}";
+  static const String wishlist = "wishlist";
+  static const String addToWishlist = "wishlist";
+  static const String removeFromWishlist = "/wishlist/{productId}";
 
   // ================== Products ==================
   static const String products = 'products';

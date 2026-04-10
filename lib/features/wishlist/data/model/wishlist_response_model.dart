@@ -1,64 +1,47 @@
-// wishlist_response_model.dart
 import 'package:json_annotation/json_annotation.dart';
-
 part 'wishlist_response_model.g.dart';
 
 @JsonSerializable()
 class WishlistResponseModel {
-  final String statusMsg;
-  final String message;
-  final List<WishlistItemModel> data;
-
-  WishlistResponseModel({
-    required this.statusMsg,
-    required this.message,
-    required this.data,
-  });
-
-  factory WishlistResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$WishlistResponseModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WishlistResponseModelToJson(this);
+  final String status;
+  final int count;
+  @JsonKey(name: 'data') final List<WishlistItemModel> items;
+  WishlistResponseModel({required this.status, required this.count, required this.items});
+  factory WishlistResponseModel.fromJson(Map<String,dynamic> j)=>_$WishlistResponseModelFromJson(j);
 }
 
 @JsonSerializable()
 class WishlistItemModel {
-  final String id;
-  final ProductInfoModel product;
-  final String createdAt;
+  @JsonKey(name: '_id') final String id;
+  final String title;
+  final String description;
+  final num price;
+  @JsonKey(name: 'imageCover') final String imageCover;
+  final List<String> images;
+  final int quantity;
+  final int sold;
+  @JsonKey(name: 'ratingsAverage') final num? ratingsAverage;
+  final WishlistCategory category;
+  final WishlistBrand? brand;
 
   WishlistItemModel({
-    required this.id,
-    required this.product,
-    required this.createdAt,
+    required this.id, required this.title, required this.description,
+    required this.price, required this.imageCover, required this.images,
+    required this.quantity, required this.sold, this.ratingsAverage,
+    required this.category, this.brand,
   });
-
-  factory WishlistItemModel.fromJson(Map<String, dynamic> json) =>
-      _$WishlistItemModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WishlistItemModelToJson(this);
+  factory WishlistItemModel.fromJson(Map<String,dynamic> j)=>_$WishlistItemModelFromJson(j);
+  double get priceDouble => price.toDouble();
 }
 
-@JsonSerializable()
-class ProductInfoModel {
-  final String id;
-  final String title;
-  final String imageCover;
-  final int price;
-  final String? description;
-  final double? ratingsAverage;
+@JsonSerializable() class WishlistCategory {
+  @JsonKey(name: '_id') final String id; final String name;
+  WishlistCategory({required this.id, required this.name});
+  factory WishlistCategory.fromJson(Map<String,dynamic> j)=>_$WishlistCategoryFromJson(j);
+}
 
-  ProductInfoModel({
-    required this.id,
-    required this.title,
-    required this.imageCover,
-    required this.price,
-    this.description,
-    this.ratingsAverage,
-  });
-
-  factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductInfoModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProductInfoModelToJson(this);
+@JsonSerializable() class WishlistBrand {
+  @JsonKey(name: '_id') final String id; final String name;
+  WishlistBrand({required this.id, required this.name});
+  factory WishlistBrand.fromJson(Map<String,dynamic> j)=>_$WishlistBrandFromJson(j);
 }

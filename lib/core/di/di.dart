@@ -5,6 +5,7 @@ import 'package:route_smart/core/common/data/data_source/all_products_data_sourc
 import 'package:route_smart/core/common/data/repo/all_data_products_repo.dart';
 import 'package:route_smart/core/constants/api_constants.dart';
 import 'package:route_smart/core/services/api/api_services.dart';
+import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/features/auth_feature/data/data_source/auth_data_source.dart';
 import 'package:route_smart/features/auth_feature/data/repo/auth_repo.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
@@ -16,6 +17,9 @@ import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.da
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
+import 'package:route_smart/features/wishlist/data/data_source/wishlist_data_source.dart';
+import 'package:route_smart/features/wishlist/data/repo/wishlisrt_repo.dart';
+import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -23,6 +27,7 @@ Future<void> setupDI() async {
   await _initCore();
   await _initAuth();
   await _initHome();
+  await _iniWishlist();
 }
 
 Future<void> _initCore() async {
@@ -39,6 +44,7 @@ Future<void> _initCore() async {
   sl
     ..registerFactory(AppCubit.new)
     ..registerLazySingleton<ApiService>(() => ApiService(sl<Dio>()));
+  sl.registerLazySingleton<SecureStorage>(() => SecureStorage());
 }
 
 Future<void> _initAuth() async {
@@ -47,7 +53,7 @@ Future<void> _initAuth() async {
   );
 
   sl.registerLazySingleton<AuthRepositoryImpl>(
-    () => AuthRepositoryImpl(sl<AuthRemoteDataSourceImpl>()),
+    () => AuthRepositoryImpl(sl<AuthRemoteDataSourceImpl>(),sl()),
   );
 
   sl.registerFactory(() => SignInBloc(sl<AuthRepositoryImpl>()));
@@ -72,4 +78,19 @@ Future<void> _initHome() async {
   sl.registerFactory(() => BrandsBloc(sl<AllDataProductsRepository>()));
   sl.registerFactory(() => ProductsBloc(sl<AllDataProductsRepository>()));
   sl.registerFactory(() => SearchBloc(sl<AllDataProductsRepository>()));
+}
+
+//wishlist
+
+Future<void> _iniWishlist() async {
+  sl.registerLazySingleton<WishlistRemoteDataSource>(
+    () => WishlistRemoteDataSourceImpl(sl<ApiService>(),sl()),
+  );
+
+  sl.registerLazySingleton<WishlistRepository>(
+    () => WishlistRepository(sl()),
+  );
+
+  sl.registerFactory(() => WishlistBloc(sl()));
+ 
 }
