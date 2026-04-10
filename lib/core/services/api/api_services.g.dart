@@ -290,16 +290,17 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<WishlistResponseModel> getWishlist() async {
+  Future<WishlistResponseModel> getWishlist(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'token': token};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<WishlistResponseModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/wishlist',
+            'wishlist',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -318,18 +319,20 @@ class _ApiService implements ApiService {
 
   @override
   Future<MessageResponseModel> addToWishlist(
+    String token,
     WishlistRequestModel request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'token': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _options = _setStreamType<MessageResponseModel>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/wishlist',
+            'wishlist',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -356,7 +359,7 @@ class _ApiService implements ApiService {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/wishlist/${productId}',
+            '/wishlist/${productId}',
             queryParameters: queryParameters,
             data: _data,
           )

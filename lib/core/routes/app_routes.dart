@@ -26,6 +26,9 @@ import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_event.dart';
 import 'package:route_smart/features/search/presention/pages/search_screen.dart';
 import 'package:route_smart/features/splash/presention/pages/splash_page.dart';
+import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
+import 'package:route_smart/features/wishlist/presention/manger/wishlist_event.dart';
+import 'package:route_smart/features/wishlist/presention/pages/wishlist_page.dart';
 
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -88,6 +91,17 @@ class AppRouter {
           ),
         );
 
+         case AppRoutesNames.wishlist:
+        return CustomPageRoute(
+          settings: settings,
+          page: BlocProvider(
+          create: (context) => sl<WishlistBloc>()..add(   
+          const WishlistEvent.getWishlist()),
+
+          child: const WishlistPage(),
+          ),
+        );
+
 case AppRoutesNames.search:
         return CustomPageRoute(
           settings: settings,
@@ -130,6 +144,11 @@ case AppRoutesNames.search:
               BlocProvider(
                 create: (context) => sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
               ),
+
+              BlocProvider(
+          create: (context) => sl<WishlistBloc>()
+               ..add(const WishlistEvent.getWishlist()),
+        ),
             ],
             child: HomeScreen(),
           ), 

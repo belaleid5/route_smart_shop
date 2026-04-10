@@ -10,4 +10,5 @@ class AppRoutesNames {
   static const reset_password = '/reset_password';
    static const home = '/home_page';
    static const search = '/search_page';
+     static const wishlist = '/wishlist';
 }
