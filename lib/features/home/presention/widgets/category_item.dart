@@ -1,13 +1,12 @@
 // core/common/widgets/form/category_item.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/data/model/category_response_model.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 // 👇 1. Import الـ Extension للأنيميشن
-import 'package:route_smart/core/extensions/animation_extensions.dart'; 
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
-import 'package:route_smart/core/styles/app_images.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
 
 class CategoryItem extends StatelessWidget {
   const CategoryItem({super.key, required this.category});
@@ -28,7 +27,7 @@ class CategoryItem extends StatelessWidget {
           child: ClipOval(
             child: CustomImage(
               imageType: ImagesType.network,
-              imagePath: category.image ?? ""
+              imagePath: category.image,
             ),
           ),
         ),
@@ -36,7 +35,7 @@ class CategoryItem extends StatelessWidget {
         SizedBox(
           width: 75,
           child: Text(
-            category.name ?? '',
+            category.name ,
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -48,10 +47,6 @@ class CategoryItem extends StatelessWidget {
           ),
         ),
       ],
-    )
-   
-    .animateBottomToTop(
-      duration: const Duration(milliseconds: 500),
-    );
+    ).animateBottomToTop(duration: const Duration(milliseconds: 500));
   }
 }
