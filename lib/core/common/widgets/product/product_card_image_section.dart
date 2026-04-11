@@ -8,10 +8,14 @@ class ProductCardImageSection extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.discountPercent,
+    this.onFavoriteTap,
+    this.productId, 
   });
 
   final String imageUrl;
   final String? discountPercent;
+  final VoidCallback? onFavoriteTap;
+  final String? productId; 
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,14 @@ class ProductCardImageSection extends StatelessWidget {
             left: 8,
             child: ProductDiscountBadge(percent: discountPercent!),
           ),
-        Positioned(top: 8, right: 8, child: ProductWishlistButton()),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: ProductWishlistButton(
+            productId: productId, 
+            onTap: onFavoriteTap,
+          ),
+        ),
       ],
     );
   }

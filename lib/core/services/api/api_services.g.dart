@@ -350,10 +350,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<MessageResponseModel> removeFromWishlist(String productId) async {
+  Future<MessageResponseModel> removeFromWishlist(
+    String token,
+    String productId,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'token': token};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<MessageResponseModel>(
       Options(method: 'DELETE', headers: _headers, extra: _extra)

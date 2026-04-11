@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/common/animations/custom_page_route.dart';
 import 'package:route_smart/core/common/screens/empty_screen.dart';
+import 'package:route_smart/core/common/screens/main_screen.dart';
 import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
@@ -31,6 +32,9 @@ import 'package:route_smart/features/wishlist/presention/manger/wishlist_event.d
 import 'package:route_smart/features/wishlist/presention/pages/wishlist_page.dart';
 
 class AppRouter {
+  // ✅ Singleton instance من WishlistBloc
+  static final WishlistBloc _wishlistBloc = sl<WishlistBloc>();
+
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutesNames.emptyScreen:
@@ -45,116 +49,123 @@ class AppRouter {
           page: const OnboardingPage(),
         );
 
-    case AppRoutesNames.register:
+      case AppRoutesNames.register:
         return CustomPageRoute(
           settings: settings,
           page: BlocProvider(
-          create: (context) => sl<RegisterBloc>(),
-          child: const RegisterPage(),
+            create: (context) => sl<RegisterBloc>(),
+            child: const RegisterPage(),
           ),
         );
 
-
-         case AppRoutesNames.signIn:
+      case AppRoutesNames.signIn:
         return CustomPageRoute(
           settings: settings,
           page: BlocProvider(
-          create: (context) => sl<SignInBloc>(),
-          child: const SignInPage(),
+            create: (context) => sl<SignInBloc>(),
+            child: const SignInPage(),
           ),
         );
 
-
-        case AppRoutesNames.forgotPassword:
+      case AppRoutesNames.forgotPassword:
         return CustomPageRoute(
           settings: settings,
           page: BlocProvider(
-          create: (context) => sl<ForgotPasswordBloc>(),
-          child: const ForgotPasswordPage(),
+            create: (context) => sl<ForgotPasswordBloc>(),
+            child: const ForgotPasswordPage(),
           ),
         );
 
- case AppRoutesNames.verifyCode:
+      case AppRoutesNames.verifyCode:
         return CustomPageRoute(
           settings: settings,
           page: BlocProvider(
-          create: (context) => sl<VerifyCodeBloc>(),
-          child: const VerifyCodePage(),
+            create: (context) => sl<VerifyCodeBloc>(),
+            child: const VerifyCodePage(),
           ),
         );
- case AppRoutesNames.reset_password:
+
+      case AppRoutesNames.reset_password:
         return CustomPageRoute(
           settings: settings,
           page: BlocProvider(
-          create: (context) => sl<ResetPasswordBloc>(),
-          child: const ResetPasswordPage(),
+            create: (context) => sl<ResetPasswordBloc>(),
+            child: const ResetPasswordPage(),
           ),
         );
 
-         case AppRoutesNames.wishlist:
+      // ✅ Wishlist Page - استخدام BlocProvider.value
+      case AppRoutesNames.wishlist:
         return CustomPageRoute(
           settings: settings,
-          page: BlocProvider(
-          create: (context) => sl<WishlistBloc>()..add(   
-          const WishlistEvent.getWishlist()),
-
-          child: const WishlistPage(),
+          page: BlocProvider.value(
+            value: _wishlistBloc..add(const WishlistEvent.getWishlist()),
+            child: const WishlistPage(),
           ),
         );
 
-case AppRoutesNames.search:
+      // ✅ Search Page - إضافة WishlistBloc
+      case AppRoutesNames.search:
         return CustomPageRoute(
           settings: settings,
-          page:MultiBlocProvider(
+          page: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => sl<CategoriesBloc>()..add(const CategoriesEvent.getCategories()),
-              ),
-               BlocProvider(
-                create: (context) => sl<BrandsBloc>()..add(const BrandsEvent.getBrands()),
-              ),
-             
-              BlocProvider(
-                create: (context) => sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
+                create: (context) =>
+                    sl<CategoriesBloc>()
+                      ..add(const CategoriesEvent.getCategories()),
               ),
               BlocProvider(
-          create: (context) => sl<SearchBloc>()..add(const SearchEvent.search()),
-     
-          ),
-            ], 
-                 child: const SearchScreen(), 
-          
-          ) ,
-          
-        );
-
-
-         case AppRoutesNames.home:
-        return CustomPageRoute(
-          settings: settings,
-        page:  MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => sl<CategoriesBloc>(),
+                create: (context) =>
+                    sl<BrandsBloc>()..add(const BrandsEvent.getBrands()),
               ),
-               BlocProvider(
-                create: (context) => sl<BrandsBloc>(),
-              ),
-             
               BlocProvider(
-                create: (context) => sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
+                create: (context) =>
+                    sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
               ),
-
               BlocProvider(
-          create: (context) => sl<WishlistBloc>()
-               ..add(const WishlistEvent.getWishlist()),
-        ),
+                create: (context) =>
+                    sl<SearchBloc>()..add(const SearchEvent.search()),
+              ),
+              // ✅ إضافة WishlistBloc للـ Search
+              BlocProvider.value(
+                value: _wishlistBloc..add(const WishlistEvent.getWishlist()),
+              ),
             ],
-            child: HomeScreen(),
-          ), 
-         
+            child: const SearchScreen(),
+          ),
         );
 
+      // ✅ Home Page - استخدام نفس الـ instance
+      case AppRoutesNames.home:
+        return CustomPageRoute(
+          settings: settings,
+          page: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => sl<CategoriesBloc>()),
+              BlocProvider(create: (context) => sl<BrandsBloc>()),
+              BlocProvider(
+                create: (context) =>
+                    sl<ProductsBloc>()..add(const ProductsEvent.getProducts()),
+              ),
+              // ✅ استخدام BlocProvider.value بدلاً من create
+              BlocProvider.value(
+                value: _wishlistBloc..add(const WishlistEvent.getWishlist()),
+              ),
+            ],
+            child: const HomeScreen(),
+          ),
+        );
+
+      // ✅ Main Screen - إضافة WishlistBloc على مستوى أعلى
+      case AppRoutesNames.mainScreen:
+        return CustomPageRoute(
+          settings: settings,
+          page: BlocProvider.value(
+            value: _wishlistBloc..add(const WishlistEvent.getWishlist()),
+            child: const MainScreen(),
+          ),
+        );
 
       default:
         return CustomPageRoute(

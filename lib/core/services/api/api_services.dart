@@ -89,6 +89,7 @@ abstract class ApiService {
 
   @DELETE(ApiConstants.removeFromWishlist)
   Future<MessageResponseModel> removeFromWishlist(
+    @Header('token') String token,
     @Path("productId") String productId,
   );
 }
