@@ -8,11 +8,13 @@ class ProductCardItem extends StatelessWidget {
   const ProductCardItem({
     super.key,
     required this.product,
-    this.onTap,                        
+    this.onTap,
+    this.onFavoriteTap,
   });
 
   final ProductDataModel product;
-  final VoidCallback? onTap;               
+  final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
 
   bool get _hasDiscount =>
       product.priceAfterDiscount != null &&
@@ -27,7 +29,7 @@ class ProductCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(                  
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -54,6 +56,8 @@ class ProductCardItem extends StatelessWidget {
               child: ProductCardImageSection(
                 imageUrl: product.imageCover ?? '',
                 discountPercent: _discountPercent,
+                onFavoriteTap: onFavoriteTap,
+                productId: product.id, 
               ),
             ),
             ProductInfo(product: product),

@@ -1,4 +1,3 @@
-// features/wishlist/presentation/bloc/wishlist_event.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 

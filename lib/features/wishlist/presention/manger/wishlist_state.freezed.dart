@@ -128,13 +128,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<WishlistItemModel> items)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<WishlistItemModel> items,  Set<String> wishlistIds)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case InitialState() when initial != null:
 return initial();case LoadingState() when loading != null:
 return loading();case LoadedState() when loaded != null:
-return loaded(_that.items);case ErrorState() when error != null:
-return error(_that.error);case _:
+return loaded(_that.items,_that.wishlistIds);case ErrorState() when error != null:
+return error(_that.message);case _:
   return orElse();
 
 }
@@ -152,13 +152,13 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<WishlistItemModel> items)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<WishlistItemModel> items,  Set<String> wishlistIds)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case InitialState():
 return initial();case LoadingState():
 return loading();case LoadedState():
-return loaded(_that.items);case ErrorState():
-return error(_that.error);case _:
+return loaded(_that.items,_that.wishlistIds);case ErrorState():
+return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +175,13 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<WishlistItemModel> items)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<WishlistItemModel> items,  Set<String> wishlistIds)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case InitialState() when initial != null:
 return initial();case LoadingState() when loading != null:
 return loading();case LoadedState() when loaded != null:
-return loaded(_that.items);case ErrorState() when error != null:
-return error(_that.error);case _:
+return loaded(_that.items,_that.wishlistIds);case ErrorState() when error != null:
+return error(_that.message);case _:
   return null;
 
 }
@@ -257,7 +257,7 @@ String toString() {
 
 
 class LoadedState implements WishlistState {
-  const LoadedState(final  List<WishlistItemModel> items): _items = items;
+  const LoadedState({required final  List<WishlistItemModel> items, required final  Set<String> wishlistIds}): assert(wishlistIds != null),_items = items,_wishlistIds = wishlistIds;
   
 
  final  List<WishlistItemModel> _items;
@@ -265,6 +265,13 @@ class LoadedState implements WishlistState {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
+}
+
+ final  Set<String> _wishlistIds;
+ Set<String> get wishlistIds {
+  if (_wishlistIds is EqualUnmodifiableSetView) return _wishlistIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableSetView(_wishlistIds);
 }
 
 
@@ -278,16 +285,16 @@ $LoadedStateCopyWith<LoadedState> get copyWith => _$LoadedStateCopyWithImpl<Load
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadedState&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadedState&&const DeepCollectionEquality().equals(other._items, _items)&&const DeepCollectionEquality().equals(other._wishlistIds, _wishlistIds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),const DeepCollectionEquality().hash(_wishlistIds));
 
 @override
 String toString() {
-  return 'WishlistState.loaded(items: $items)';
+  return 'WishlistState.loaded(items: $items, wishlistIds: $wishlistIds)';
 }
 
 
@@ -298,7 +305,7 @@ abstract mixin class $LoadedStateCopyWith<$Res> implements $WishlistStateCopyWit
   factory $LoadedStateCopyWith(LoadedState value, $Res Function(LoadedState) _then) = _$LoadedStateCopyWithImpl;
 @useResult
 $Res call({
- List<WishlistItemModel> items
+ List<WishlistItemModel> items, Set<String> wishlistIds
 });
 
 
@@ -315,10 +322,11 @@ class _$LoadedStateCopyWithImpl<$Res>
 
 /// Create a copy of WishlistState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? items = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? items = null,Object? wishlistIds = null,}) {
   return _then(LoadedState(
-null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<WishlistItemModel>,
+items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<WishlistItemModel>,wishlistIds: null == wishlistIds ? _self._wishlistIds : wishlistIds // ignore: cast_nullable_to_non_nullable
+as Set<String>,
   ));
 }
 
@@ -329,10 +337,10 @@ as List<WishlistItemModel>,
 
 
 class ErrorState implements WishlistState {
-  const ErrorState(this.error);
+  const ErrorState(this.message);
   
 
- final  String error;
+ final  String message;
 
 /// Create a copy of WishlistState
 /// with the given fields replaced by the non-null parameter values.
@@ -344,16 +352,16 @@ $ErrorStateCopyWith<ErrorState> get copyWith => _$ErrorStateCopyWithImpl<ErrorSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ErrorState&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ErrorState&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode => Object.hash(runtimeType,message);
 
 @override
 String toString() {
-  return 'WishlistState.error(error: $error)';
+  return 'WishlistState.error(message: $message)';
 }
 
 
@@ -364,7 +372,7 @@ abstract mixin class $ErrorStateCopyWith<$Res> implements $WishlistStateCopyWith
   factory $ErrorStateCopyWith(ErrorState value, $Res Function(ErrorState) _then) = _$ErrorStateCopyWithImpl;
 @useResult
 $Res call({
- String error
+ String message
 });
 
 
@@ -381,9 +389,9 @@ class _$ErrorStateCopyWithImpl<$Res>
 
 /// Create a copy of WishlistState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(ErrorState(
-null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

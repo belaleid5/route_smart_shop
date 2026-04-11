@@ -1,3 +1,4 @@
+// lib/core/common/widgets/grid_view_products.dart
 
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/data/model/product_data_model.dart';
@@ -9,13 +10,15 @@ class GridViewProducts extends StatelessWidget {
   const GridViewProducts({
     super.key,
     required this.products,
-    required this.onProductTap,              
+    required this.onProductTap,
+    this.onFavoriteTap,                        
     this.hasReachedMax = false,
   });
 
   final List<ProductDataModel> products;
   final bool hasReachedMax;
-  final ValueChanged<ProductDataModel> onProductTap;  
+  final ValueChanged<ProductDataModel> onProductTap;
+  final ValueChanged<ProductDataModel>? onFavoriteTap; 
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,9 @@ class GridViewProducts extends StatelessWidget {
       itemBuilder: (context, index) {
         return ProductCardItem(
           product: products[index],
-          onTap: () => onProductTap(products[index]),  
+          onTap: () => onProductTap(products[index]),
+          onFavoriteTap: () => onFavoriteTap?.call(products[index]), 
+          
         ).animateBottomToTop(
           duration: Duration(milliseconds: 300 + (index * 50)),
         );

@@ -32,6 +32,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
 
   @override
   Future<void> removeFromWishlist(String productId) async {
-    await _apiService.removeFromWishlist(productId);
+        final token = await _secureStorage.getString(PrefKeys.accessToken);
+    await _apiService.removeFromWishlist(token!,productId);
   }
 }

@@ -1,13 +1,10 @@
 // lib/features/wishlist/presentation/widgets/wishlist_price_row.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class WishlistPriceRow extends StatelessWidget {
-  const WishlistPriceRow({
-    super.key,
-    required this.price,
-    this.oldPrice,
-  });
+  const WishlistPriceRow({super.key, required this.price, this.oldPrice});
 
   final double price;
   final double? oldPrice;
@@ -20,9 +17,9 @@ class WishlistPriceRow extends StatelessWidget {
         if (hasDiscount) ...[
           Text(
             '\$${oldPrice!.toStringAsFixed(0)},00',
-            style: const TextStyle(
+            style: context.textStyle.copyWith(
               fontSize: 15,
-              color: Color(0xFFFF5A7A),
+              color: context.color.primary,
               decoration: TextDecoration.lineThrough,
             ),
           ),
