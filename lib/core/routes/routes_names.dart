@@ -12,4 +12,5 @@ class AppRoutesNames {
    static const search = '/search_page';
      static const wishlist = '/wishlist';
      static const mainScreen = '/main_screen';
+     static const details = '/details';
 }

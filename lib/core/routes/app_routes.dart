@@ -15,6 +15,7 @@ import 'package:route_smart/features/auth_feature/presention/pages/register_page
 import 'package:route_smart/features/auth_feature/presention/pages/reset_password_page.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/sign_in.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/verication_code_page.dart';
+import 'package:route_smart/features/details/presention/widgets/product_details_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
@@ -157,7 +158,6 @@ class AppRouter {
           ),
         );
 
-      // ✅ Main Screen - إضافة WishlistBloc على مستوى أعلى
       case AppRoutesNames.mainScreen:
         return CustomPageRoute(
           settings: settings,
@@ -166,6 +166,8 @@ class AppRouter {
             child: const MainScreen(),
           ),
         );
+
+       
 
       default:
         return CustomPageRoute(
