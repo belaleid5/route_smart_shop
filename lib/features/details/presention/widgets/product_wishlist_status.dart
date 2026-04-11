@@ -1,5 +1,3 @@
-// lib/features/product_details/presentation/widgets/product_wishlist_status.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
@@ -20,7 +18,7 @@ class ProductWishlistStatus extends StatelessWidget {
             color: Colors.orange,
             icon: Icons.hourglass_empty,
           ),
-          loaded: (_) => const StatusChip(
+          loaded: (items, wishlistIds) => const StatusChip( // ✅ إضافة parameter تاني
             label: '✅ Added to Wishlist',
             color: Colors.green,
             icon: Icons.favorite,

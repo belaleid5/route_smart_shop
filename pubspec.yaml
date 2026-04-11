@@ -44,6 +44,7 @@ dependencies:
   google_fonts: ^8.0.2
   bloc_concurrency: ^0.3.0
   flutter_secure_storage: ^10.0.0
+  liquid_glass_bottom_bar: ^0.0.6
 
 
 dev_dependencies:

@@ -11,4 +11,6 @@ class AppRoutesNames {
    static const home = '/home_page';
    static const search = '/search_page';
      static const wishlist = '/wishlist';
+     static const mainScreen = '/main_screen';
+     static const details = '/details';
 }
