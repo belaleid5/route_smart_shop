@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/product/product_card_item.dart';
@@ -8,12 +7,14 @@ class FlashDealCard extends StatelessWidget {
     super.key,
     required this.product,
     this.onTap,
-    this.onFavoriteTap, 
+    this.onFavoriteTap,
+    this.onAddToCart,
   });
 
   final ProductDataModel product;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteTap;
+  final VoidCallback? onAddToCart;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,8 @@ class FlashDealCard extends StatelessWidget {
       child: ProductCardItem(
         product: product,
         onTap: onTap,
-        onFavoriteTap: onFavoriteTap, 
+        onFavoriteTap: onFavoriteTap,
+        onAddToCart: onAddToCart, 
       ),
     );
   }

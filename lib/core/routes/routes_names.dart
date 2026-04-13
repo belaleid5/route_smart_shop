@@ -13,4 +13,5 @@ class AppRoutesNames {
      static const wishlist = '/wishlist';
      static const mainScreen = '/main_screen';
      static const details = '/details';
+static const cart = '/cart';
 }
