@@ -10,11 +10,13 @@ class ProductCardItem extends StatelessWidget {
     required this.product,
     this.onTap,
     this.onFavoriteTap,
+    this.onAddToCart,
   });
 
   final ProductDataModel product;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteTap;
+  final VoidCallback? onAddToCart;
 
   bool get _hasDiscount =>
       product.priceAfterDiscount != null &&
@@ -57,7 +59,8 @@ class ProductCardItem extends StatelessWidget {
                 imageUrl: product.imageCover ?? '',
                 discountPercent: _discountPercent,
                 onFavoriteTap: onFavoriteTap,
-                productId: product.id, 
+                productId: product.id,
+                onAddToCart: onAddToCart, 
               ),
             ),
             ProductInfo(product: product),

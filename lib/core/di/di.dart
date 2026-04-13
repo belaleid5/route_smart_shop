@@ -13,6 +13,9 @@ import 'package:route_smart/features/auth_feature/presention/manger/reset_passwo
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
+import 'package:route_smart/features/cart/data/data_source/cart_remote_data_source.dart';
+import 'package:route_smart/features/cart/data/repo/cart_repo.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
@@ -28,6 +31,7 @@ Future<void> setupDI() async {
   await _initAuth();
   await _initHome();
   await _iniWishlist();
+  _registerCartFeature();
 }
 
 Future<void> _initCore() async {
@@ -53,7 +57,7 @@ Future<void> _initAuth() async {
   );
 
   sl.registerLazySingleton<AuthRepositoryImpl>(
-    () => AuthRepositoryImpl(sl<AuthRemoteDataSourceImpl>(),sl()),
+    () => AuthRepositoryImpl(sl<AuthRemoteDataSourceImpl>(), sl()),
   );
 
   sl.registerFactory(() => SignInBloc(sl<AuthRepositoryImpl>()));
@@ -84,13 +88,25 @@ Future<void> _initHome() async {
 
 Future<void> _iniWishlist() async {
   sl.registerLazySingleton<WishlistRemoteDataSource>(
-    () => WishlistRemoteDataSourceImpl(sl<ApiService>(),sl()),
+    () => WishlistRemoteDataSourceImpl(sl<ApiService>(), sl()),
   );
 
-  sl.registerLazySingleton<WishlistRepository>(
-    () => WishlistRepository(sl()),
-  );
+  sl.registerLazySingleton<WishlistRepository>(() => WishlistRepository(sl()));
 
   sl.registerFactory(() => WishlistBloc(sl()));
- 
+}
+
+void _registerCartFeature() {
+  // DataSource
+  sl.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSourceImpl(sl<ApiService>(), sl<SecureStorage>()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<CartRepositoryImpl>(
+    () => CartRepositoryImpl(sl<CartRemoteDataSource>()),
+  );
+
+  // Cubit
+  sl.registerFactory(() => CartBloc(sl<CartRepositoryImpl>()));
 }

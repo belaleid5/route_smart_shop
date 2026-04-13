@@ -14,7 +14,6 @@ class ProductPriceLabel extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // ✅ Currency icon
         Icon(
           Icons.monetization_on_outlined,
           size: 14,

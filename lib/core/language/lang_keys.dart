@@ -1,8 +1,5 @@
-// core/language/lang_keys.dart
-// أضف المفاتيح دي في ملف LangKeys الموجود عندك
-
 class LangKeys {
-  // المفاتيح الموجودة عندك...
+  // المفاتيح الموجودة
   static const String language = 'language';
   static const String appName = 'app_name';
   static const String login = 'login';
@@ -10,8 +7,7 @@ class LangKeys {
   static const String email = 'your_email';
   static const String password = 'password';
   static const String validEmail = 'valid_email';
-    static const String verification = 'verification';
-  
+  static const String verification = 'verification';
   static const String validPasswrod = 'valid_passwrod';
   static const String loggedSuccessfully = 'logged_successfully';
   static const String loggedError = 'logged_error';
@@ -43,7 +39,7 @@ class LangKeys {
   static const String unsubscribedToNotifications = 'unsubscribed_to_notifications';
   static const String viewAll = 'view_all';
 
-  // ========== Profile Screen Keys (ضيف دول) ==========
+  // ========== Profile ==========
   static const String profile = 'profile';
   static const String editProfile = 'edit_profile';
   static const String general = 'general';
@@ -59,4 +55,16 @@ class LangKeys {
   static const String helpSupport = 'help_support';
   static const String darkModeEnabled = 'dark_mode_enabled';
   static const String lightModeEnabled = 'light_mode_enabled';
+
+  // ========== Cart ==========
+  static const String cart = 'cart';
+  static const String total = 'total';
+  static const String checkout = 'checkout';
+  static const String clearAll = 'clear_all';
+  static const String noItemsInCart = 'no_items_in_cart';
+  static const String itemRemoved = 'item_removed';
+  static const String cartCleared = 'cart_cleared';
+  static const String quantityUpdated = 'quantity_updated';
+  static const String retry = 'retry';
+  static const String cartEmpty = 'cart_empty';
 }

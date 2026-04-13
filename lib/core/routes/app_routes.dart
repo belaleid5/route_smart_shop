@@ -15,6 +15,7 @@ import 'package:route_smart/features/auth_feature/presention/pages/register_page
 import 'package:route_smart/features/auth_feature/presention/pages/reset_password_page.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/sign_in.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/verication_code_page.dart';
+import 'package:route_smart/features/cart/presention/page/cart_page.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
@@ -49,7 +50,11 @@ class AppRouter {
           settings: settings,
           page: const OnboardingPage(),
         );
-
+case AppRoutesNames.cart:
+        return CustomPageRoute(
+          settings: settings,
+          page: const CartPage(),
+        );
       case AppRoutesNames.register:
         return CustomPageRoute(
           settings: settings,
