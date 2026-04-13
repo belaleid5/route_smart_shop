@@ -9,6 +9,7 @@ import 'package:route_smart/features/cart/presention/manger/cart_event.dart';
 import 'package:route_smart/features/cart/presention/widgets/cart_bottom_bar.dart';
 import 'package:route_smart/features/cart/presention/widgets/cart_header.dart';
 import 'package:route_smart/features/cart/presention/widgets/cart_item_card.dart';
+import 'package:route_smart/features/cart/presention/widgets/empty_cart_view.dart';
 
 class CartContent extends StatelessWidget {
   const CartContent({super.key, required this.cart});
@@ -35,7 +36,7 @@ class CartContent extends StatelessWidget {
 
               const SliverToBoxAdapter(child: SizedBox(height: 16)),
               if (products.isEmpty)
-                SliverFillRemaining(child: _EmptyProductsView())
+                SliverFillRemaining(child: EmptyCartView())
               else
                 SliverList.builder(
                   itemCount: products.length,
@@ -77,17 +78,4 @@ class CartContent extends StatelessWidget {
   }
 }
 
-class _EmptyProductsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        context.translate('no_items_in_cart'),
-        style: context.textStyle.copyWith(
-          color: context.color.textPrimary,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-}
+
