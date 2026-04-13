@@ -15,6 +15,9 @@ import 'package:route_smart/core/common/data/model/category_response_model.dart'
 import 'package:route_smart/core/common/data/model/product_response_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
+import 'package:route_smart/features/cart/data/models/cart_request_model.dart';
+import 'package:route_smart/features/cart/data/models/cart_response_model.dart';
+import 'package:route_smart/features/cart/data/models/update_cart_item_request_model.dart';
 
 part 'api_services.g.dart';
 
@@ -22,11 +25,19 @@ part 'api_services.g.dart';
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
+  // ══════════════════════════════════════════════════════════════
+  // Auth
+  // ══════════════════════════════════════════════════════════════
+
   @POST(ApiConstants.signup)
-  Future<AuthResponseModel> register(@Body() RegisterRequestModel registerRequest);
+  Future<AuthResponseModel> register(
+    @Body() RegisterRequestModel registerRequest,
+  );
 
   @POST(ApiConstants.signin)
-  Future<AuthResponseModel> signIn(@Body() SignInRequestModel signInRequest);
+  Future<AuthResponseModel> signIn(
+    @Body() SignInRequestModel signInRequest,
+  );
 
   @POST(ApiConstants.forgotPassword)
   Future<MessageResponseModel> forgotPassword(
@@ -42,6 +53,10 @@ abstract class ApiService {
   Future<ResetPasswordResponse> resetPassword(
     @Body() ResetPasswordRequestModel resetPasswordRequest,
   );
+
+  // ══════════════════════════════════════════════════════════════
+  // Categories, Products, Brands
+  // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.categories)
   Future<CategoryResponseModel> getCategories(
@@ -70,16 +85,14 @@ abstract class ApiService {
     @Query("keyword") String? keyword,
   );
 
+  // ══════════════════════════════════════════════════════════════
+  // Wishlist
+  // ══════════════════════════════════════════════════════════════
 
-
-
-
-   // 🆕 Wishlist endpoints
   @GET(ApiConstants.wishlist)
   Future<WishlistResponseModel> getWishlist(
     @Header('token') String token,
   );
-  
 
   @POST(ApiConstants.addToWishlist)
   Future<MessageResponseModel> addToWishlist(
@@ -91,5 +104,38 @@ abstract class ApiService {
   Future<MessageResponseModel> removeFromWishlist(
     @Header('token') String token,
     @Path("productId") String productId,
+  );
+
+  // ══════════════════════════════════════════════════════════════
+  // 🆕 Cart
+  // ══════════════════════════════════════════════════════════════
+
+  @GET(ApiConstants.cart)
+  Future<CartResponseModel> getCart(
+    @Header('token') String token,
+  );
+
+  @POST(ApiConstants.addToCart)
+  Future<CartResponseModel> addToCart(
+    @Header('token') String token,
+    @Body() CartRequestModel request,
+  );
+
+@PUT(ApiConstants.updateCartItem)
+Future<CartResponseModel> updateCartItemQuantity(
+  @Header('token') String token,
+  @Path("productId") String productId, 
+  @Body() UpdateCartItemRequestModel request,
+);
+
+@DELETE(ApiConstants.removeCartItem)
+Future<CartResponseModel> removeCartItem(
+  @Header('token') String token,
+  @Path("productId") String productId, 
+);
+
+  @DELETE(ApiConstants.cart)
+  Future<MessageResponseModel> clearCart(
+    @Header('token') String token,
   );
 }

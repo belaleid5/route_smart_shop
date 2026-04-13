@@ -1,11 +1,12 @@
-// lib/core/common/screens/main_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_glass_bottom_bar/liquid_glass_bottom_bar.dart';
 import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_event.dart';
+import 'package:route_smart/features/cart/presention/page/cart_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
@@ -30,13 +31,18 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   late final WishlistBloc _wishlistBloc;
+  late final CartBloc _cartBloc;
   late final List<Widget> _pages;
+
   @override
   void initState() {
     super.initState();
 
     _wishlistBloc = sl<WishlistBloc>()
       ..add(const WishlistEvent.getWishlist());
+
+    _cartBloc = sl<CartBloc>()
+      ..add(const CartEvent.getCart());
 
     _pages = [
       // ── 0: Home ──────────────────────────────
@@ -55,29 +61,37 @@ class _MainScreenState extends State<MainScreen> {
               ..add(const ProductsEvent.getProducts()),
           ),
           BlocProvider.value(value: _wishlistBloc),
+          BlocProvider.value(value: _cartBloc), // ✅ نفس الـ instance
         ],
         child: const HomeScreen(),
       ),
 
+      // ── 1: Search ─────────────────────────────
       MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (_) =>
                 sl<SearchBloc>()..add(const SearchEvent.search()),
           ),
-          // ✅ BlocProvider.value - نفس الـ instance
           BlocProvider.value(value: _wishlistBloc),
+          BlocProvider.value(value: _cartBloc), // ✅ نفس الـ instance
         ],
         child: const SearchScreen(),
       ),
 
+      // ── 2: Wishlist ───────────────────────────
       BlocProvider.value(
         value: _wishlistBloc,
         child: const WishlistPage(),
       ),
 
-      const Center(child: Text('Cart 🛒')),
+      // ── 3: Cart ───────────────────────────────
+      BlocProvider.value(
+        value: _cartBloc,
+        child: const CartPage(),
+      ),
 
+      // ── 4: Profile ────────────────────────────
       const Center(child: Text('Profile 👤')),
     ];
   }
@@ -85,6 +99,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _wishlistBloc.close();
+    _cartBloc.close();
     super.dispose();
   }
 

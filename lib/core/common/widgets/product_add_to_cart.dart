@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_state.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_state.dart';
 
-class ProductWishlistButton extends StatefulWidget {
-  const ProductWishlistButton({super.key, this.onTap, this.productId});
+class ProductAddToCartButton extends StatefulWidget {
+  const ProductAddToCartButton({super.key, this.onTap, this.productId});
 
   final VoidCallback? onTap;
   final String? productId;
 
   @override
-  State<ProductWishlistButton> createState() => _ProductWishlistButtonState();
+  State<ProductAddToCartButton> createState() => _ProductAddToCartButtonState();
 }
 
-class _ProductWishlistButtonState extends State<ProductWishlistButton>
+class _ProductAddToCartButtonState extends State<ProductAddToCartButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController bounceController;
   late final Animation<double> bounceAnimation;
@@ -43,21 +43,43 @@ class _ProductWishlistButtonState extends State<ProductWishlistButton>
     widget.onTap?.call();
   }
 
+  bool isProductInCart(CartState state) {
+    if (widget.productId == null || widget.productId!.isEmpty) return false;
+
+    return state.maybeWhen(
+      getCartSuccess: (cart) =>
+          cart.data?.products.any(
+            (item) => item.productId == widget.productId,
+          ) ??
+          false,
+      addToCartSuccess: (cart) =>
+          cart.data?.products.any(
+            (item) => item.productId == widget.productId,
+          ) ??
+          false,
+      removeItemSuccess: (cart) =>
+          cart.data?.products.any(
+            (item) => item.productId == widget.productId,
+          ) ??
+          false,
+      orElse: () => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.productId == null || widget.productId!.isEmpty) {
-      return buildButton(context, isFavorited: false, onTap: widget.onTap);
+      return buildButton(context, isInCart: false, onTap: widget.onTap);
     }
 
-    return BlocBuilder<WishlistBloc, WishlistState>(
+    return BlocBuilder<CartBloc, CartState>(
       buildWhen: (previous, current) =>
-          previous.isFavorite(widget.productId!) !=
-          current.isFavorite(widget.productId!),
+          isProductInCart(previous) != isProductInCart(current),
       builder: (context, state) => ScaleTransition(
         scale: bounceAnimation,
         child: buildButton(
           context,
-          isFavorited: state.isFavorite(widget.productId!),
+          isInCart: isProductInCart(state),
           onTap: handleTap,
         ),
       ),
@@ -66,7 +88,7 @@ class _ProductWishlistButtonState extends State<ProductWishlistButton>
 
   Widget buildButton(
     BuildContext context, {
-    required bool isFavorited,
+    required bool isInCart,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -77,9 +99,7 @@ class _ProductWishlistButtonState extends State<ProductWishlistButton>
         width: 34,
         height: 34,
         decoration: BoxDecoration(
-          color: isFavorited
-              ? context.color.button.withOpacity(0.12)
-              : context.color.white,
+          color: context.color.primary,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -98,12 +118,10 @@ class _ProductWishlistButtonState extends State<ProductWishlistButton>
             child: FadeTransition(opacity: animation, child: child),
           ),
           child: Icon(
-            isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-            key: ValueKey(isFavorited),
+            isInCart ? Icons.check : Icons.shopping_cart_rounded,
+            key: ValueKey(isInCart),
             size: 18,
-            color: isFavorited
-                ? context.color.primary
-                : context.color.textSecondary,
+            color: context.color.white,
           ),
         ),
       ),
