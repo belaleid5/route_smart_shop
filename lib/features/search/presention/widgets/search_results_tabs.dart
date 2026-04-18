@@ -1,5 +1,3 @@
-// lib/features/search/presentation/widgets/search_results_tabs.dart
-
 import 'package:flutter/material.dart';
 import 'package:route_smart/features/search/presention/manger/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
@@ -12,11 +10,13 @@ class SearchResultsTabs extends StatelessWidget {
     super.key,
     required this.state,
     required this.scrollController,
+    required this.keyword,
     required this.onTabChanged,
   });
 
   final SearchSuccess state;
   final ScrollController scrollController;
+  final String keyword;
   final ValueChanged<SearchTab> onTabChanged;
 
   @override
@@ -36,7 +36,10 @@ class SearchResultsTabs extends StatelessWidget {
           total: state.totalProducts,
           limit: state.params.limit,
         ),
-        SearchTabContent(state: state),
+        SearchTabContent(
+          state: state,
+          keyword: keyword,
+        ),
       ],
     );
   }

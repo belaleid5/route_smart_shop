@@ -31,10 +31,9 @@ class _SearchCategoryMenuButtonState extends State<SearchCategoryMenuButton> {
     return widget.categories
             .where((c) => c.id == widget.selectedId)
             .firstOrNull
-            ?.name
-            .split(' ')
-            .first ??
-        'All';
+            !.name
+            !.split(' ')
+            .first;
   }
 
   // ─── Show Menu ────────────────────────────────────────────────────────────

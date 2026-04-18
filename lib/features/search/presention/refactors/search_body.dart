@@ -9,20 +9,28 @@ import 'package:route_smart/features/search/presention/manger/search_state.dart'
 import 'package:route_smart/features/search/presention/widgets/search_body_builder.dart';
 
 class SearchBody extends StatefulWidget {
-  const SearchBody({super.key});
+  const SearchBody({
+    super.key,
+    this.showBackButton = false,
+  });
+
+  final bool showBackButton;
 
   @override
-  State<SearchBody> createState() => SearchBodyState();
+  State<SearchBody> createState() => _SearchBodyState();
 }
 
-class SearchBodyState extends State<SearchBody> {
-  final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+class _SearchBodyState extends State<SearchBody> {
+  late final TextEditingController _searchController;
+  late final ScrollController _scrollController;
+
+  String _keyword = '';
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _searchController = TextEditingController();
+    _scrollController = ScrollController()..addListener(_onScroll);
     _triggerInitialSearch();
   }
 
@@ -38,9 +46,7 @@ class SearchBodyState extends State<SearchBody> {
 
   void _triggerInitialSearch() {
     context.read<SearchBloc>().add(
-      const SearchEvent.search(
-        params: SearchFilterParams(page: 1, limit: 20),
-      ),
+      const SearchEventSearch(params: SearchFilterParams(page: 1, limit: 20)),
     );
   }
 
@@ -49,31 +55,32 @@ class SearchBodyState extends State<SearchBody> {
     final position = _scrollController.position;
     final isNearBottom = position.pixels >= position.maxScrollExtent - 300;
     if (isNearBottom) {
-      context.read<SearchBloc>().add(const SearchEvent.loadNextPage());
+      context.read<SearchBloc>().add(const SearchEventLoadNextPage());
     }
   }
 
   void _onKeywordChanged(String keyword) {
-    context.read<SearchBloc>().add(
-      SearchEvent.keywordChanged(keyword: keyword),
-    );
+    setState(() {
+      _keyword = keyword;
+    });
   }
 
   void _onCategorySelected(String? categoryId) {
     context.read<SearchBloc>().add(
-      SearchEvent.categorySelected(categoryId: categoryId),
+      SearchEventCategorySelected(categoryId: categoryId),
     );
   }
 
   void _onCleared() {
     _searchController.clear();
-    context.read<SearchBloc>().add(const SearchEvent.cleared());
+    setState(() {
+      _keyword = '';
+    });
+    context.read<SearchBloc>().add(const SearchEventCleared());
   }
 
   void _onParamsChanged(SearchFilterParams params) {
-    context.read<SearchBloc>().add(
-      SearchEvent.search(params: params),
-    );
+    context.read<SearchBloc>().add(SearchEventSearch(params: params));
   }
 
   List<CategoryData> _getCategories(SearchState state) =>
@@ -88,33 +95,33 @@ class SearchBodyState extends State<SearchBody> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocBuilder<SearchBloc, SearchState>(
-        builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchAppBar(
-                controller: _searchController,
-                onSearch: _onKeywordChanged,
-                onChanged: _onKeywordChanged,
-                categories: _getCategories(state),
-                selectedCategoryId: _getSelectedCategoryId(state),
-                onCategorySelected: _onCategorySelected,
-                params: _getCurrentParams(state),
-                onParamsChanged: _onParamsChanged,
-                onCleared: _onCleared,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocBuilder<SearchBloc, SearchState>(
+            builder: (context, state) => SearchAppBar(
+              controller: _searchController,
+              onSearch: _onKeywordChanged,
+              onChanged: _onKeywordChanged,
+              categories: _getCategories(state),
+              selectedCategoryId: _getSelectedCategoryId(state),
+              onCategorySelected: _onCategorySelected,
+              params: _getCurrentParams(state),
+              onParamsChanged: _onParamsChanged,
+              onCleared: _onCleared,
+              showBackButton: widget.showBackButton,
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<SearchBloc, SearchState>(
+              builder: (context, state) => SearchBodyBuilder(
+                state: state,
+                scrollController: _scrollController,
+                keyword: _keyword,
               ),
-
-              // ── Body ─────────────────────────────────────────────────────
-              Expanded(
-                child: SearchBodyBuilder(
-                  state: state,
-                  scrollController: _scrollController,
-                ),
-              ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

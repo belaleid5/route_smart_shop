@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/common/data/model/product_response_model.dart';
 
 part 'brand_response_model.g.dart';
 
@@ -8,23 +9,12 @@ class BrandResponseModel {
   final Metadata? metadata;
   final List<BrandData>? data;
 
-  BrandResponseModel({this.results, this.metadata, this.data});
+  const BrandResponseModel({this.results, this.metadata, this.data});
 
-  factory BrandResponseModel.fromJson(Map<String, dynamic> json) => _$BrandResponseModelFromJson(json);
+  factory BrandResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$BrandResponseModelFromJson(json);
+
   Map<String, dynamic> toJson() => _$BrandResponseModelToJson(this);
-}
-
-@JsonSerializable()
-class Metadata {
-  final int? currentPage;
-  final int? numberOfPages;
-  final int? limit;
-  final int? nextPage;
-
-  Metadata({this.currentPage, this.numberOfPages, this.limit, this.nextPage});
-
-  factory Metadata.fromJson(Map<String, dynamic> json) => _$MetadataFromJson(json);
-  Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }
 
 @JsonSerializable()
@@ -37,7 +27,7 @@ class BrandData {
   final String? createdAt;
   final String? updatedAt;
 
-  BrandData({
+  const BrandData({
     this.id,
     this.name,
     this.slug,
@@ -46,6 +36,8 @@ class BrandData {
     this.updatedAt,
   });
 
-  factory BrandData.fromJson(Map<String, dynamic> json) => _$BrandDataFromJson(json);
+  factory BrandData.fromJson(Map<String, dynamic> json) =>
+      _$BrandDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$BrandDataToJson(this);
 }

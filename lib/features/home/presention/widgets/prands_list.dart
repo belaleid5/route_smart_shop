@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 import 'package:route_smart/core/common/widgets/smooth_list_view.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 import 'package:route_smart/features/home/presention/widgets/brand_chip.dart';
 import 'package:route_smart/features/home/presention/widgets/brand_loading_chip.dart';
 
@@ -18,7 +18,7 @@ class BrandsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 65,
+      height: 35,
       child: SmoothListView.builder(
         duration: Duration(milliseconds: 500),
         scrollDirection: Axis.horizontal,
@@ -31,7 +31,7 @@ class BrandsList extends StatelessWidget {
             return const BrandLoadingChip();
           }
           return Padding(
-            padding: const EdgeInsets.only(right: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: BrandChip(brand: brands[index]).animateBottomToTop(),
           );
         },

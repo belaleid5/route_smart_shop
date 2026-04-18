@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
-
+import 'package:route_smart/core/helper/spacing.dart';
 
 class EmptyCartView extends StatelessWidget {
   const EmptyCartView({super.key});
@@ -16,7 +16,7 @@ class EmptyCartView extends StatelessWidget {
             size: 80,
             color: context.color.textPrimary,
           ),
-          const SizedBox(height: 16),
+          verticalSpace(16),
           Text(
             context.translate('cart_empty'),
             style: context.textStyle.copyWith(

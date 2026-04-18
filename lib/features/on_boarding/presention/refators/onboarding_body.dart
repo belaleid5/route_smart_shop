@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/on_boarding/data/models/onboarding_viewmodel.dart';
 import 'package:route_smart/features/on_boarding/presention/refators/onboarding_page_content.dart';
 import 'package:route_smart/features/on_boarding/presention/widgets/onboarding_dots_indicator.dart';
 import 'package:route_smart/features/on_boarding/presention/widgets/onboarding_next_button.dart';
 import 'package:route_smart/features/on_boarding/presention/widgets/onboarding_top_bar.dart';
-
 
 class OnboardingBody extends StatelessWidget {
   const OnboardingBody({super.key});
@@ -24,16 +24,15 @@ class OnboardingBody extends StatelessWidget {
             controller: viewModel.pageController,
             onPageChanged: viewModel.onPageChanged,
             itemCount: viewModel.pages.length,
-            itemBuilder: (_, index) => OnboardingPageContent(
-              page: viewModel.pages[index],
-            ),
+            itemBuilder: (_, index) =>
+                OnboardingPageContent(page: viewModel.pages[index]),
           ),
         ),
         OnboardingDotsIndicator(
           count: viewModel.pages.length,
           currentIndex: viewModel.currentPage,
         ),
-        const SizedBox(height: 24),
+        verticalSpace(24),
         Padding(
           padding: _horizontalPadding,
           child: OnboardingNextButton(
@@ -43,7 +42,7 @@ class OnboardingBody extends StatelessWidget {
                 : viewModel.nextPage,
           ),
         ),
-        const SizedBox(height: 24),
+        verticalSpace(24),
       ],
     );
   }

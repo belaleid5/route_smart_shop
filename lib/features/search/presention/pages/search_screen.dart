@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/search/presention/refactors/search_body.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({
+    super.key,
+    this.showBackButton = false,
+  });
 
-  @override
-  _SearchScreenState createState() => _SearchScreenState();
-}
+  final bool showBackButton;
 
-class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.color.background,
-      body: SearchBody(),
+      body: SearchBody(showBackButton: showBackButton),
     );
   }
 }

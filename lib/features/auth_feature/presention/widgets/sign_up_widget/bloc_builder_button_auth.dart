@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_state.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/button_auth.dart';
@@ -19,7 +18,11 @@ class BlocBuilderButtonAuth extends StatelessWidget {
           orElse: () => false,
         );
 
-        return ButtonAuth(isLoading: isLoading, onSubmit: onSubmit, text: 'SignUp',).animateShimmer();
+        return ButtonAuth(
+          isLoading: isLoading,
+          onSubmit: onSubmit,
+          text: 'SignUp',
+        ).animateShimmer();
       },
     );
   }

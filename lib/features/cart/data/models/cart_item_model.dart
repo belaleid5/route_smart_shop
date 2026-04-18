@@ -29,8 +29,8 @@ class CartItemModel {
     final productData = json['product'] as Map<String, dynamic>?;
 
     return CartItemModel(
-      cartItemId: json['_id'] as String? ?? '',           
-      productId: productData?['_id'] as String? ?? '',      
+      cartItemId: json['_id'] as String? ?? '',
+      productId: productData?['_id'] as String? ?? '',
       productName: productData?['title'] as String? ?? '',
       quantity: json['count'] as int? ?? 0,
       price: (json['price'] as num?)?.toDouble() ?? 0.0,

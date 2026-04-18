@@ -13,11 +13,14 @@ import 'package:route_smart/features/auth_feature/data/models/verfication_code_m
 import 'package:route_smart/core/common/data/model/brand_response_model.dart';
 import 'package:route_smart/core/common/data/model/category_response_model.dart';
 import 'package:route_smart/core/common/data/model/product_response_model.dart';
+import 'package:route_smart/features/checkout/data/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/order_response_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 import 'package:route_smart/features/cart/data/models/cart_request_model.dart';
 import 'package:route_smart/features/cart/data/models/cart_response_model.dart';
 import 'package:route_smart/features/cart/data/models/update_cart_item_request_model.dart';
+import 'package:route_smart/features/details/data/models/product_details_response_model.dart';
 
 part 'api_services.g.dart';
 
@@ -60,29 +63,38 @@ abstract class ApiService {
 
   @GET(ApiConstants.categories)
   Future<CategoryResponseModel> getCategories(
-    @Query("page")    int     page,
-    @Query("limit")   int     limit,
+    @Query("page") int page,
+    @Query("limit") int limit,
     @Query("keyword") String? keyword,
   );
 
   @GET(ApiConstants.products)
   Future<ProductResponseModel> getProducts(
-    @Query("page")        int     page,
-    @Query("limit")       int     limit,
-    @Query("sort")        String? sort,
-    @Query("keyword")     String? keyword,
-    @Query("category")    String? category,
-    @Query("brand")       String? brand,
+    @Query("page") int page,
+    @Query("limit") int limit,
+    @Query("sort") String? sort,
+    @Query("keyword") String? keyword,
+    @Query("category") String? category,
+    @Query("brand") String? brand,
     @Query("subcategory") String? subcategory,
-    @Query("price[gte]")  String? priceGte,
-    @Query("price[lte]")  String? priceLte,
+    @Query("price[gte]") String? priceGte,
+    @Query("price[lte]") String? priceLte,
   );
 
   @GET(ApiConstants.brands)
   Future<BrandResponseModel> getBrands(
-    @Query("page")    int     page,
-    @Query("limit")   int     limit,
+    @Query("page") int page,
+    @Query("limit") int limit,
     @Query("keyword") String? keyword,
+  );
+
+  // ══════════════════════════════════════════════════════════════
+  // Product Details
+  // ══════════════════════════════════════════════════════════════
+
+  @GET(ApiConstants.productDetails)
+  Future<ProductDetailsResponseModel> getProductDetails(
+    @Path("productId") String productId,
   );
 
   // ══════════════════════════════════════════════════════════════
@@ -107,7 +119,7 @@ abstract class ApiService {
   );
 
   // ══════════════════════════════════════════════════════════════
-  // 🆕 Cart
+  // Cart
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.cart)
@@ -121,21 +133,55 @@ abstract class ApiService {
     @Body() CartRequestModel request,
   );
 
-@PUT(ApiConstants.updateCartItem)
-Future<CartResponseModel> updateCartItemQuantity(
-  @Header('token') String token,
-  @Path("productId") String productId, 
-  @Body() UpdateCartItemRequestModel request,
-);
+  @PUT(ApiConstants.updateCartItem)
+  Future<CartResponseModel> updateCartItemQuantity(
+    @Header('token') String token,
+    @Path("productId") String productId,
+    @Body() UpdateCartItemRequestModel request,
+  );
 
-@DELETE(ApiConstants.removeCartItem)
-Future<CartResponseModel> removeCartItem(
-  @Header('token') String token,
-  @Path("productId") String productId, 
-);
+  @DELETE(ApiConstants.removeCartItem)
+  Future<CartResponseModel> removeCartItem(
+    @Header('token') String token,
+    @Path("productId") String productId,
+  );
 
   @DELETE(ApiConstants.cart)
   Future<MessageResponseModel> clearCart(
     @Header('token') String token,
   );
+
+
+  @GET(ApiConstants.addresses)
+Future<AddressResponseModel> getAddresses(
+  @Header('token') String token,
+);
+
+@POST(ApiConstants.addAddress)
+Future<AddressResponseModel> addAddress(
+  @Header('token') String token,
+  @Body() Map<String, dynamic> body,
+);
+
+@DELETE(ApiConstants.removeAddress)
+Future<AddressResponseModel> removeAddress(
+  @Header('token') String token,
+  @Path('addressId') String addressId,
+);
+
+// ══════════════════════════════════════════════════════════════
+// Orders
+// ══════════════════════════════════════════════════════════════
+
+@POST(ApiConstants.createCashOrder)
+Future<OrderResponseModel> createCashOrder(
+  @Header('token') String token,
+  @Path('cartId') String cartId,
+  @Body() Map<String, dynamic> body,
+);
+
+@GET(ApiConstants.getUserOrders)
+Future<List<OrderResponseModel>> getUserOrders(
+  @Path('userId') String userId,
+);
 }

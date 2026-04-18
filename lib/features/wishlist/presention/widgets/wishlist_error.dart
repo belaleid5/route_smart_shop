@@ -1,6 +1,7 @@
 // lib/features/wishlist/presentation/widgets/wishlist_error_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class WishlistErrorView extends StatelessWidget {
   const WishlistErrorView({
@@ -19,13 +20,13 @@ class WishlistErrorView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.wifi_off_rounded, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
+          verticalSpace(16),
           Text(
             message,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey[500]),
           ),
-          const SizedBox(height: 24),
+          verticalSpace(24),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF2563EB),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/on_boarding/data/models/onboarding_model.dart';
 import 'package:route_smart/features/on_boarding/presention/widgets/onboarding_image_card.dart';
 
@@ -19,7 +20,7 @@ class OnboardingPageContent extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 16),
+        verticalSpace(16),
         Expanded(
           child: Padding(
             padding: _cardPadding,
@@ -29,7 +30,7 @@ class OnboardingPageContent extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 32),
+        verticalSpace(32),
         Padding(
           padding: _titlePadding,
           child: Text(
@@ -41,11 +42,9 @@ class OnboardingPageContent extends StatelessWidget {
               letterSpacing: -0.5,
               color: colorScheme.onSurface,
             ),
-          ).animateBottomToTop(
-            duration: const Duration(milliseconds: 500),
-          ),
+          ).animateBottomToTop(duration: const Duration(milliseconds: 500)),
         ),
-        const SizedBox(height: 12),
+        verticalSpace(12),
         Padding(
           padding: _descriptionPadding,
           child: Text(
@@ -57,7 +56,7 @@ class OnboardingPageContent extends StatelessWidget {
             ),
           ).animateBlur(duration: const Duration(milliseconds: 600)),
         ),
-        const SizedBox(height: 28),
+        verticalSpace(28),
       ],
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/cart/data/models/cart_item_model.dart';
 import 'package:route_smart/features/cart/presention/widgets/cart_item_image.dart';
@@ -29,7 +28,7 @@ class CartItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -57,56 +56,5 @@ class CartItemCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class CartItemCardAnimated extends StatefulWidget {
-  const CartItemCardAnimated({
-    super.key,
-    required this.item,
-    required this.onDelete,
-    required this.onIncrement,
-    required this.onDecrement,
-    required this.index,
-  });
-
-  final CartItemModel item;
-  final VoidCallback onDelete;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
-  final int index;
-
-  @override
-  State<CartItemCardAnimated> createState() => _CartItemCardAnimatedState();
-}
-
-class _CartItemCardAnimatedState extends State<CartItemCardAnimated>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return CartItemCard(
-      key: ValueKey(widget.item.productId),
-      item: widget.item,
-      onDelete: widget.onDelete,
-      onIncrement: widget.onIncrement,
-      onDecrement: widget.onDecrement,
-    )
-        .animate()
-        .fadeIn(
-          duration: 400.ms,
-          delay: Duration(milliseconds: widget.index * 80),
-          curve: Curves.easeInOutQuart,
-        )
-        .moveY(
-          begin: 30,
-          end: 0,
-          duration: 400.ms,
-          delay: Duration(milliseconds: widget.index * 80),
-          curve: Curves.easeInOutQuart,
-        );
   }
 }

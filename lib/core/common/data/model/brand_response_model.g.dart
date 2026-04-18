@@ -24,20 +24,6 @@ Map<String, dynamic> _$BrandResponseModelToJson(BrandResponseModel instance) =>
       'data': instance.data,
     };
 
-Metadata _$MetadataFromJson(Map<String, dynamic> json) => Metadata(
-  currentPage: (json['currentPage'] as num?)?.toInt(),
-  numberOfPages: (json['numberOfPages'] as num?)?.toInt(),
-  limit: (json['limit'] as num?)?.toInt(),
-  nextPage: (json['nextPage'] as num?)?.toInt(),
-);
-
-Map<String, dynamic> _$MetadataToJson(Metadata instance) => <String, dynamic>{
-  'currentPage': instance.currentPage,
-  'numberOfPages': instance.numberOfPages,
-  'limit': instance.limit,
-  'nextPage': instance.nextPage,
-};
-
 BrandData _$BrandDataFromJson(Map<String, dynamic> json) => BrandData(
   id: json['_id'] as String?,
   name: json['name'] as String?,

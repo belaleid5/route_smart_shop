@@ -16,6 +16,12 @@ import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/
 import 'package:route_smart/features/cart/data/data_source/cart_remote_data_source.dart';
 import 'package:route_smart/features/cart/data/repo/cart_repo.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
+import 'package:route_smart/features/checkout/data_source/checkout_remote_data_source.dart';
+import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
+import 'package:route_smart/features/checkout/repo/checkout_repo.dart';
+import 'package:route_smart/features/details/data/data_source/product_details_data_source.dart';
+import 'package:route_smart/features/details/data/repo/product_details_repo.dart';
+import 'package:route_smart/features/details/presention/manger/product_details_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
@@ -32,6 +38,8 @@ Future<void> setupDI() async {
   await _initHome();
   await _iniWishlist();
   _registerCartFeature();
+  _detailsProductFeature();
+  _registerCheckoutFeature();
 }
 
 Future<void> _initCore() async {
@@ -109,4 +117,31 @@ void _registerCartFeature() {
 
   // Cubit
   sl.registerFactory(() => CartBloc(sl<CartRepositoryImpl>()));
+}
+
+void _detailsProductFeature() {
+  // DataSource
+  sl.registerLazySingleton<ProductDetailsRemoteDataSource>(
+    () => ProductDetailsRemoteDataSourceImpl(sl<ApiService>()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ProductDetailsRepository>(
+    () => ProductDetailsRepository(sl()),
+  );
+
+  // Cubit
+  sl.registerFactory(() => ProductDetailsBloc(sl()));
+}
+
+void _registerCheckoutFeature() {
+  sl.registerLazySingleton<CheckoutRemoteDataSource>(
+    () => CheckoutRemoteDataSourceImpl(sl<ApiService>(), sl<SecureStorage>()),
+  );
+
+  sl.registerLazySingleton<CheckoutRepository>(
+    () => CheckoutRepository(sl<CheckoutRemoteDataSource>()),
+  );
+
+  sl.registerFactory(() => CheckoutBloc(sl<CheckoutRepository>()));
 }

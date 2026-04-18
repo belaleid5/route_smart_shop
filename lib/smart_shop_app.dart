@@ -46,7 +46,7 @@ class RouteSmartShopApp extends StatelessWidget {
                   return MaterialApp(
                     debugShowCheckedModeBanner:
                         EnvVariable.instance.isDebugMode,
-                    initialRoute: AppRoutesNames.mainScreen ,
+                    initialRoute: AppRoutesNames.splashPage ,
                     onGenerateRoute: AppRouter.onGenerateRoute,
                     theme: AppTheme.light,
                     darkTheme: AppTheme.dark,
@@ -69,3 +69,4 @@ class RouteSmartShopApp extends StatelessWidget {
     );
   }
 }
+ 

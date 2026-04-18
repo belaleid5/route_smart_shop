@@ -1,6 +1,7 @@
 // lib/features/search/presentation/widgets/search_brand_logo.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class SearchListItemImage  extends StatelessWidget {
@@ -21,15 +22,8 @@ class SearchListItemImage  extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => Icon(
-            Icons.store_rounded,
-            size: 28,
-            color: context.color.textSecondary,
-          ),
-        ),
+        child: CustomImage(imageType:ImagesType.network, 
+        imagePath: imageUrl,  ),
       ),
     );
   }

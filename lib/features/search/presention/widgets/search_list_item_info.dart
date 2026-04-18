@@ -1,6 +1,7 @@
 // lib/features/search/presentation/widgets/search_brand_info.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/search/presention/widgets/search_list_item_name.dart';
 
 import 'search_brand_slug.dart';
@@ -22,7 +23,7 @@ class SearchListItemInfo extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SearchListItemName(name: name),
-        const SizedBox(height: 4),
+        verticalSpace(4),
         SearchListItemSubtitle(slug: subtitle),
       ],
     );

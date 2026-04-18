@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class CartErrorView extends StatelessWidget {
   const CartErrorView({
@@ -20,7 +21,7 @@ class CartErrorView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-            const SizedBox(height: 16),
+            verticalSpace(16),
             Text(
               message,
               textAlign: TextAlign.center,
@@ -29,7 +30,7 @@ class CartErrorView extends StatelessWidget {
                 color: context.color.textPrimary,
               ),
             ),
-            const SizedBox(height: 24),
+            verticalSpace(24),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
