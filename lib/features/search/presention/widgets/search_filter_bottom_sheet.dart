@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 import 'package:route_smart/features/search/presention/manger/search_params.dart';
 
@@ -23,10 +24,10 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
 
   // ── Sort Options ───────────────────────────────────────────────────────────
   static const _sortOptions = [
-    (label: 'Default', value: null,     icon: Icons.sort_rounded),
-    (label: 'A → Z',   value: 'title',  icon: Icons.sort_by_alpha_rounded),
-    (label: 'Z → A',   value: '-title', icon: Icons.sort_by_alpha_rounded),
-    (label: 'Price ↑', value: 'price',  icon: Icons.arrow_upward_rounded),
+    (label: 'Default', value: null, icon: Icons.sort_rounded),
+    (label: 'A → Z', value: 'title', icon: Icons.sort_by_alpha_rounded),
+    (label: 'Z → A', value: '-title', icon: Icons.sort_by_alpha_rounded),
+    (label: 'Price ↑', value: 'price', icon: Icons.arrow_upward_rounded),
     (label: 'Price ↓', value: '-price', icon: Icons.arrow_downward_rounded),
   ];
 
@@ -38,9 +39,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
 
   // ─── Actions ───────────────────────────────────────────────────────────────
   void _apply() {
-    widget.onApply(
-      widget.params.copyWith(sort: _selectedSort),
-    );
+    widget.onApply(widget.params.copyWith(sort: _selectedSort));
     Navigator.pop(context);
   }
 
@@ -59,9 +58,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
       ),
       decoration: BoxDecoration(
         color: context.color.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(28),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -70,20 +67,17 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
           // ── Handle ──────────────────────────────────────────────────────
           const _BottomSheetHandle(),
 
-          const SizedBox(height: 20),
+          verticalSpace(20),
 
           // ── Header ──────────────────────────────────────────────────────
           _BottomSheetHeader(onReset: _reset),
 
-          const SizedBox(height: 20),
+          verticalSpace(20),
 
           // ── Sort Title ───────────────────────────────────────────────────
-          const _SectionTitle(
-            icon: Icons.swap_vert_rounded,
-            title: 'Sort By',
-          ),
+          const _SectionTitle(icon: Icons.swap_vert_rounded, title: 'Sort By'),
 
-          const SizedBox(height: 12),
+          verticalSpace(12),
 
           // ── Sort Chips ───────────────────────────────────────────────────
           Wrap(
@@ -101,7 +95,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                 .toList(),
           ),
 
-          const SizedBox(height: 24),
+          verticalSpace(24),
 
           // ── Apply Button ─────────────────────────────────────────────────
           _ApplyButton(onApply: _apply),
@@ -167,10 +161,7 @@ class _BottomSheetHeader extends StatelessWidget {
 
 // ─── Section Title ─────────────────────────────────────────────────────────────
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({
-    required this.icon,
-    required this.title,
-  });
+  const _SectionTitle({required this.icon, required this.title});
 
   final IconData icon;
   final String title;
@@ -179,11 +170,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: context.color.primary,
-        ),
+        Icon(icon, size: 18, color: context.color.primary),
         const SizedBox(width: 8),
         Text(
           title,
@@ -218,19 +205,12 @@ class _SortChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 8,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: isSelected
-              ? context.color.primary
-              : context.color.white,
+          color: isSelected ? context.color.primary : context.color.white,
           border: Border.all(
-            color: isSelected
-                ? context.color.primary
-                : context.color.stroke,
+            color: isSelected ? context.color.primary : context.color.stroke,
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: isSelected
@@ -265,9 +245,7 @@ class _SortChip extends StatelessWidget {
                 fontWeight: isSelected
                     ? FontWeightHelper.semiBold
                     : FontWeightHelper.medium,
-                color: isSelected
-                    ? Colors.white
-                    : context.color.textPrimary,
+                color: isSelected ? Colors.white : context.color.textPrimary,
               ),
             ),
           ],

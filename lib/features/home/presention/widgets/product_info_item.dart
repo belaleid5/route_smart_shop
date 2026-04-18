@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class ProductInfoItem extends StatelessWidget {
   final String? categoryName;
@@ -32,7 +33,7 @@ class ProductInfoItem extends StatelessWidget {
               fontSize: 10,
             ),
           ),
-          const SizedBox(height: 4),
+          verticalSpace( 4),
           Text(
             title ?? '',
             maxLines: 1,
@@ -42,7 +43,7 @@ class ProductInfoItem extends StatelessWidget {
               fontSize: 12,
             ),
           ),
-          const SizedBox(height: 4),
+          verticalSpace( 4),
           Row(
             children: [
               Text(
@@ -65,7 +66,7 @@ class ProductInfoItem extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 4),
+          verticalSpace( 4),
           Row(
             children: [
               const Icon(Icons.star, color: Colors.amber, size: 12),

@@ -1,8 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:route_smart/core/common/widgets/custom_image.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class BrandChip extends StatelessWidget {
   final BrandData brand;
@@ -16,7 +14,7 @@ class BrandChip extends StatelessWidget {
         debugPrint('Tapped on Brand: ${brand.name}');
       },
       child: Container(
-        constraints: const BoxConstraints(minWidth: 110),
+        constraints: const BoxConstraints(minWidth: 80),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: context.color.white,
@@ -32,26 +30,13 @@ class BrandChip extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomImage(
-              imageType: ImagesType.network,
-              imagePath: brand.image!,
-              width: 32,
-              height: 50,
-              boxFit: BoxFit.fill,
-            ),
-            horizontalSpace(10),
-            Text(
-              brand.name!,
-              style: context.textStyle.copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: context.color.textPrimary,
-              ),
-            ),
-          ],
+        child: Text(
+          brand.name!,
+          style: context.textStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: context.color.textPrimary,
+          ),
         ),
       ),
     );

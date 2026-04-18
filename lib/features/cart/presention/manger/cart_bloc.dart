@@ -11,6 +11,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepositoryImpl repository;
   final Set<String> processingProductIds = {};
 
+  static const _fallbackError = 'Something went wrong. Please try again';
+
   CartBloc(this.repository) : super(const CartState.initial()) {
     on<GetCartEvent>(onGetCart);
     on<AddToCartEvent>(onAddToCart);
@@ -18,6 +20,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RemoveItemEvent>(onRemoveItem);
     on<ClearCartEvent>(onClearCart);
   }
+
+  String _safeError(String? error) =>
+      (error != null && error.isNotEmpty) ? error : _fallbackError;
 
   CartResponseModel? currentCart() => state.maybeWhen(
         getCartSuccess: (cart) => cart,
@@ -58,7 +63,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     result.when(
       success: (cart) => emit(CartState.getCartSuccess(cart)),
-      failure: (error) => emit(CartState.error(error)),
+      failure: (error) => emit(CartState.error(_safeError(error))),
     );
   }
 
@@ -74,7 +79,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       result.when(
         success: (cart) => emit(CartState.addToCartSuccess(cart)),
-        failure: (error) => emit(CartState.error(error)),
+        failure: (error) => emit(CartState.error(_safeError(error))),
       );
     } finally {
       processingProductIds.remove(event.productId);
@@ -117,7 +122,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           if (previousCart != null) {
             emit(CartState.updateQuantitySuccess(previousCart));
           }
-          emit(CartState.error(error));
+          emit(CartState.error(_safeError(error)));
         },
       );
     } finally {
@@ -134,13 +139,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     final previousCart = currentCart();
 
+    // ✅ Optimistic update — استخدم updateQuantitySuccess
+    // علشان الـ CartBody listener مايعرضش Toast هنا
     if (previousCart != null) {
       final optimisticProducts = previousCart.data?.products
               .where((item) => item.productId != event.productId)
               .toList() ??
           [];
 
-      emit(CartState.removeItemSuccess(
+      emit(CartState.updateQuantitySuccess(
         buildOptimisticCart(previousCart, optimisticProducts),
       ));
     }
@@ -149,12 +156,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final result = await repository.removeCartItem(event.productId);
 
       result.when(
+        // ✅ Toast يظهر هنا فقط — مرة واحدة
         success: (cart) => emit(CartState.removeItemSuccess(cart)),
         failure: (error) {
           if (previousCart != null) {
-            emit(CartState.removeItemSuccess(previousCart));
+            emit(CartState.updateQuantitySuccess(previousCart));
           }
-          emit(CartState.error(error));
+          emit(CartState.error(_safeError(error)));
         },
       );
     } finally {
@@ -172,19 +180,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     result.when(
       success: (message) => emit(CartState.clearCartSuccess(message)),
-      failure: (error) => emit(CartState.error(error)),
+      failure: (error) => emit(CartState.error(_safeError(error))),
     );
   }
 
-bool isProductInCart(String productId) {
-  return state.maybeWhen(
-    getCartSuccess: (cart) =>
-        cart.data?.products.any((item) => item.productId == productId) ?? false,
-    addToCartSuccess: (cart) =>
-        cart.data?.products.any((item) => item.productId == productId) ?? false,
-    removeItemSuccess: (cart) =>
-        cart.data?.products.any((item) => item.productId == productId) ?? false,
-    orElse: () => false,
-  );
-}
+  bool isProductInCart(String productId) {
+    return state.maybeWhen(
+      getCartSuccess: (cart) =>
+          cart.data?.products.any((item) => item.productId == productId) ??
+          false,
+      addToCartSuccess: (cart) =>
+          cart.data?.products.any((item) => item.productId == productId) ??
+          false,
+      removeItemSuccess: (cart) =>
+          cart.data?.products.any((item) => item.productId == productId) ??
+          false,
+      updateQuantitySuccess: (cart) =>
+          cart.data?.products.any((item) => item.productId == productId) ??
+          false,
+      orElse: () => false,
+    );
+  }
 }

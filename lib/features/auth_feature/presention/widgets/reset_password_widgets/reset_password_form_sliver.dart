@@ -102,7 +102,8 @@ class _ResetPasswordFormSliverState extends State<ResetPasswordFormSliver> {
         context.pushNamedAndRemoveUntil(AppRoutesNames.signIn);
       },
       error: (errorMessage) {
-        CustomToast.showError(context, errorMessage);
+                CustomToast.showError(context, context.translate(errorMessage));
+
       },
     );
   }

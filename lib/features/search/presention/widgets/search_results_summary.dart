@@ -1,6 +1,5 @@
-// lib/features/search/presentation/widgets/search_results_summary.dart
-
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class SearchResultsSummary extends StatelessWidget {
@@ -25,6 +24,9 @@ class SearchResultsSummary extends StatelessWidget {
           fontSize: 12,
           color:    context.color.textSecondary,
         ),
+      ).animateRightLeft(
+        isFromStart: false,
+        duration: const Duration(milliseconds: 400),
       ),
     );
   }

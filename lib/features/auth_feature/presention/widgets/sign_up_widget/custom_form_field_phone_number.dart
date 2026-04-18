@@ -3,6 +3,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class CustomFormFieldPhoneNumber extends StatelessWidget {
   const CustomFormFieldPhoneNumber({
@@ -18,7 +19,7 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Phone Number', style: Theme.of(context).textTheme.labelLarge),
-        const SizedBox(height: 10),
+        verticalSpace( 10),
         Row(
           children: [
             Container(
@@ -47,7 +48,7 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        verticalSpace( 20),
       ],
     );
   }

@@ -1,7 +1,7 @@
-// lib/features/search/presentation/widgets/search_brands_empty.dart
-
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
 class SearchEmptyState extends StatelessWidget {
@@ -28,8 +28,10 @@ class SearchEmptyState extends StatelessWidget {
               icon,
               size: 64,
               color: context.color.primary.withValues(alpha: 0.4),
-            ),
-            const SizedBox(height: 16),
+            ).animateFlipVertical(),
+
+            verticalSpace(16),
+
             Text(
               title,
               style: context.textStyle.copyWith(
@@ -37,14 +39,19 @@ class SearchEmptyState extends StatelessWidget {
                 fontWeight: FontWeightHelper.semiBold,
                 color: context.color.textSecondary,
               ),
-            ),
-            const SizedBox(height: 8),
+            ).animateRightLeft(duration: const Duration(milliseconds: 400)),
+
+            verticalSpace(8),
+
             Text(
               subtitle,
               style: context.textStyle.copyWith(
                 fontSize: 13,
                 color: context.color.textSecondary.withValues(alpha: 0.6),
               ),
+            ).animateRightLeft(
+              isFromStart: false,
+              duration: const Duration(milliseconds: 450),
             ),
           ],
         ),

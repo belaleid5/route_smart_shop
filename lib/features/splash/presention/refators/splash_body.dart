@@ -5,6 +5,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
@@ -31,7 +32,7 @@ class _SplashBodyState extends State<SplashBody> {
       if (!mounted) return;
 
       if (token != null) {
-        context.pushReplacementNamed(AppRoutesNames.home);
+        context.pushReplacementNamed(AppRoutesNames.mainScreen);
       } else {
         context.pushReplacementNamed(AppRoutesNames.signIn);
       }
@@ -59,7 +60,7 @@ class _SplashBodyState extends State<SplashBody> {
             ),
           ).animateBlur(duration: const Duration(milliseconds: 800)),
 
-          const SizedBox(height: 10),
+          verticalSpace(10),
 
           Text(
             'Smart Shopping Experience',

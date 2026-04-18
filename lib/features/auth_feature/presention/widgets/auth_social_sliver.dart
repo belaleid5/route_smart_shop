@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class AuthSocialSliver extends StatelessWidget {
@@ -30,7 +31,7 @@ class AuthSocialSliver extends StatelessWidget {
                 const Expanded(child: Divider()),
               ],
             ),
-            const SizedBox(height: 30),
+            verticalSpace(30),
             Row(
               spacing: 40,
               crossAxisAlignment: CrossAxisAlignment.center,

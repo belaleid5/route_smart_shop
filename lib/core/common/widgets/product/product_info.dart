@@ -5,6 +5,7 @@ import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/product/product_category_label.dart';
 import 'package:route_smart/core/common/widgets/product/product_price_and_rating.dart';
 import 'package:route_smart/core/common/widgets/product/product_title.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class ProductInfo extends StatelessWidget {
   const ProductInfo({super.key, required this.product});
@@ -20,9 +21,9 @@ class ProductInfo extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ProductCategoryLabel(name: product.category?.name),
-          const SizedBox(height: 4),
+          verticalSpace( 4),
           Flexible(child: ProductTitle(title: product.title)),
-          const SizedBox(height: 6),
+          verticalSpace( 6),
           ProductPriceAndRating(
             price: product.price,
             ratingsAverage: product.ratingsAverage,

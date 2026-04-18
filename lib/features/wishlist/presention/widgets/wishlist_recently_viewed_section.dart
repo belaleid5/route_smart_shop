@@ -1,6 +1,8 @@
 // lib/features/wishlist/presentation/widgets/wishlist_recently_viewed_section.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/helper/spacing.dart';
+
 import 'wishlist_avatar.dart';
 import 'wishlist_circle_icon_button.dart';
 
@@ -29,13 +31,10 @@ class WishlistRecentlyViewedSection extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              WishlistCircleIconButton(
-                icon: Icons.arrow_forward,
-                onTap: () {},
-              ),
+              WishlistCircleIconButton(icon: Icons.arrow_forward, onTap: () {}),
             ],
           ),
-          const SizedBox(height: 12),
+          verticalSpace(12),
           SizedBox(
             height: 68,
             child: ListView.separated(
@@ -45,7 +44,7 @@ class WishlistRecentlyViewedSection extends StatelessWidget {
               itemBuilder: (_, i) => WishlistAvatar(imageUrl: _images[i]),
             ),
           ),
-          const SizedBox(height: 16),
+          verticalSpace(16),
         ],
       ),
     );

@@ -1,92 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/features/cart/data/models/cart_response_model.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_state.dart';
 
-class ProductAddToCartButton extends StatefulWidget {
-  const ProductAddToCartButton({super.key, this.onTap, this.productId});
+class ProductAddToCartButton extends StatelessWidget {
+  const ProductAddToCartButton({
+    super.key,
+    this.onTap,
+    this.productId,
+  });
 
   final VoidCallback? onTap;
   final String? productId;
 
-  @override
-  State<ProductAddToCartButton> createState() => _ProductAddToCartButtonState();
-}
-
-class _ProductAddToCartButtonState extends State<ProductAddToCartButton>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController bounceController;
-  late final Animation<double> bounceAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    bounceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    bounceAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: bounceController, curve: Curves.easeOut),
+  CartResponseModel? _extractCart(CartState state) {
+    return state.whenOrNull(
+      getCartSuccess: (cart) => cart,
+      addToCartSuccess: (cart) => cart,
+      removeItemSuccess: (cart) => cart,
+      updateQuantitySuccess: (cart) => cart,
     );
   }
 
-  @override
-  void dispose() {
-    bounceController.dispose();
-    super.dispose();
-  }
+  bool _isProductInCart(CartState state) {
+    if (productId == null || productId!.isEmpty) return false;
 
-  Future<void> handleTap() async {
-    await bounceController.forward();
-    await bounceController.reverse();
-    widget.onTap?.call();
-  }
+    final cart = _extractCart(state);
+    if (cart == null) return false;
 
-  bool isProductInCart(CartState state) {
-    if (widget.productId == null || widget.productId!.isEmpty) return false;
-
-    return state.maybeWhen(
-      getCartSuccess: (cart) =>
-          cart.data?.products.any(
-            (item) => item.productId == widget.productId,
-          ) ??
-          false,
-      addToCartSuccess: (cart) =>
-          cart.data?.products.any(
-            (item) => item.productId == widget.productId,
-          ) ??
-          false,
-      removeItemSuccess: (cart) =>
-          cart.data?.products.any(
-            (item) => item.productId == widget.productId,
-          ) ??
-          false,
-      orElse: () => false,
-    );
+    return cart.data?.products.any(
+          (item) => item.productId == productId,
+        ) ??
+        false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.productId == null || widget.productId!.isEmpty) {
-      return buildButton(context, isInCart: false, onTap: widget.onTap);
+    if (productId == null || productId!.isEmpty) {
+      return _buildButton(context, isInCart: false, onTap: onTap);
     }
 
     return BlocBuilder<CartBloc, CartState>(
-      buildWhen: (previous, current) =>
-          isProductInCart(previous) != isProductInCart(current),
-      builder: (context, state) => ScaleTransition(
-        scale: bounceAnimation,
-        child: buildButton(
+      buildWhen: (previous, current) {
+        final wasInCart = _isProductInCart(previous);
+        final isInCart = _isProductInCart(current);
+        return wasInCart != isInCart;
+      },
+      builder: (context, state) {
+        final isInCart = _isProductInCart(state);
+
+        return _buildButton(
           context,
-          isInCart: isProductInCart(state),
-          onTap: handleTap,
-        ),
-      ),
+          isInCart: isInCart,
+          onTap: isInCart ? null : onTap,
+        );
+      },
     );
   }
 
-  Widget buildButton(
+  Widget _buildButton(
     BuildContext context, {
     required bool isInCart,
     VoidCallback? onTap,
@@ -99,11 +74,13 @@ class _ProductAddToCartButtonState extends State<ProductAddToCartButton>
         width: 34,
         height: 34,
         decoration: BoxDecoration(
-          color: context.color.primary,
+          color: isInCart
+              ? context.color.primary.withValues(alpha: 0.6)
+              : context.color.primary,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: context.color.black.withOpacity(0.08),
+              color: context.color.black.withValues(alpha: 0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -125,6 +102,20 @@ class _ProductAddToCartButtonState extends State<ProductAddToCartButton>
           ),
         ),
       ),
-    );
+    )
+        .animate(target: isInCart ? 1 : 0)
+        .scale(
+          begin: const Offset(1.0, 1.0),
+          end: const Offset(1.2, 1.2),
+          duration: 150.ms,
+          curve: Curves.easeOut,
+        )
+        .then()
+        .scale(
+          begin: const Offset(1.2, 1.2),
+          end: const Offset(1.0, 1.0),
+          duration: 150.ms,
+          curve: Curves.easeIn,
+        );
   }
 }

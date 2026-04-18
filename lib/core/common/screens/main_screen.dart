@@ -4,8 +4,10 @@ import 'package:liquid_glass_bottom_bar/liquid_glass_bottom_bar.dart';
 import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_event.dart';
+import 'package:route_smart/features/cart/presention/manger/cart_state.dart';
 import 'package:route_smart/features/cart/presention/page/cart_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
@@ -38,14 +40,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    _wishlistBloc = sl<WishlistBloc>()
-      ..add(const WishlistEvent.getWishlist());
-
-    _cartBloc = sl<CartBloc>()
-      ..add(const CartEvent.getCart());
+    _wishlistBloc = context.read<WishlistBloc>();
+    _cartBloc = context.read<CartBloc>();
 
     _pages = [
-      // ── 0: Home ──────────────────────────────
       MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -53,72 +51,87 @@ class _MainScreenState extends State<MainScreen> {
               ..add(const CategoriesEvent.getCategories()),
           ),
           BlocProvider(
-            create: (_) =>
-                sl<BrandsBloc>()..add(const BrandsEvent.getBrands()),
+            create: (_) => sl<BrandsBloc>()
+              ..add(const BrandsEvent.getBrands()),
           ),
           BlocProvider(
             create: (_) => sl<ProductsBloc>()
               ..add(const ProductsEvent.getProducts()),
           ),
           BlocProvider.value(value: _wishlistBloc),
-          BlocProvider.value(value: _cartBloc), // ✅ نفس الـ instance
+          BlocProvider.value(value: _cartBloc),
         ],
         child: const HomeScreen(),
       ),
-
-      // ── 1: Search ─────────────────────────────
       MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) =>
-                sl<SearchBloc>()..add(const SearchEvent.search()),
+            create: (_) => sl<SearchBloc>()
+              ..add(const SearchEventSearch()),
           ),
           BlocProvider.value(value: _wishlistBloc),
-          BlocProvider.value(value: _cartBloc), // ✅ نفس الـ instance
+          BlocProvider.value(value: _cartBloc),
         ],
         child: const SearchScreen(),
       ),
-
-      // ── 2: Wishlist ───────────────────────────
-      BlocProvider.value(
-        value: _wishlistBloc,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: _wishlistBloc),
+          BlocProvider.value(value: _cartBloc),
+        ],
         child: const WishlistPage(),
       ),
-
-      // ── 3: Cart ───────────────────────────────
       BlocProvider.value(
         value: _cartBloc,
         child: const CartPage(),
       ),
-
-      // ── 4: Profile ────────────────────────────
       const Center(child: Text('Profile 👤')),
     ];
   }
 
   @override
   void dispose() {
-    _wishlistBloc.close();
-    _cartBloc.close();
     super.dispose();
   }
 
   void _onTabTap(int index) {
     if (_currentIndex == index) return;
+
     setState(() => _currentIndex = index);
+
+    if (index == 2) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _wishlistBloc.add(const GetWishlistEvent());
+      });
+    } else if (index == 3) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _cartBloc.add(const CartEvent.getCart());
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
+    return BlocListener<CartBloc, CartState>(
+      listenWhen: (previous, current) => current.maybeWhen(
+        error: (_) => true,
+        orElse: () => false,
       ),
-      bottomNavigationBar: _buildBottomNav(context),
+      listener: (context, state) {
+        state.whenOrNull(
+          error: (message) => CustomToast.showError(context, message),
+        );
+      },
+      child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _pages,
+        ),
+        bottomNavigationBar: _buildBottomNav(context),
+      ),
     );
   }
 

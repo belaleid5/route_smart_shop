@@ -1,5 +1,3 @@
-// lib/features/wishlist/presention/widgets/wishlist_card.dart
-
 import 'package:flutter/material.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 import 'wishlist_card_image.dart';
@@ -22,19 +20,12 @@ class WishlistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(item.id),
-      direction: DismissDirection.endToStart,  // ← swipe من اليمين لليسار
-
-      // ✅ Background عند الـ swipe
-      background: _SwipeBackground(),
-
-      // ✅ عند الـ swipe → امسح
+      direction: DismissDirection.endToStart,
+      background: const _SwipeBackground(),
       onDismissed: (_) => onRemove(),
-
-      // ✅ Confirm قبل المسح
       confirmDismiss: (_) async {
         return await _showDeleteConfirm(context);
       },
-
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,17 +37,18 @@ class WishlistCard extends StatelessWidget {
           Expanded(
             child: WishlistCardDetails(
               title: item.title,
-              price: item.price.truncateToDouble(),
-              oldPrice: item.priceDouble,
+              price: item.hasDiscount
+                  ? item.priceAfterDiscountDouble!
+                  : item.priceDouble,
+              oldPrice: item.hasDiscount ? item.priceDouble : null,
             ),
           ),
-          WishlistAddToCartButton(onTap: onAddToCart),
+          WishlistAddToCartButton(onTap: onAddToCart,   productId: item.id,),
         ],
       ),
     );
   }
 
-  // ─── Confirm Dialog ────────────────────────
   Future<bool?> _showDeleteConfirm(BuildContext context) {
     return showDialog<bool>(
       context: context,
@@ -86,10 +78,9 @@ class WishlistCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-//  SWIPE BACKGROUND  (SRP)
-// ─────────────────────────────────────────────
 class _SwipeBackground extends StatelessWidget {
+  const _SwipeBackground();
+
   @override
   Widget build(BuildContext context) {
     return Container(
