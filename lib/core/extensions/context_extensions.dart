@@ -14,7 +14,6 @@ extension ContextExt on BuildContext {
   // style
   TextStyle get textStyle => Theme.of(this).textTheme.displaySmall!;
 
-  // Language — ✅ يرجع المفتاح نفسه لو الترجمة مش موجودة
   String translate(String langkey) {
     return AppLocalizations.of(this)?.translate(langkey) ?? langkey;
   }

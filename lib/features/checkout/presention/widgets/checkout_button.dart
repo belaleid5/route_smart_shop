@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/functions/spink_kit.dart';
+import 'package:route_smart/core/common/widgets/loading_widget.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class CheckoutButton extends StatelessWidget {
@@ -27,14 +29,7 @@ class CheckoutButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: Colors.white,
-                ),
-              )
+            ?  loadingWidgetSpinKit(context)
             : Text(
                 'Checkout Now',
                 style: context.textStyle.copyWith(

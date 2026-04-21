@@ -14,9 +14,14 @@ import 'package:route_smart/features/auth_feature/presention/pages/register_page
 import 'package:route_smart/features/auth_feature/presention/pages/reset_password_page.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/sign_in.dart';
 import 'package:route_smart/features/auth_feature/presention/pages/verication_code_page.dart';
+import 'package:route_smart/features/cart/data/models/cart_item_model.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_event.dart';
 import 'package:route_smart/features/cart/presention/page/cart_page.dart';
+import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
+import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
+import 'package:route_smart/features/checkout/presention/pages/checkout_page.dart';
+import 'package:route_smart/features/checkout/presention/pages/payment_deatils_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
@@ -24,7 +29,6 @@ import 'package:route_smart/features/home/presention/manger/categroy/categories_
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_event.dart';
 import 'package:route_smart/features/home/presention/pages/home_screen.dart';
-import 'package:route_smart/features/on_boarding/presention/pages/onboarding_page.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_event.dart';
 import 'package:route_smart/features/search/presention/pages/search_screen.dart';
@@ -51,12 +55,7 @@ class AppRouter {
           builder: (_) => const SplashPage(),
         );
 
-      case AppRoutesNames.onBoarding:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const OnboardingPage(),
-        );
-
+    
       case AppRoutesNames.cart:
         return MaterialPageRoute(
           settings: settings,
@@ -183,16 +182,61 @@ class AppRouter {
           ),
         );
 
-
-      default:
+      case AppRoutesNames.checkout:
+        final args = settings.arguments as Map<String, dynamic>?;
+        if (args == null) {
+          return _errorRoute('Missing checkout arguments');
+        }
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('Page not found: ${settings.name}'),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => sl<CheckoutBloc>(),
+              ),
+              BlocProvider.value(value: _cartBloc),
+            ],
+            child: CheckoutPage(
+              cartId: args['cartId'] as String,
+              cartItems: args['cartItems'] as List<CartItemModel>,
+              totalPrice: args['totalPrice'] as double,
             ),
           ),
         );
+
+      case AppRoutesNames.paymentDetails:
+        final args = settings.arguments as Map<String, dynamic>?;
+        if (args == null) {
+          return _errorRoute('Missing payment details arguments');
+        }
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider(
+            create: (_) => sl<CheckoutBloc>(),
+            child: PaymentDetailsPage(
+              amount: args['amount'] as double,
+              cartId: args['cartId'] as String,
+              shippingAddress: args['shippingAddress'] as ShippingAddressModel,
+            ),
+          ),
+        );
+
+      default:
+        return _errorRoute('Page not found: ${settings.name}');
     }
   }
+
+  static Route<dynamic> _errorRoute(String message) {
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        body: Center(
+          child: Text(
+            message,
+            style: const TextStyle(color: Colors.red, fontSize: 16),
+          ),
+        ),
+      ),
+    );
+  }
 }
+

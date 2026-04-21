@@ -12,7 +12,6 @@ class CustomToast {
     ToastType type = ToastType.info,
     Duration duration = const Duration(seconds: 5),
   }) {
-    // حماية من null أو string فاضي
     final safeMessage = (message != null && message.isNotEmpty)
         ? message
         : 'Something went wrong';

@@ -55,14 +55,16 @@ extension CheckoutStatePatterns on CheckoutState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _AddressesLoaded value)?  addressesLoaded,TResult Function( _OrderCreated value)?  orderCreated,TResult Function( _Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _AddressesLoaded value)?  addressesLoaded,TResult Function( _OrderCreated value)?  orderCreated,TResult Function( _ProcessingPayment value)?  processingPayment,TResult Function( _PaymentSuccess value)?  paymentSuccess,TResult Function( _Error value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _AddressesLoaded() when addressesLoaded != null:
 return addressesLoaded(_that);case _OrderCreated() when orderCreated != null:
-return orderCreated(_that);case _Error() when error != null:
+return orderCreated(_that);case _ProcessingPayment() when processingPayment != null:
+return processingPayment(_that);case _PaymentSuccess() when paymentSuccess != null:
+return paymentSuccess(_that);case _Error() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -81,14 +83,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _AddressesLoaded value)  addressesLoaded,required TResult Function( _OrderCreated value)  orderCreated,required TResult Function( _Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _AddressesLoaded value)  addressesLoaded,required TResult Function( _OrderCreated value)  orderCreated,required TResult Function( _ProcessingPayment value)  processingPayment,required TResult Function( _PaymentSuccess value)  paymentSuccess,required TResult Function( _Error value)  error,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
 return loading(_that);case _AddressesLoaded():
 return addressesLoaded(_that);case _OrderCreated():
-return orderCreated(_that);case _Error():
+return orderCreated(_that);case _ProcessingPayment():
+return processingPayment(_that);case _PaymentSuccess():
+return paymentSuccess(_that);case _Error():
 return error(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -106,14 +110,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _AddressesLoaded value)?  addressesLoaded,TResult? Function( _OrderCreated value)?  orderCreated,TResult? Function( _Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _AddressesLoaded value)?  addressesLoaded,TResult? Function( _OrderCreated value)?  orderCreated,TResult? Function( _ProcessingPayment value)?  processingPayment,TResult? Function( _PaymentSuccess value)?  paymentSuccess,TResult? Function( _Error value)?  error,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _AddressesLoaded() when addressesLoaded != null:
 return addressesLoaded(_that);case _OrderCreated() when orderCreated != null:
-return orderCreated(_that);case _Error() when error != null:
+return orderCreated(_that);case _ProcessingPayment() when processingPayment != null:
+return processingPayment(_that);case _PaymentSuccess() when paymentSuccess != null:
+return paymentSuccess(_that);case _Error() when error != null:
 return error(_that);case _:
   return null;
 
@@ -131,13 +137,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<AddressModel> addresses)?  addressesLoaded,TResult Function( OrderResponseModel order)?  orderCreated,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<AddressModel> addresses)?  addressesLoaded,TResult Function( OrderResponseModel order)?  orderCreated,TResult Function()?  processingPayment,TResult Function()?  paymentSuccess,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _AddressesLoaded() when addressesLoaded != null:
 return addressesLoaded(_that.addresses);case _OrderCreated() when orderCreated != null:
-return orderCreated(_that.order);case _Error() when error != null:
+return orderCreated(_that.order);case _ProcessingPayment() when processingPayment != null:
+return processingPayment();case _PaymentSuccess() when paymentSuccess != null:
+return paymentSuccess();case _Error() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -156,13 +164,15 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<AddressModel> addresses)  addressesLoaded,required TResult Function( OrderResponseModel order)  orderCreated,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<AddressModel> addresses)  addressesLoaded,required TResult Function( OrderResponseModel order)  orderCreated,required TResult Function()  processingPayment,required TResult Function()  paymentSuccess,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _AddressesLoaded():
 return addressesLoaded(_that.addresses);case _OrderCreated():
-return orderCreated(_that.order);case _Error():
+return orderCreated(_that.order);case _ProcessingPayment():
+return processingPayment();case _PaymentSuccess():
+return paymentSuccess();case _Error():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -180,13 +190,15 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<AddressModel> addresses)?  addressesLoaded,TResult? Function( OrderResponseModel order)?  orderCreated,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<AddressModel> addresses)?  addressesLoaded,TResult? Function( OrderResponseModel order)?  orderCreated,TResult? Function()?  processingPayment,TResult? Function()?  paymentSuccess,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _AddressesLoaded() when addressesLoaded != null:
 return addressesLoaded(_that.addresses);case _OrderCreated() when orderCreated != null:
-return orderCreated(_that.order);case _Error() when error != null:
+return orderCreated(_that.order);case _ProcessingPayment() when processingPayment != null:
+return processingPayment();case _PaymentSuccess() when paymentSuccess != null:
+return paymentSuccess();case _Error() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -396,6 +408,70 @@ as OrderResponseModel,
 
 
 }
+
+/// @nodoc
+
+
+class _ProcessingPayment implements CheckoutState {
+  const _ProcessingPayment();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProcessingPayment);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CheckoutState.processingPayment()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _PaymentSuccess implements CheckoutState {
+  const _PaymentSuccess();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentSuccess);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CheckoutState.paymentSuccess()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 

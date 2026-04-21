@@ -55,14 +55,15 @@ extension CheckoutEventPatterns on CheckoutEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GetAddressesEvent value)?  getAddresses,TResult Function( AddAddressEvent value)?  addAddress,TResult Function( RemoveAddressEvent value)?  removeAddress,TResult Function( CreateCashOrderEvent value)?  createCashOrder,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GetAddressesEvent value)?  getAddresses,TResult Function( AddAddressEvent value)?  addAddress,TResult Function( RemoveAddressEvent value)?  removeAddress,TResult Function( CreateCashOrderEvent value)?  createCashOrder,TResult Function( PayWithCardEvent value)?  payWithCard,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case GetAddressesEvent() when getAddresses != null:
 return getAddresses(_that);case AddAddressEvent() when addAddress != null:
 return addAddress(_that);case RemoveAddressEvent() when removeAddress != null:
 return removeAddress(_that);case CreateCashOrderEvent() when createCashOrder != null:
-return createCashOrder(_that);case _:
+return createCashOrder(_that);case PayWithCardEvent() when payWithCard != null:
+return payWithCard(_that);case _:
   return orElse();
 
 }
@@ -80,14 +81,15 @@ return createCashOrder(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GetAddressesEvent value)  getAddresses,required TResult Function( AddAddressEvent value)  addAddress,required TResult Function( RemoveAddressEvent value)  removeAddress,required TResult Function( CreateCashOrderEvent value)  createCashOrder,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GetAddressesEvent value)  getAddresses,required TResult Function( AddAddressEvent value)  addAddress,required TResult Function( RemoveAddressEvent value)  removeAddress,required TResult Function( CreateCashOrderEvent value)  createCashOrder,required TResult Function( PayWithCardEvent value)  payWithCard,}){
 final _that = this;
 switch (_that) {
 case GetAddressesEvent():
 return getAddresses(_that);case AddAddressEvent():
 return addAddress(_that);case RemoveAddressEvent():
 return removeAddress(_that);case CreateCashOrderEvent():
-return createCashOrder(_that);case _:
+return createCashOrder(_that);case PayWithCardEvent():
+return payWithCard(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -104,14 +106,15 @@ return createCashOrder(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GetAddressesEvent value)?  getAddresses,TResult? Function( AddAddressEvent value)?  addAddress,TResult? Function( RemoveAddressEvent value)?  removeAddress,TResult? Function( CreateCashOrderEvent value)?  createCashOrder,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GetAddressesEvent value)?  getAddresses,TResult? Function( AddAddressEvent value)?  addAddress,TResult? Function( RemoveAddressEvent value)?  removeAddress,TResult? Function( CreateCashOrderEvent value)?  createCashOrder,TResult? Function( PayWithCardEvent value)?  payWithCard,}){
 final _that = this;
 switch (_that) {
 case GetAddressesEvent() when getAddresses != null:
 return getAddresses(_that);case AddAddressEvent() when addAddress != null:
 return addAddress(_that);case RemoveAddressEvent() when removeAddress != null:
 return removeAddress(_that);case CreateCashOrderEvent() when createCashOrder != null:
-return createCashOrder(_that);case _:
+return createCashOrder(_that);case PayWithCardEvent() when payWithCard != null:
+return payWithCard(_that);case _:
   return null;
 
 }
@@ -128,13 +131,14 @@ return createCashOrder(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  getAddresses,TResult Function( AddressModel address)?  addAddress,TResult Function( String addressId)?  removeAddress,TResult Function( String cartId,  ShippingAddressModel shippingAddress)?  createCashOrder,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  getAddresses,TResult Function( AddressModel address)?  addAddress,TResult Function( String addressId)?  removeAddress,TResult Function( String cartId,  ShippingAddressModel shippingAddress)?  createCashOrder,TResult Function( double amount,  String cartId,  ShippingAddressModel shippingAddress)?  payWithCard,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case GetAddressesEvent() when getAddresses != null:
 return getAddresses();case AddAddressEvent() when addAddress != null:
 return addAddress(_that.address);case RemoveAddressEvent() when removeAddress != null:
 return removeAddress(_that.addressId);case CreateCashOrderEvent() when createCashOrder != null:
-return createCashOrder(_that.cartId,_that.shippingAddress);case _:
+return createCashOrder(_that.cartId,_that.shippingAddress);case PayWithCardEvent() when payWithCard != null:
+return payWithCard(_that.amount,_that.cartId,_that.shippingAddress);case _:
   return orElse();
 
 }
@@ -152,13 +156,14 @@ return createCashOrder(_that.cartId,_that.shippingAddress);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  getAddresses,required TResult Function( AddressModel address)  addAddress,required TResult Function( String addressId)  removeAddress,required TResult Function( String cartId,  ShippingAddressModel shippingAddress)  createCashOrder,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  getAddresses,required TResult Function( AddressModel address)  addAddress,required TResult Function( String addressId)  removeAddress,required TResult Function( String cartId,  ShippingAddressModel shippingAddress)  createCashOrder,required TResult Function( double amount,  String cartId,  ShippingAddressModel shippingAddress)  payWithCard,}) {final _that = this;
 switch (_that) {
 case GetAddressesEvent():
 return getAddresses();case AddAddressEvent():
 return addAddress(_that.address);case RemoveAddressEvent():
 return removeAddress(_that.addressId);case CreateCashOrderEvent():
-return createCashOrder(_that.cartId,_that.shippingAddress);case _:
+return createCashOrder(_that.cartId,_that.shippingAddress);case PayWithCardEvent():
+return payWithCard(_that.amount,_that.cartId,_that.shippingAddress);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +180,14 @@ return createCashOrder(_that.cartId,_that.shippingAddress);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  getAddresses,TResult? Function( AddressModel address)?  addAddress,TResult? Function( String addressId)?  removeAddress,TResult? Function( String cartId,  ShippingAddressModel shippingAddress)?  createCashOrder,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  getAddresses,TResult? Function( AddressModel address)?  addAddress,TResult? Function( String addressId)?  removeAddress,TResult? Function( String cartId,  ShippingAddressModel shippingAddress)?  createCashOrder,TResult? Function( double amount,  String cartId,  ShippingAddressModel shippingAddress)?  payWithCard,}) {final _that = this;
 switch (_that) {
 case GetAddressesEvent() when getAddresses != null:
 return getAddresses();case AddAddressEvent() when addAddress != null:
 return addAddress(_that.address);case RemoveAddressEvent() when removeAddress != null:
 return removeAddress(_that.addressId);case CreateCashOrderEvent() when createCashOrder != null:
-return createCashOrder(_that.cartId,_that.shippingAddress);case _:
+return createCashOrder(_that.cartId,_that.shippingAddress);case PayWithCardEvent() when payWithCard != null:
+return payWithCard(_that.amount,_that.cartId,_that.shippingAddress);case _:
   return null;
 
 }
@@ -413,6 +419,76 @@ class _$CreateCashOrderEventCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? cartId = null,Object? shippingAddress = null,}) {
   return _then(CreateCashOrderEvent(
 cartId: null == cartId ? _self.cartId : cartId // ignore: cast_nullable_to_non_nullable
+as String,shippingAddress: null == shippingAddress ? _self.shippingAddress : shippingAddress // ignore: cast_nullable_to_non_nullable
+as ShippingAddressModel,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PayWithCardEvent implements CheckoutEvent {
+  const PayWithCardEvent({required this.amount, required this.cartId, required this.shippingAddress});
+  
+
+ final  double amount;
+ final  String cartId;
+ final  ShippingAddressModel shippingAddress;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PayWithCardEventCopyWith<PayWithCardEvent> get copyWith => _$PayWithCardEventCopyWithImpl<PayWithCardEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PayWithCardEvent&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.cartId, cartId) || other.cartId == cartId)&&(identical(other.shippingAddress, shippingAddress) || other.shippingAddress == shippingAddress));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,amount,cartId,shippingAddress);
+
+@override
+String toString() {
+  return 'CheckoutEvent.payWithCard(amount: $amount, cartId: $cartId, shippingAddress: $shippingAddress)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PayWithCardEventCopyWith<$Res> implements $CheckoutEventCopyWith<$Res> {
+  factory $PayWithCardEventCopyWith(PayWithCardEvent value, $Res Function(PayWithCardEvent) _then) = _$PayWithCardEventCopyWithImpl;
+@useResult
+$Res call({
+ double amount, String cartId, ShippingAddressModel shippingAddress
+});
+
+
+
+
+}
+/// @nodoc
+class _$PayWithCardEventCopyWithImpl<$Res>
+    implements $PayWithCardEventCopyWith<$Res> {
+  _$PayWithCardEventCopyWithImpl(this._self, this._then);
+
+  final PayWithCardEvent _self;
+  final $Res Function(PayWithCardEvent) _then;
+
+/// Create a copy of CheckoutEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? amount = null,Object? cartId = null,Object? shippingAddress = null,}) {
+  return _then(PayWithCardEvent(
+amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double,cartId: null == cartId ? _self.cartId : cartId // ignore: cast_nullable_to_non_nullable
 as String,shippingAddress: null == shippingAddress ? _self.shippingAddress : shippingAddress // ignore: cast_nullable_to_non_nullable
 as ShippingAddressModel,
   ));

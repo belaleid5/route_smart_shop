@@ -28,6 +28,7 @@ class CartBottomBar extends StatelessWidget {
               create: (_) => sl<CheckoutBloc>()
                 ..add(const CheckoutEvent.getAddresses()),
             ),
+            // ✅ مرر الـ CartBloc علشان CheckoutBody يقدر يوصله
             BlocProvider.value(value: cartBloc),
           ],
           child: CheckoutPage(

@@ -25,7 +25,7 @@ class ButtonAuth extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: isLoading
-          ? loadingWidget(context)
+          ? loadingWidgetSpinKit(context)
           : Text(
               text,
               style: context.textStyle.copyWith(

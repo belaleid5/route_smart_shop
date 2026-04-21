@@ -3,9 +3,11 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:route_smart/core/app/bloc_observer.dart';
 import 'package:route_smart/core/app/connectivitiy_controller.dart';
 import 'package:route_smart/core/app/env_varible.dart';
+import 'package:route_smart/core/constants/stripe_keys.dart';
 import 'package:route_smart/core/di/di.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_pref.dart';
@@ -20,6 +22,7 @@ void main() async {
   await SecureStorage().initSecureStorage();
   await SharedPref().initPreferences();
   await setupDI();
+  Stripe.publishableKey = StripeKeys.stripePublishableKey;
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(DevicePreview(builder: (context) => const RouteSmartShopApp()));
 }
