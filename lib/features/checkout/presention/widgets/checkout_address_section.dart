@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/helper/spacing.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_address_card.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_address_empty.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_address_header.dart';
+import 'package:route_smart/features/checkout/presention/widgets/checkout_address_shimmer.dart';
 
 class CheckoutAddressSection extends StatelessWidget {
   const CheckoutAddressSection({
@@ -27,7 +28,7 @@ class CheckoutAddressSection extends StatelessWidget {
         const CheckoutAddressHeader(),
         verticalSpace(12),
         if (isLoading)
-          const Center(child: CircularProgressIndicator())
+          const CheckoutAddressShimmer()         
         else if (addresses.isEmpty)
           const CheckoutAddressEmpty()
         else

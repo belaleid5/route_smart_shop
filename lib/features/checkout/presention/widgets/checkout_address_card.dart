@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
 
 class CheckoutAddressCard extends StatelessWidget {
   const CheckoutAddressCard({

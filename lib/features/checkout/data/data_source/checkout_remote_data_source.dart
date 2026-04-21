@@ -1,9 +1,9 @@
 import 'package:route_smart/core/services/api/api_services.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/order_response_model.dart';
-import 'package:route_smart/features/checkout/data/shipping_address_model.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/order_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
 
 abstract class CheckoutRemoteDataSource {
   Future<AddressResponseModel> getAddresses();

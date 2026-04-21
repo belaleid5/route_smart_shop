@@ -1,9 +1,9 @@
 import 'package:route_smart/core/errors/api_error_handler.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/order_response_model.dart';
-import 'package:route_smart/features/checkout/data/shipping_address_model.dart';
-import 'package:route_smart/features/checkout/data_source/checkout_remote_data_source.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/order_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
+import 'package:route_smart/features/checkout/data/data_source/checkout_remote_data_source.dart';
 
 class CheckoutRepository {
   final CheckoutRemoteDataSource _remote;

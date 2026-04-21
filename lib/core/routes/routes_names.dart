@@ -15,4 +15,7 @@ class AppRoutesNames {
   static const details = '/details';
   static const cart = '/cart';
   static const checkout = '/checkout';
+   static const paymentResult = '/paymentResult';
+   static const paymentDetails = '/payment_details';
+  
 }

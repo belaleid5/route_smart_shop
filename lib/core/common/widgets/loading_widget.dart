@@ -66,7 +66,6 @@ class _LoadingWidgetState extends State<LoadingWidget>
               left: position,
               top: position,
               child: Transform(
-                // ✅ الاسم الصحيح
                 transform: Matrix4.rotationZ(
                   (360 / itemCount) * i * 0.0174533,
                 ),

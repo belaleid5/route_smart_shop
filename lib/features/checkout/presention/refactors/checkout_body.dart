@@ -6,8 +6,8 @@ import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/features/cart/data/models/cart_item_model.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/shipping_address_model.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_event.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_state.dart';
@@ -17,6 +17,7 @@ import 'package:route_smart/features/checkout/presention/widgets/checkout_button
 import 'package:route_smart/features/checkout/presention/widgets/checkout_products_section.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_pyment_method.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_total_row.dart';
+import 'package:route_smart/features/checkout/presention/widgets/payemnt_result.dart';
 
 class CheckoutBody extends StatefulWidget {
   const CheckoutBody({
@@ -36,9 +37,15 @@ class CheckoutBody extends StatefulWidget {
 
 class _CheckoutBodyState extends State<CheckoutBody> {
   AddressModel? _selectedAddress;
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash; // ✅ استخدم الـ imported
+  List<AddressModel> _cachedAddresses = [];
 
   void _onAddressSelected(AddressModel address) {
     setState(() => _selectedAddress = address);
+  }
+
+  void _onPaymentMethodChanged(PaymentMethod method) {
+    setState(() => _selectedPaymentMethod = method);
   }
 
   void _handleCheckout() {
@@ -50,30 +57,31 @@ class _CheckoutBodyState extends State<CheckoutBody> {
       return;
     }
 
-    context.read<CheckoutBloc>().add(
-          CheckoutEvent.createCashOrder(
-            cartId: widget.cartId,
-            shippingAddress: ShippingAddressModel(
-              details: _selectedAddress!.details ?? '',
-              phone: _selectedAddress!.phone ?? '',
-              city: _selectedAddress!.city ?? '',
-            ),
-          ),
-        );
-  }
-
-  void _onOrderCreated() {
-    CustomToast.showSuccess(
-      context,
-      context.translate(LangKeys.orderCreatedSuccess),
+    final shippingAddress = ShippingAddressModel(
+      details: _selectedAddress!.details ?? '',
+      phone: _selectedAddress!.phone ?? '',
+      city: _selectedAddress!.city ?? '',
     );
 
-    Navigator.of(context).pop();
+    if (_selectedPaymentMethod == PaymentMethod.cash) {
+      context.read<CheckoutBloc>().add(
+            CheckoutEvent.createCashOrder(
+              cartId: widget.cartId,
+              shippingAddress: shippingAddress,
+            ),
+          );
+    } else {
+      showPaymentResultDialog(context, isSuccess: true);
+    }
   }
 
   void _autoSelectFirstAddress(List<AddressModel> addresses) {
-    if (_selectedAddress != null || addresses.isEmpty) return;
-    setState(() => _selectedAddress = addresses.first);
+    if (addresses.isNotEmpty) {
+      setState(() {
+        _cachedAddresses = addresses;
+        _selectedAddress ??= addresses.first;
+      });
+    }
   }
 
   @override
@@ -82,26 +90,38 @@ class _CheckoutBodyState extends State<CheckoutBody> {
       listenWhen: (previous, current) => current.maybeWhen(
         addressesLoaded: (_) => true,
         orderCreated: (_) => true,
+        paymentSuccess: () => true,
         error: (_) => true,
         orElse: () => false,
       ),
       listener: (context, state) {
         state.maybeWhen(
           addressesLoaded: _autoSelectFirstAddress,
-          orderCreated: (_) => _onOrderCreated(),
-          error: (message) => CustomToast.showError(context, context.translate(message)),
+          orderCreated: (_) {
+            showPaymentResultDialog(context, isSuccess: true);
+          },
+          paymentSuccess: () {
+            showPaymentResultDialog(context, isSuccess: true);
+          },
+          error: (message) {
+            CustomToast.showError(context, message);
+          },
           orElse: () {},
         );
       },
       builder: (context, state) {
         final isLoading = state.maybeWhen(
           loading: () => true,
+          processingPayment: () => true,
           orElse: () => false,
         );
 
         final addresses = state.maybeWhen(
-          addressesLoaded: (addresses) => addresses,
-          orElse: () => <AddressModel>[],
+          addressesLoaded: (fresh) {
+            if (fresh.isNotEmpty) _cachedAddresses = fresh;
+            return _cachedAddresses;
+          },
+          orElse: () => _cachedAddresses,
         );
 
         return SafeArea(
@@ -127,8 +147,10 @@ class _CheckoutBodyState extends State<CheckoutBody> {
                         cartItems: widget.cartItems,
                       ).animateBottomToTop(),
                       verticalSpace(24),
-                      const CheckoutPaymentMethod()
-                          .animateRightLeft(isFromStart: false),
+                      CheckoutPaymentMethod(
+                        selectedMethod: _selectedPaymentMethod,
+                        onMethodChanged: _onPaymentMethodChanged, // ✅ دلوقتي مطابق
+                      ).animateRightLeft(isFromStart: false),
                       verticalSpace(24),
                       CheckoutTotalRow(
                         totalAmount: widget.totalPrice,

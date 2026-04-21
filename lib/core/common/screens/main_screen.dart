@@ -113,10 +113,15 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CartBloc, CartState>(
-      listenWhen: (previous, current) => current.maybeWhen(
-        error: (_) => true,
-        orElse: () => false,
-      ),
+      listenWhen: (previous, current) {
+        // ✅ يعرض error فقط لو المستخدم في صفحة الـ Cart
+        if (_currentIndex != 3) return false;
+
+        return current.maybeWhen(
+          error: (_) => true,
+          orElse: () => false,
+        );
+      },
       listener: (context, state) {
         state.whenOrNull(
           error: (message) => CustomToast.showError(context, message),

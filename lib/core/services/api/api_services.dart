@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
+import 'package:retrofit/retrofit.dart' hide Headers;
+import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/data/model/product_response_model.dart';
 import 'package:route_smart/core/constants/api_constants.dart';
 import 'package:route_smart/features/auth_feature/data/models/auth_response_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/forgot_password/forgot_password_request_model.dart';
@@ -10,17 +13,17 @@ import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_re
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/response_verification_code_model.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/verification_code_request_model.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
-import 'package:route_smart/core/common/data/model/product_response_model.dart';
-import 'package:route_smart/features/checkout/data/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/order_response_model.dart';
-import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
-import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 import 'package:route_smart/features/cart/data/models/cart_request_model.dart';
 import 'package:route_smart/features/cart/data/models/cart_response_model.dart';
 import 'package:route_smart/features/cart/data/models/update_cart_item_request_model.dart';
+import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/order_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/stripe/ephemeral_key_response_model.dart';
+import 'package:route_smart/features/checkout/data/models/stripe/payment_amount_model.dart';
+import 'package:route_smart/features/checkout/data/models/stripe/payment_intent_response_model.dart';
 import 'package:route_smart/features/details/data/models/product_details_response_model.dart';
+import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
+import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 
 part 'api_services.g.dart';
 
@@ -38,9 +41,7 @@ abstract class ApiService {
   );
 
   @POST(ApiConstants.signin)
-  Future<AuthResponseModel> signIn(
-    @Body() SignInRequestModel signInRequest,
-  );
+  Future<AuthResponseModel> signIn(@Body() SignInRequestModel signInRequest);
 
   @POST(ApiConstants.forgotPassword)
   Future<MessageResponseModel> forgotPassword(
@@ -102,9 +103,7 @@ abstract class ApiService {
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.wishlist)
-  Future<WishlistResponseModel> getWishlist(
-    @Header('token') String token,
-  );
+  Future<WishlistResponseModel> getWishlist(@Header('token') String token);
 
   @POST(ApiConstants.addToWishlist)
   Future<MessageResponseModel> addToWishlist(
@@ -123,9 +122,7 @@ abstract class ApiService {
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.cart)
-  Future<CartResponseModel> getCart(
-    @Header('token') String token,
-  );
+  Future<CartResponseModel> getCart(@Header('token') String token);
 
   @POST(ApiConstants.addToCart)
   Future<CartResponseModel> addToCart(
@@ -147,41 +144,57 @@ abstract class ApiService {
   );
 
   @DELETE(ApiConstants.cart)
-  Future<MessageResponseModel> clearCart(
-    @Header('token') String token,
-  );
+  Future<MessageResponseModel> clearCart(@Header('token') String token);
 
+  // ══════════════════════════════════════════════════════════════
+  // Addresses
+  // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.addresses)
-Future<AddressResponseModel> getAddresses(
-  @Header('token') String token,
-);
+  Future<AddressResponseModel> getAddresses(@Header('token') String token);
 
-@POST(ApiConstants.addAddress)
-Future<AddressResponseModel> addAddress(
-  @Header('token') String token,
+  @POST(ApiConstants.addAddress)
+  Future<AddressResponseModel> addAddress(
+    @Header('token') String token,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @DELETE(ApiConstants.removeAddress)
+  Future<AddressResponseModel> removeAddress(
+    @Header('token') String token,
+    @Path('addressId') String addressId,
+  );
+
+  // ══════════════════════════════════════════════════════════════
+  // Orders
+  // ══════════════════════════════════════════════════════════════
+
+  @POST(ApiConstants.createCashOrder)
+  Future<OrderResponseModel> createCashOrder(
+    @Header('token') String token,
+    @Path('cartId') String cartId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @GET(ApiConstants.getUserOrders)
+  Future<List<OrderResponseModel>> getUserOrders(@Path('userId') String userId);
+
+  // ══════════════════════════════════════════════════════════════
+  // Stripe (Full URL — different baseUrl)
+  // ══════════════════════════════════════════════════════════════
+
+  @POST(ApiConstants.createPaymentIntent)
+@FormUrlEncoded()
+Future<PaymentIntentResponseModel> createPaymentIntent(
+  @Header('Authorization') String authorization,
   @Body() Map<String, dynamic> body,
 );
 
-@DELETE(ApiConstants.removeAddress)
-Future<AddressResponseModel> removeAddress(
-  @Header('token') String token,
-  @Path('addressId') String addressId,
-);
-
-// ══════════════════════════════════════════════════════════════
-// Orders
-// ══════════════════════════════════════════════════════════════
-
-@POST(ApiConstants.createCashOrder)
-Future<OrderResponseModel> createCashOrder(
-  @Header('token') String token,
-  @Path('cartId') String cartId,
+@POST(ApiConstants.createEphemeralKey)
+@FormUrlEncoded()
+Future<EphemeralKeyResponseModel> createEphemeralKey(
+  @Header('Authorization') String authorization,
+  @Header('Stripe-Version') String stripeVersion,
   @Body() Map<String, dynamic> body,
-);
-
-@GET(ApiConstants.getUserOrders)
-Future<List<OrderResponseModel>> getUserOrders(
-  @Path('userId') String userId,
 );
 }
