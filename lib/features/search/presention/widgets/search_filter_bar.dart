@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/data/model/category_response_model.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 import 'package:route_smart/features/search/presention/manger/search_params.dart';
 import 'package:route_smart/features/search/presention/widgets/search_bar_item.dart';
@@ -24,12 +25,12 @@ class SearchFilterBar extends StatelessWidget {
 
   // ─── Active Filters Count ─────────────────────────────────────────────────
   int get _activeFiltersCount => [
-        params.categoryId,
-        params.sort,
-        params.minPrice,
-        params.maxPrice,
-        params.brandId,
-      ].where((f) => f != null).length;
+    params.categoryId,
+    params.sort,
+    params.minPrice,
+    params.maxPrice,
+    params.brandId,
+  ].where((f) => f != null).length;
 
   bool get _hasActiveFilters => _activeFiltersCount > 0;
 
@@ -82,10 +83,10 @@ class SearchFilterBar extends StatelessWidget {
               label: 'Price',
               icon: Icons.attach_money_rounded,
               isSelected: params.minPrice != null || params.maxPrice != null,
-              badgeCount: [params.minPrice, params.maxPrice]
-                      .where((p) => p != null)
-                      .length
-                  .let((c) => c > 0 ? c : null),
+              badgeCount: [
+                params.minPrice,
+                params.maxPrice,
+              ].where((p) => p != null).length.let((c) => c > 0 ? c : null),
               onTap: () {},
             ),
           ),
@@ -96,12 +97,12 @@ class SearchFilterBar extends StatelessWidget {
 
   // ─── Sort Label ────────────────────────────────────────────────────────────
   String get _sortLabel => switch (params.sort) {
-        '-price' => 'Price ↓',
-        'price'  => 'Price ↑',
-        '-sold'  => 'Popular',
-        '-rate'  => 'Top Rated',
-        _        => 'Sort',
-      };
+    '-price' => 'Price ↓',
+    'price' => 'Price ↑',
+    '-sold' => 'Popular',
+    '-rate' => 'Top Rated',
+    _ => 'Sort',
+  };
 
   // ─── Sort Bottom Sheet ─────────────────────────────────────────────────────
   void _showSortSheet(BuildContext context) {
@@ -127,36 +128,25 @@ class _ClearButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: context.color.primary
-          .withValues(alpha: 0.08),
+          color: context.color.primary.withValues(alpha: 0.08),
           border: Border.all(
-            color: context.color.primary
-            .withValues(alpha: 0.3),
+            color: context.color.primary.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.close_rounded,
-              size: 16,
-              color: context.color.primary
-              ,
-            ),
+            Icon(Icons.close_rounded, size: 16, color: context.color.primary),
             const SizedBox(width: 6),
             Text(
               'Clear',
               style: context.textStyle.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeightHelper.medium,
-                color: context.color.primary
-                ,
+                color: context.color.primary,
               ),
             ),
           ],
@@ -177,11 +167,15 @@ class _SortBottomSheet extends StatelessWidget {
   final ValueChanged<String?> onSelected;
 
   static const _sortOptions = [
-    (label: 'Default',    value: null,     icon: Icons.sort_rounded),
-    (label: 'Price ↓',   value: '-price',  icon: Icons.arrow_downward_rounded),
-    (label: 'Price ↑',   value: 'price',   icon: Icons.arrow_upward_rounded),
-    (label: 'Popular',   value: '-sold',   icon: Icons.local_fire_department_rounded),
-    (label: 'Top Rated', value: '-rate',   icon: Icons.star_rounded),
+    (label: 'Default', value: null, icon: Icons.sort_rounded),
+    (label: 'Price ↓', value: '-price', icon: Icons.arrow_downward_rounded),
+    (label: 'Price ↑', value: 'price', icon: Icons.arrow_upward_rounded),
+    (
+      label: 'Popular',
+      value: '-sold',
+      icon: Icons.local_fire_department_rounded,
+    ),
+    (label: 'Top Rated', value: '-rate', icon: Icons.star_rounded),
   ];
 
   @override
@@ -190,9 +184,7 @@ class _SortBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
       decoration: BoxDecoration(
         color: context.color.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(24),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -210,9 +202,8 @@ class _SortBottomSheet extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
+          verticalSpace(20),
 
-          // ── Title ────────────────────────────────────────────────────────
           Row(
             children: [
               Icon(
@@ -232,7 +223,7 @@ class _SortBottomSheet extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          verticalSpace(16),
 
           // ── Options ──────────────────────────────────────────────────────
           ..._sortOptions.map(
@@ -274,10 +265,7 @@ class _SortOptionItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
@@ -326,10 +314,8 @@ class _SortOptionItem extends StatelessWidget {
             // ── Check ────────────────────────────────────────────────────
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) => ScaleTransition(
-                scale: animation,
-                child: child,
-              ),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
               child: isSelected
                   ? Icon(
                       Icons.check_circle_rounded,
@@ -337,10 +323,7 @@ class _SortOptionItem extends StatelessWidget {
                       color: context.color.primary,
                       size: 20,
                     )
-                  : const SizedBox(
-                      key: ValueKey('empty'),
-                      width: 20,
-                    ),
+                  : const SizedBox(key: ValueKey('empty'), width: 20),
             ),
           ],
         ),

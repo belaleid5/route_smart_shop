@@ -19,7 +19,7 @@ class FlashDealsSection extends StatelessWidget {
         children: [
           const FlashDealsSectionHeader(),
           verticalSpace(16),
-          const SizedBox(height: 250, child: FlashDealProductsList()),
+          SizedBox(height:  250, child: FlashDealProductsList()),
         ],
       ),
     );

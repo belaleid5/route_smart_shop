@@ -1,17 +1,14 @@
+import 'package:route_smart/core/language/lang_keys.dart';
+
 class ApiErrorsConstants {
-  static const String badRequestError = 'badRequestError';
-  static const String noContent = 'noContent';
-  static const String forbiddenError = 'forbiddenError';
-  static const String unauthorizedError = 'unauthorizedError';
-  static const String notFoundError = 'notFoundError';
-  static const String conflictError = 'conflictError';
-  static const String internalServerError = 'internalServerError';
-  static const String unknownError = 'unknownError';
-  static const String timeoutError = 'timeoutError';
-  static const String defaultError = 'defaultError';
-  static const String cacheError = 'cacheError';
-  static const String noInternetError = 'noInternetError';
-  static const String loadingMessage = 'loading_message';
-  static const String retryAgainMessage = 'retry_again_message';
-  static const String ok = 'Ok';
+  static final String noContent = LangKeys.errorNoContent;
+  static final String badRequestError = LangKeys.errorBadRequest;
+  static final String unauthorizedError = LangKeys.errorUnauthorized;
+  static final String forbiddenError = LangKeys.errorForbidden;
+  static final String internalServerError = LangKeys.errorServer;
+  static final String notFoundError = LangKeys.errorNotFound;
+  static final String timeoutError = LangKeys.errorTimeout;
+  static final String cacheError = LangKeys.errorCache;
+  static final String noInternetError = LangKeys.errorNoInternet;
+  static final String defaultError = LangKeys.errorDefault;
 }

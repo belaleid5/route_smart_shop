@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_event.dart';
 
@@ -18,7 +19,7 @@ class SearchErrorView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SearchErrorMessage(message: message),
-          const SizedBox(height: 16),
+          verticalSpace(16),
           SearchRetryButton(),
         ],
       ),

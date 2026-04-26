@@ -113,7 +113,8 @@ class _VerifyCodeFormSliverState extends State<VerifyCodeFormSliver> {
         context.pushNamed(AppRoutesNames.reset_password);
       },
       error: (errorMessage) {
-        CustomToast.showError(context, errorMessage);
+                CustomToast.showError(context, context.translate(errorMessage));
+;
         pinController.clear(); 
       },
     );

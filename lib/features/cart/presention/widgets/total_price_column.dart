@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class TotalPriceColumn extends StatelessWidget {
   const TotalPriceColumn({super.key, required this.totalPrice});
@@ -20,7 +21,7 @@ class TotalPriceColumn extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 2),
+        verticalSpace(2),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, animation) => SlideTransition(

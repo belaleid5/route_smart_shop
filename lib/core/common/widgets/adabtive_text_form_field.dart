@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class AdaptiveInputField extends StatelessWidget {
   const AdaptiveInputField({
@@ -89,7 +90,7 @@ class AdaptiveInputField extends StatelessWidget {
       children: [
         if (title != null)
           Text(title!, style: Theme.of(context).textTheme.labelLarge),
-        if (title != null) const SizedBox(height: 10),
+        if (title != null) verticalSpace(10),
         TextFormField(
           readOnly: readOnly,
           controller: controller,

@@ -101,7 +101,7 @@ class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
         context.pushReplacementNamed(AppRoutesNames.verifyCode);
       },
       error: (errorMessage) {
-        CustomToast.showError(context, errorMessage);
+        CustomToast.showError(context, context.translate(errorMessage));
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/data/model/category_response_model.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 import 'package:route_smart/features/search/presention/widgets/search_category_menu_item.dart';
 
@@ -47,10 +48,7 @@ class _SearchCategoryMenuOverlayState extends State<SearchCategoryMenuOverlay>
       curve: Curves.easeOutBack,
     );
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     _controller.forward();
   }
@@ -155,10 +153,7 @@ class _MenuContent extends StatelessWidget {
             // ── List ──────────────────────────────────────────────────────
             Flexible(
               child: ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 6,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 shrinkWrap: true,
                 children: [
                   // ── All Option ──────────────────────────────────────────
@@ -169,23 +164,22 @@ class _MenuContent extends StatelessWidget {
                     onTap: () => onSelected(null),
                   ),
 
-                  const SizedBox(height: 4),
+                  verticalSpace(4),
 
                   // ── Categories ──────────────────────────────────────────
                   ...categories.map(
                     (cat) => SearchCategoryMenuItem(
-                      label: cat.name,
+                      label: cat.name!,
                       isSelected: selectedId == cat.id,
-                      onTap: () => onSelected(
-                        selectedId == cat.id ? null : cat.id,
-                      ),
+                      onTap: () =>
+                          onSelected(selectedId == cat.id ? null : cat.id),
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 6),
+            verticalSpace(6),
           ],
         ),
       ),

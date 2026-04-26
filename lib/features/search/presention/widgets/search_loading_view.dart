@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/custom_shimmer.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 
 class SearchLoadingView extends StatelessWidget {
   const SearchLoadingView({super.key});
-
 
   static const int _shimmerCount = 8;
 
@@ -16,27 +15,23 @@ class SearchLoadingView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       itemCount: _shimmerCount,
       separatorBuilder: (_, __) => verticalSpace(12),
-      itemBuilder: (_, __) => const SearchItemShimmer(),
+      itemBuilder: (_, index) => _SearchItemShimmer(index: index),
     );
   }
 }
 
+class _SearchItemShimmer extends StatelessWidget {
+  const _SearchItemShimmer({required this.index});
 
-class SearchItemShimmer extends StatelessWidget {
-  const SearchItemShimmer({super.key});
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ShimmerWidget.rounded(
-          height: 80,
-          width: 80,
-          radius: 12,
-        ),
+        ShimmerWidget.rounded(height: 80, width: 80, radius: 12),
         horizontalSpace(12),
-        // Text placeholders
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,6 +46,10 @@ class SearchItemShimmer extends StatelessWidget {
           ),
         ),
       ],
+    )
+    .animateRightLeft(
+      duration: Duration(milliseconds: 300 + (index * 50)),
+      isFromStart: false,
     );
   }
 }

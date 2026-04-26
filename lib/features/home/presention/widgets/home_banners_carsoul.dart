@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/main_carousel_slider.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/home/presention/widgets/builde_banner_card.dart';
 
@@ -26,6 +27,6 @@ class HomeBannerCarousel extends StatelessWidget {
           bgColor: context.color.primary,
         ),
       ],
-    );
+    ).animateBlur();
   }
 }

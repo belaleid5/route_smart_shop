@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
 class SearchTitle extends StatelessWidget {
@@ -13,7 +14,7 @@ class SearchTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SearchTitleGradientText(),
-        const SizedBox(height: 4),
+        verticalSpace(4),
         SearchTitleSubtitle(),
       ],
     );
@@ -32,10 +33,7 @@ class SearchTitleGradientText extends StatelessWidget {
         fontWeight: FontWeightHelper.bold,
         foreground: Paint()
           ..shader = LinearGradient(
-            colors: [
-              context.color.primary,
-              const Color(0xFF6DECB9),
-            ],
+            colors: [context.color.primary, const Color(0xFF6DECB9)],
           ).createShader(const Rect.fromLTWH(0, 0, 200, 50)),
       ),
     );

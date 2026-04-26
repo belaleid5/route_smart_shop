@@ -51,6 +51,8 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
     context.read<SignInBloc>().add(SignInSubmitted(request));
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
@@ -113,10 +115,11 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
         }
         // ignore: use_build_context_synchronously
         CustomToast.showSuccess(context, data.message ?? "Welcome Back!");
-         context.pushNamedAndRemoveUntil(AppRoutesNames.wishlist);
+         context.pushNamedAndRemoveUntil(AppRoutesNames.mainScreen);
       },
       error: (message) {
-        CustomToast.showError(context, message);
+               CustomToast.showError(context, context.translate(message));
+
       },
     );
   }

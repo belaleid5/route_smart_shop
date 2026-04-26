@@ -236,7 +236,7 @@ class ShimmerListTile extends StatelessWidget {
               children: [
                 ShimmerWidget.text(width: 150),
                 if (showSubtitle) ...[
-                  const SizedBox(height: 8),
+                  verticalSpace(8),
                   ShimmerWidget.text(width: 100, height: 12),
                 ],
               ],

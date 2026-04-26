@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class RegisterHeaderSliver extends StatelessWidget {
@@ -34,7 +35,7 @@ class RegisterHeaderSliver extends StatelessWidget {
                 ),
               ],
             ).animateBottomToTop(),
-            const SizedBox(height: 40),
+            verticalSpace( 40),
             Text(
               'Create Account',
               style: context.textStyle.copyWith(
@@ -42,7 +43,7 @@ class RegisterHeaderSliver extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ).animateRightLeft(),
-            const SizedBox(height: 8),
+            verticalSpace( 8),
             Text(
               'Sign up to get started',
               style: context.textStyle.copyWith(

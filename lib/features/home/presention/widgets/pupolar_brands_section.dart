@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_state.dart';
@@ -41,8 +43,10 @@ class _PopularBrandsSectionState extends State<PopularBrandsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HeaderSection(title: 'Popular Brands'),
-        const SizedBox(height: 12),
+        const HeaderSection(
+          title: 'Popular Brands',
+        ).animateRightLeft(isFromStart: false),
+        verticalSpace(12),
         BlocBuilder<BrandsBloc, BrandsState>(
           builder: (context, state) {
             return state.when(
@@ -61,7 +65,7 @@ class _PopularBrandsSectionState extends State<PopularBrandsSection> {
                 onRetry: () => context.read<BrandsBloc>().add(
                   const BrandsEvent.getBrands(),
                 ),
-              ),
+              ).animateShakeAlarm(),
             );
           },
         ),

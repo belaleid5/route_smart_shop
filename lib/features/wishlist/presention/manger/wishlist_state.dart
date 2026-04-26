@@ -1,8 +1,8 @@
 // lib/features/wishlist/presention/manger/wishlist_state.dart
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
-import 'package:collection/collection.dart';
 
 part 'wishlist_state.freezed.dart';
 

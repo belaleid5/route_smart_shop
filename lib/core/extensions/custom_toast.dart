@@ -8,12 +8,16 @@ class CustomToast {
 
   static void show(
     BuildContext context,
-    String message, {
+    String? message, {
     ToastType type = ToastType.info,
     Duration duration = const Duration(seconds: 5),
   }) {
+    final safeMessage = (message != null && message.isNotEmpty)
+        ? message
+        : 'Something went wrong';
+
     debugPrint(' CustomToast.show called');
-    debugPrint('   Message: $message');
+    debugPrint('   Message: $safeMessage');
     debugPrint('   Type: $type');
 
     try {
@@ -26,7 +30,7 @@ class CustomToast {
         builder: (ctx) {
           debugPrint('   Building toast widget');
           return _ToastWidget(
-            message: message,
+            message: safeMessage,
             type: type,
             duration: duration,
             onDismissed: () {
@@ -47,17 +51,17 @@ class CustomToast {
     }
   }
 
-  static void showSuccess(BuildContext context, String message) {
+  static void showSuccess(BuildContext context, String? message) {
     debugPrint(' showSuccess called');
     show(context, message, type: ToastType.success);
   }
 
-  static void showError(BuildContext context, String message) {
+  static void showError(BuildContext context, String? message) {
     debugPrint(' showError called');
     show(context, message, type: ToastType.error);
   }
 
-  static void showInfo(BuildContext context, String message) {
+  static void showInfo(BuildContext context, String? message) {
     debugPrint('showInfo called');
     show(context, message);
   }
@@ -159,7 +163,6 @@ class _ToastWidgetState extends State<_ToastWidget>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final backgroundColor = isDark ? context.color.shades : Colors.white;
-
     final closeIconColor = isDark ? Colors.grey[400] : Colors.grey[600];
 
     return Positioned(
@@ -178,11 +181,14 @@ class _ToastWidgetState extends State<_ToastWidget>
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(12),
                 border: isDark
-                    ? Border.all(color: Colors.white.withOpacity(0.1))
+                    ? Border.all(
+                        color: Colors.white.withValues(alpha: 0.1),
+                      )
                     : null,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                    color: Colors.black
+                        .withValues(alpha: isDark ? 0.3 : 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -202,7 +208,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: config.color.withOpacity(0.1),
+                      color: config.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(config.icon, color: config.color, size: 20),
@@ -225,7 +231,11 @@ class _ToastWidgetState extends State<_ToastWidget>
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.close, size: 18, color: closeIconColor),
+                      child: Icon(
+                        Icons.close,
+                        size: 18,
+                        color: closeIconColor,
+                      ),
                     ),
                   ),
                 ],

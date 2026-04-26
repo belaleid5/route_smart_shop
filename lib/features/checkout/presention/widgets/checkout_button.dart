@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/common/functions/spink_kit.dart';
+import 'package:route_smart/core/common/widgets/loading_widget.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+
+class CheckoutButton extends StatelessWidget {
+  const CheckoutButton({
+    super.key,
+    this.onPressed,
+    this.isLoading = false,
+  });
+
+  final VoidCallback? onPressed;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.color.button,
+          disabledBackgroundColor: context.color.button.withValues(alpha: 0.6),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+        ),
+        child: isLoading
+            ?  loadingWidgetSpinKit(context)
+            : Text(
+                'Checkout Now',
+                style: context.textStyle.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+      ),
+    );
+  }
+}

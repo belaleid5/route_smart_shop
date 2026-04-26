@@ -12,9 +12,9 @@ import 'package:route_smart/features/auth_feature/data/models/sign_up/register_r
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_state.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/custom_text_go_to.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/bloc_builder_button_auth.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/custom_form_field_phone_number.dart';
-import 'package:route_smart/features/auth_feature/presention/widgets/custom_text_go_to.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/sign_up_widget/widget_custom_check_box_agree_terms.dart';
 
 class RegisterFormSliver extends StatefulWidget {
@@ -115,7 +115,7 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
 
                   const WidgetCustomCheckBoxAgreeTerms(),
 
-                  const SizedBox(height: 25),
+                  verticalSpace(25),
 
                   BlocBuilderButtonAuth(onSubmit: _onSubmit),
 
@@ -141,10 +141,11 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
           context,
           data.message ?? "Account Created Successfully",
         );
-            context.pushNamedAndRemoveUntil(AppRoutesNames.signIn);
+        context.pushNamedAndRemoveUntil(AppRoutesNames.signIn);
       },
       error: (message) {
-        CustomToast.showError(context, message);
+               CustomToast.showError(context, context.translate(message));
+;
       },
     );
   }

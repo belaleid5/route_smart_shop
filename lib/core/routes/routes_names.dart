@@ -8,10 +8,21 @@ class AppRoutesNames {
   static const forgotPassword = '/forgot_password';
   static const verifyCode = '/verify_code';
   static const reset_password = '/reset_password';
-   static const home = '/home_page';
-   static const search = '/search_page';
-     static const wishlist = '/wishlist';
-     static const mainScreen = '/main_screen';
-     static const details = '/details';
-static const cart = '/cart';
+  static const home = '/home_page';
+  static const search = '/search_page';
+  static const wishlist = '/wishlist';
+  static const mainScreen = '/main_screen';
+  static const details = '/details';
+  static const cart = '/cart';
+  static const checkout = '/checkout';
+   static const paymentResult = '/paymentResult';
+   static const paymentDetails = '/payment_details';
+  static const reviews = '/reviews';
+  static const productDetails = '/productDetails';
+
+
+
+
+
+
 }

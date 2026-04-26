@@ -219,7 +219,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     switch (result) {
       case Success(data: final response):
         final newCategories = response.data;
-        allFetchedCategories.addAll(newCategories);
+        allFetchedCategories.addAll(newCategories!);
 
         if (state is SearchSuccess) {
           final current = state as SearchSuccess;
@@ -247,7 +247,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       // Category Filter
       final matchesCategory = params.categoryId == null ||
-          product.category?.id == params.categoryId; // أو id حسب الموديل
+          product.category?.id == params.categoryId; 
 
       final matchesBrand = params.brandId == null ||
           product.brand?.id == params.brandId;
@@ -260,12 +260,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     final filteredBrands = allFetchedBrands.where((brand) {
       if (query.isEmpty) return true;
-      return (brand.name ?? '').toLowerCase().contains(query);
+      return (brand.name ?? '').toLowerCase().startsWith(query);
     }).toList();
 
     final filteredCategories = allFetchedCategories.where((category) {
       if (query.isEmpty) return true;
-      return category.name.toLowerCase().contains(query);
+      return category.name!.toLowerCase().startsWith(query);
     }).toList();
 
     final currentMax = hasReachedMax ??

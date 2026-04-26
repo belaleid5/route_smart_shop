@@ -15,6 +15,7 @@ abstract final class ApiConstants {
 
   // ================== Products ==================
   static const String products = 'v1/products';
+  static const String productDetails = 'v1/products/{productId}';
 
   // ================== Categories ==================
   static const String categories = 'v1/categories';
@@ -22,18 +23,37 @@ abstract final class ApiConstants {
   // ================== Brands ==================
   static const String brands = 'v1/brands';
 
-  // ================== Orders ==================
-  static String checkoutSession(String cartId) =>
-      'v1/orders/checkout-session/$cartId';
-
-  static String userOrders(String userId) => 'v1/orders/user/$userId';
-
   // ================== Cart ==================
- static const String cart           = 'v2/cart';
-static const String addToCart      = 'v2/cart';
-static const String updateCartItem = 'v2/cart/{productId}'; 
-static const String removeCartItem = 'v2/cart/{productId}'; 
-static const String clearCart      = 'v2/cart';
+  static const String cart = 'v2/cart';
+  static const String addToCart = 'v2/cart';
+  static const String updateCartItem = 'v2/cart/{productId}';
+  static const String removeCartItem = 'v2/cart/{productId}';
+  static const String clearCart = 'v2/cart';
+
+  // ================== Addresses ==================
+  static const String addresses = 'v1/addresses';
+  static const String addAddress = 'v1/addresses';
+  static const String removeAddress = 'v1/addresses/{addressId}';
+  static const String getSpecificAddress = 'v1/addresses/{addressId}';
+
+  // ================== Orders ==================
+  static const String createCashOrder = 'v2/orders/{cartId}';
+  static const String checkoutSession = 'v1/orders/checkout-session/{cartId}';
+  static const String getUserOrders = 'v1/orders/user/{userId}';
+  static const String getAllOrders = 'v1/orders';
+
+  static const String allReviews = 'v1/reviews';
+  static const String reviewById = 'v1/reviews/{id}';
+  static const String productReviews = 'v1/products/{productId}/reviews';
+  static const String createReview = 'v1/products/{productId}/reviews';
+  static const String updateReview = 'v1/reviews/{id}';
+  static const String deleteReview = 'v1/reviews/{id}';
+
+  // ================== Stripe ==================
+  static const String stripeBaseUrl = 'https://api.stripe.com/v1/';
+  static const String createPaymentIntent = '${stripeBaseUrl}payment_intents';
+  static const String createEphemeralKey = '${stripeBaseUrl}ephemeral_keys';
+  static const String stripeApiVersion = '2024-11-20.acacia';
 
   // ================== Timeouts ==================
   static const Duration connectionTimeout = Duration(seconds: 60);
