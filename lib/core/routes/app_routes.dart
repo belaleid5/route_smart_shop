@@ -1,5 +1,8 @@
+// core/routes/app_router.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/screens/empty_screen.dart';
 import 'package:route_smart/core/common/screens/main_screen.dart';
 import 'package:route_smart/core/di/di.dart';
@@ -22,6 +25,9 @@ import 'package:route_smart/features/checkout/data/models/shipping_address_model
 import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
 import 'package:route_smart/features/checkout/presention/pages/checkout_page.dart';
 import 'package:route_smart/features/checkout/presention/pages/payment_deatils_page.dart';
+import 'package:route_smart/features/details/presention/manger/product_details_bloc.dart';
+import 'package:route_smart/features/details/presention/manger/product_details_event.dart';
+import 'package:route_smart/features/details/presention/page/product_details_page.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
@@ -29,6 +35,9 @@ import 'package:route_smart/features/home/presention/manger/categroy/categories_
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_event.dart';
 import 'package:route_smart/features/home/presention/pages/home_screen.dart';
+import 'package:route_smart/features/reviews/presention/manger/review_events.dart';
+import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
+import 'package:route_smart/features/reviews/presention/pages/reviews_page.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_event.dart';
 import 'package:route_smart/features/search/presention/pages/search_screen.dart';
@@ -55,7 +64,6 @@ class AppRouter {
           builder: (_) => const SplashPage(),
         );
 
-    
       case AppRoutesNames.cart:
         return MaterialPageRoute(
           settings: settings,
@@ -129,16 +137,16 @@ class AppRouter {
                   ..add(const CategoriesEvent.getCategories()),
               ),
               BlocProvider(
-                create: (_) => sl<BrandsBloc>()
-                  ..add(const BrandsEvent.getBrands()),
+                create: (_) =>
+                    sl<BrandsBloc>()..add(const BrandsEvent.getBrands()),
               ),
               BlocProvider(
                 create: (_) => sl<ProductsBloc>()
                   ..add(const ProductsEvent.getProducts()),
               ),
               BlocProvider(
-                create: (_) => sl<SearchBloc>()
-                  ..add(const SearchEventSearch()),
+                create: (_) =>
+                    sl<SearchBloc>()..add(const SearchEventSearch()),
               ),
               BlocProvider.value(value: _wishlistBloc),
               BlocProvider.value(value: _cartBloc),
@@ -182,6 +190,7 @@ class AppRouter {
           ),
         );
 
+   
       case AppRoutesNames.checkout:
         final args = settings.arguments as Map<String, dynamic>?;
         if (args == null) {
@@ -191,9 +200,7 @@ class AppRouter {
           settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (_) => sl<CheckoutBloc>(),
-              ),
+              BlocProvider(create: (_) => sl<CheckoutBloc>()),
               BlocProvider.value(value: _cartBloc),
             ],
             child: CheckoutPage(
@@ -203,6 +210,44 @@ class AppRouter {
             ),
           ),
         );
+
+case AppRoutesNames.reviews:
+  final productId = settings.arguments as String?;
+  if (productId == null) {
+    return _errorRoute('Missing product ID for reviews');
+  }
+  return MaterialPageRoute(
+    settings: settings,
+    builder: (_) => BlocProvider(
+      create: (_) => sl<ReviewsBloc>()
+        ..add(ReviewsEvent.getProductReviews(productId: productId)),
+      child: ReviewsPage(productId: productId),
+    ),
+  );
+
+  case AppRoutesNames.productDetails:
+    final product = settings.arguments as ProductDataModel?;
+    if (product == null) {
+      return _errorRoute('Missing product data');
+    }
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: _wishlistBloc),
+          BlocProvider.value(value: _cartBloc),
+          BlocProvider(
+            create: (_) => sl<ProductDetailsBloc>()
+              ..add(ProductDetailsEvent.getProductDetails(product.id ?? '')),
+          ),
+          BlocProvider(
+            create: (_) => sl<ReviewsBloc>()
+              ..add(ReviewsEvent.getProductReviews(productId: product.id ?? '')),
+          ),
+        ],
+        child: ProductDetailsPage(product: product),
+      ),
+    );
 
       case AppRoutesNames.paymentDetails:
         final args = settings.arguments as Map<String, dynamic>?;
@@ -216,7 +261,8 @@ class AppRouter {
             child: PaymentDetailsPage(
               amount: args['amount'] as double,
               cartId: args['cartId'] as String,
-              shippingAddress: args['shippingAddress'] as ShippingAddressModel,
+              shippingAddress:
+                  args['shippingAddress'] as ShippingAddressModel,
             ),
           ),
         );
@@ -239,4 +285,3 @@ class AppRouter {
     );
   }
 }
-

@@ -42,12 +42,17 @@ abstract final class ApiConstants {
   static const String getUserOrders = 'v1/orders/user/{userId}';
   static const String getAllOrders = 'v1/orders';
 
+  static const String allReviews = 'v1/reviews';
+  static const String reviewById = 'v1/reviews/{id}';
+  static const String productReviews = 'v1/products/{productId}/reviews';
+  static const String createReview = 'v1/products/{productId}/reviews';
+  static const String updateReview = 'v1/reviews/{id}';
+  static const String deleteReview = 'v1/reviews/{id}';
+
   // ================== Stripe ==================
   static const String stripeBaseUrl = 'https://api.stripe.com/v1/';
-  static const String createPaymentIntent =
-      '${stripeBaseUrl}payment_intents';
-  static const String createEphemeralKey =
-      '${stripeBaseUrl}ephemeral_keys';
+  static const String createPaymentIntent = '${stripeBaseUrl}payment_intents';
+  static const String createEphemeralKey = '${stripeBaseUrl}ephemeral_keys';
   static const String stripeApiVersion = '2024-11-20.acacia';
 
   // ================== Timeouts ==================

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:route_smart/core/services/cach/cach_manger.dart';
 import 'package:route_smart/core/styles/app_images.dart';
+import 'package:route_smart/core/extensions/custom_shimmer.dart'; 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +22,7 @@ class CustomImage extends StatelessWidget {
     this.color,
     this.applySvgColor = false,
     this.fallbackPath,
+    this.isCircular = false,
   });
 
   final ImagesType imageType;
@@ -33,6 +34,7 @@ class CustomImage extends StatelessWidget {
   final Color? color;
   final bool applySvgColor;
   final String? fallbackPath;
+  final bool isCircular;
 
   String get _securePath => imagePath.replaceFirst('http://', 'https://');
 
@@ -53,6 +55,14 @@ class CustomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
+
+    // تجهيز الشيمر ليكون متطابقاً مع أبعاد وشكل الصورة المطلوبة
+    final placeholder = _PlaceholderImage(
+      width: width,
+      height: height,
+      borderRadius: isCircular ? (width ?? 100) / 2 : borderRadius,
+      isCircular: isCircular,
+    );
 
     switch (imageType) {
       case ImagesType.svg:
@@ -77,8 +87,7 @@ class CustomImage extends StatelessWidget {
             colorFilter: applySvgColor
                 ? ColorFilter.mode(color ?? Colors.red, BlendMode.srcIn)
                 : null,
-            placeholderBuilder: (_) =>
-                _PlaceholderImage(width: width, height: height),
+            placeholderBuilder: (_) => placeholder,
           ),
         );
 
@@ -136,8 +145,13 @@ class CustomImage extends StatelessWidget {
                 cacheKey: _securePath,
                 color: color,
                 fit: boxFit,
-                placeholder: (context, url) =>
-                    _PlaceholderImage(width: width, height: height),
+                
+                // ✅ إعدادات التلاشي (Fade) لمنع الفراغ اللحظي
+                fadeInDuration: const Duration(milliseconds: 500), // وقت ظهور الصورة
+                fadeOutDuration: const Duration(milliseconds: 300), // وقت اختفاء الشيمر
+                fadeInCurve: Curves.easeInOut, // حركة ظهور انسيابية
+                
+                placeholder: (context, url) => placeholder,
                 errorWidget: (context, url, error) {
                   debugPrint('❌ CachedNetworkImage error: $error');
                   return _errorImage();
@@ -146,7 +160,7 @@ class CustomImage extends StatelessWidget {
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
+      borderRadius: BorderRadius.circular(isCircular ? (width ?? 100) / 2 : borderRadius),
       child: imageWidget,
     );
   }
@@ -154,27 +168,28 @@ class CustomImage extends StatelessWidget {
 
 // ══════════════════════════════════════════════════════
 class _PlaceholderImage extends StatelessWidget {
-  const _PlaceholderImage({this.width, this.height});
+  const _PlaceholderImage({
+    this.width,
+    this.height,
+    this.borderRadius = 5.0,
+    this.isCircular = false,
+  });
 
   final double? width;
   final double? height;
+  final double borderRadius;
+  final bool isCircular;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      color: Colors.grey.shade100,
-      child: Center(
-        child: SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: Colors.grey.shade400,
-          ),
-        ),
-      ),
+    if (isCircular && width != null) {
+      return ShimmerWidget.circular(size: width!);
+    }
+    
+    return ShimmerWidget.rectangular(
+      width: width ?? double.infinity,
+      height: height ?? double.infinity,
+      borderRadius: BorderRadius.circular(borderRadius),
     );
   }
 }

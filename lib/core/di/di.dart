@@ -1,3 +1,5 @@
+// core/di/di.dart
+
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_smart/core/app/app_cubit/app_cubit_cubit.dart';
@@ -27,6 +29,9 @@ import 'package:route_smart/features/details/presention/manger/product_details_b
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
+import 'package:route_smart/features/reviews/data/data_source/reviews_remote_data_source.dart';
+import 'package:route_smart/features/reviews/data/repo/reviews_repository_impl.dart';
+import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/wishlist/data/data_source/wishlist_data_source.dart';
 import 'package:route_smart/features/wishlist/data/repo/wishlisrt_repo.dart';
@@ -41,8 +46,9 @@ Future<void> setupDI() async {
   await _iniWishlist();
   _registerCartFeature();
   _detailsProductFeature();
-  _registerStripeFeature();    
-  _registerCheckoutFeature();    
+  _registerStripeFeature();
+  _registerCheckoutFeature();
+  _registerReviewsFeature(); 
 }
 
 Future<void> _initCore() async {
@@ -103,7 +109,6 @@ Future<void> _iniWishlist() async {
   sl.registerFactory(() => WishlistBloc(sl()));
 }
 
-
 void _registerCartFeature() {
   sl.registerLazySingleton<CartRemoteDataSource>(
     () => CartRemoteDataSourceImpl(sl<ApiService>(), sl<SecureStorage>()),
@@ -115,8 +120,6 @@ void _registerCartFeature() {
 
   sl.registerFactory(() => CartBloc(sl<CartRepositoryImpl>()));
 }
-
-
 
 void _detailsProductFeature() {
   sl.registerLazySingleton<ProductDetailsRemoteDataSource>(
@@ -130,9 +133,7 @@ void _detailsProductFeature() {
   sl.registerFactory(() => ProductDetailsBloc(sl()));
 }
 
-
 void _registerStripeFeature() {
-  // Data Source
   sl.registerLazySingleton<StripeRemoteDataSource>(
     () => StripeRemoteDataSourceImpl(sl<ApiService>()),
   );
@@ -156,4 +157,20 @@ void _registerCheckoutFeature() {
       sl<StripeRepository>(),
     ),
   );
+}
+
+// ✅ Reviews Feature
+void _registerReviewsFeature() {
+  // Data Source
+  sl.registerLazySingleton<ReviewsRemoteDataSource>(
+    () => ReviewsRemoteDataSourceImpl(sl<ApiService>(), sl<SecureStorage>()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ReviewsRepository>(
+    () => ReviewsRepository(sl<ReviewsRemoteDataSource>()),
+  );
+
+  // Bloc
+  sl.registerFactory(() => ReviewsBloc(sl<ReviewsRepository>()));
 }

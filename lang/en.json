@@ -83,5 +83,10 @@
     "checkout_now": "Checkout Now",
     "please_select_address": "Please select a delivery address",
     "order_created_success": "Order created successfully!",
+    "review_already_added": "You already added review on this product",
+    "add_review": "Add Review",
+    "edit_review": "Edit Review",
+    "submit_review": "Submit Review",
+    "update_review": "Update Review",
     "payment": "Payment"
 }
