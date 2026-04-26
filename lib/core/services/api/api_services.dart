@@ -19,9 +19,11 @@ import 'package:route_smart/features/cart/data/models/update_cart_item_request_m
 import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
 import 'package:route_smart/features/checkout/data/models/order_response_model.dart';
 import 'package:route_smart/features/checkout/data/models/stripe/ephemeral_key_response_model.dart';
-import 'package:route_smart/features/checkout/data/models/stripe/payment_amount_model.dart';
 import 'package:route_smart/features/checkout/data/models/stripe/payment_intent_response_model.dart';
 import 'package:route_smart/features/details/data/models/product_details_response_model.dart';
+import 'package:route_smart/features/reviews/data/models/create_review_request_model.dart';
+import 'package:route_smart/features/reviews/data/models/review_model.dart';
+import 'package:route_smart/features/reviews/data/models/reviews_response_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_request_model.dart';
 import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
 
@@ -41,7 +43,9 @@ abstract class ApiService {
   );
 
   @POST(ApiConstants.signin)
-  Future<AuthResponseModel> signIn(@Body() SignInRequestModel signInRequest);
+  Future<AuthResponseModel> signIn(
+    @Body() SignInRequestModel signInRequest,
+  );
 
   @POST(ApiConstants.forgotPassword)
   Future<MessageResponseModel> forgotPassword(
@@ -103,7 +107,9 @@ abstract class ApiService {
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.wishlist)
-  Future<WishlistResponseModel> getWishlist(@Header('token') String token);
+  Future<WishlistResponseModel> getWishlist(
+    @Header('token') String token,
+  );
 
   @POST(ApiConstants.addToWishlist)
   Future<MessageResponseModel> addToWishlist(
@@ -122,7 +128,9 @@ abstract class ApiService {
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.cart)
-  Future<CartResponseModel> getCart(@Header('token') String token);
+  Future<CartResponseModel> getCart(
+    @Header('token') String token,
+  );
 
   @POST(ApiConstants.addToCart)
   Future<CartResponseModel> addToCart(
@@ -144,14 +152,18 @@ abstract class ApiService {
   );
 
   @DELETE(ApiConstants.cart)
-  Future<MessageResponseModel> clearCart(@Header('token') String token);
+  Future<MessageResponseModel> clearCart(
+    @Header('token') String token,
+  );
 
   // ══════════════════════════════════════════════════════════════
   // Addresses
   // ══════════════════════════════════════════════════════════════
 
   @GET(ApiConstants.addresses)
-  Future<AddressResponseModel> getAddresses(@Header('token') String token);
+  Future<AddressResponseModel> getAddresses(
+    @Header('token') String token,
+  );
 
   @POST(ApiConstants.addAddress)
   Future<AddressResponseModel> addAddress(
@@ -177,24 +189,66 @@ abstract class ApiService {
   );
 
   @GET(ApiConstants.getUserOrders)
-  Future<List<OrderResponseModel>> getUserOrders(@Path('userId') String userId);
+  Future<List<OrderResponseModel>> getUserOrders(
+    @Path('userId') String userId,
+  );
 
   // ══════════════════════════════════════════════════════════════
   // Stripe (Full URL — different baseUrl)
   // ══════════════════════════════════════════════════════════════
 
   @POST(ApiConstants.createPaymentIntent)
-@FormUrlEncoded()
-Future<PaymentIntentResponseModel> createPaymentIntent(
-  @Header('Authorization') String authorization,
-  @Body() Map<String, dynamic> body,
-);
+  @FormUrlEncoded()
+  Future<PaymentIntentResponseModel> createPaymentIntent(
+    @Header('Authorization') String authorization,
+    @Body() Map<String, dynamic> body,
+  );
 
-@POST(ApiConstants.createEphemeralKey)
-@FormUrlEncoded()
-Future<EphemeralKeyResponseModel> createEphemeralKey(
-  @Header('Authorization') String authorization,
-  @Header('Stripe-Version') String stripeVersion,
-  @Body() Map<String, dynamic> body,
-);
+  @POST(ApiConstants.createEphemeralKey)
+  @FormUrlEncoded()
+  Future<EphemeralKeyResponseModel> createEphemeralKey(
+    @Header('Authorization') String authorization,
+    @Header('Stripe-Version') String stripeVersion,
+    @Body() Map<String, dynamic> body,
+  );
+
+  // ══════════════════════════════════════════════════════════════
+  // Reviews
+  // ══════════════════════════════════════════════════════════════
+
+  @GET(ApiConstants.allReviews)
+  Future<ReviewsResponseModel> getAllReviews(
+    @Query("page") int? page,
+  );
+
+  @GET(ApiConstants.productReviews)
+  Future<ReviewsResponseModel> getProductReviews(
+    @Path("productId") String productId,
+    @Query("page") int? page,
+  );
+
+  @GET(ApiConstants.reviewById)
+  Future<ReviewModel> getReviewById(
+    @Path("id") String id,
+  );
+
+  @POST(ApiConstants.createReview)
+  Future<void> createReview(
+    @Header('token') String token,
+    @Path("productId") String productId,
+    @Body() CreateReviewRequestModel body,
+  );
+
+  @PUT(ApiConstants.updateReview)
+  Future<void> updateReview(
+    @Header('token') String token,
+    @Path("id") String id,
+    @Body() CreateReviewRequestModel body,
+  );
+
+  @DELETE(ApiConstants.deleteReview)
+  Future<void> deleteReview(
+    @Header('token') String token,
+    @Path("id") String id,
+  );
 }

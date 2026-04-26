@@ -108,6 +108,12 @@ class LangKeys {
   static const String pleaseSelectAddress = 'please_select_address';
   static const String orderCreatedSuccess = 'order_created_success';
   static const String payment = 'payment';
+  static const String reviewAlreadyAdded = 'review_already_added';
+  static const String addReview = 'add_review';
+  static const String editReview = 'edit_review';
+  static const String submitReview = 'submit_review';
+  static const String updateReview = 'update_review';
+
 
   
 }

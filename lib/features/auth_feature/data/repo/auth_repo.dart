@@ -18,21 +18,19 @@ import 'package:route_smart/features/auth_feature/data/models/verfication_code_m
 
 class AuthRepositoryImpl {
   final AuthRemoteDataSource _remoteDataSource;
-  final SecureStorage _secureStorage;              // ← أضف
+  final SecureStorage _secureStorage;              
 
   AuthRepositoryImpl(
     this._remoteDataSource,
-    this._secureStorage,                           // ← أضف
+    this._secureStorage,                           
   );
 
-  // ── SignIn ─────────────────────────────────────
   Future<ApiResult<AuthResponseModel>> signIn(
     SignInRequestModel signInRequest,
   ) async {
     try {
       final response = await _remoteDataSource.signIn(signInRequest);
 
-      // ✅ احفظ الـ Token
       final token = response.token;
       if (token != null && token.isNotEmpty) {
         await _secureStorage.setString(
@@ -51,7 +49,6 @@ class AuthRepositoryImpl {
     }
   }
 
-  // ── Register ───────────────────────────────────
   Future<ApiResult<AuthResponseModel>> register(
     RegisterRequestModel registerRequest,
   ) async {
@@ -76,7 +73,6 @@ class AuthRepositoryImpl {
     }
   }
 
-  // ── Forgot Password ────────────────────────────
   Future<ApiResult<MessageResponseModel>> forgotPassword(
     ForgotPasswordRequestModel forgotPasswordRequest,
   ) async {
@@ -93,7 +89,6 @@ class AuthRepositoryImpl {
     }
   }
 
-  // ── Verify Code ────────────────────────────────
   Future<ApiResult<VerificationCodeResponseModel>> sendResetCode(
     VerificationCodeRequestModel verifyCodedRequest,
   ) async {
@@ -108,7 +103,6 @@ class AuthRepositoryImpl {
     }
   }
 
-  // ── Reset Password ─────────────────────────────
   Future<ApiResult<ResetPasswordResponse>> resetPassword(
     ResetPasswordRequestModel resetPasswordRequest,
   ) async {

@@ -42,9 +42,7 @@ class PaymentResultDialog extends StatelessWidget {
           child: Column(
             children: [
               AppLogo(colors: colors),
-
               const Spacer(),
-
               isSuccess
                   ? SuccessContent(colors: colors)
                   : LoadingContent(colors: colors),

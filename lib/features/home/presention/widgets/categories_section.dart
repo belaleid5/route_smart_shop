@@ -29,8 +29,9 @@ class CategoriesSection extends StatelessWidget {
           child: BlocBuilder<CategoriesBloc, CategoriesState>(
             builder: (context, state) {
               return state.maybeWhen(
+                
                 loading: () => SmoothListView.separated(
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 800),
                   curve: Curves.easeOutQuart,
                   smoothScroll: true,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -40,7 +41,7 @@ class CategoriesSection extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return const ShimmerBrandItem(size: 70)
                     .animateBottomToTop(
-                      duration: Duration(milliseconds: 300 + (index * 50)),
+                      duration: Duration(milliseconds: 500 + (index * 50)),
                     );
                   },
                 ),
@@ -75,7 +76,7 @@ class CategoriesSection extends StatelessWidget {
                         category: category,
                       )
                       .animateBottomToTop(
-                        duration: Duration(milliseconds: 300 + (index * 50)),
+                        duration: Duration(milliseconds: 500 + (index * 50)),
                       );
                     },
                   );

@@ -23,6 +23,7 @@ class CategoryItem extends StatelessWidget {
           ),
           child: ClipOval(
             child: CustomImage(
+              
               imageType: ImagesType.network,
               imagePath: category.image ?? '',
             ),

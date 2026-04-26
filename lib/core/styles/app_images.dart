@@ -16,4 +16,5 @@ class AppImages {
   static const String googleIcon = "assets/images/google.svg";
   static const String appleIcon = 'assets/images/apple.svg';
   static const String fashionImage = 'assets/images/apple.svg';
+  static const String userImage = "assets/icons/boy.svg";
 }

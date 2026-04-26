@@ -82,5 +82,10 @@
     "checkout_now": "إتمام الشراء",
     "please_select_address": "الرجاء اختيار عنوان التوصيل",
     "order_created_success": "تم إنشاء الطلب بنجاح!",
+    "review_already_added": "لقد قمت بإضافة تقييم لهذا المنتج مسبقاً",
+    "add_review": "إضافة تقييم",
+    "edit_review": "تعديل التقييم",
+    "submit_review": "إرسال التقييم",
+    "update_review": "تحديث التقييم",
     "payment": "الدفع"
 }
