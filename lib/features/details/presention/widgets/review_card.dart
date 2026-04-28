@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/features/details/presention/widgets/review_action_menu.dart';
 import 'package:route_smart/features/details/presention/widgets/user_avatar.dart';
 import 'package:route_smart/features/reviews/data/models/review_model.dart';
-import 'package:route_smart/features/reviews/presention/widgets/reviews_actions.dart';
 import 'package:route_smart/features/reviews/presention/widgets/star_rating_widget.dart';
 
 class ReviewPreviewCard extends StatelessWidget {
@@ -19,8 +19,6 @@ class ReviewPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userName = review.user.name;
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -33,29 +31,28 @@ class ReviewPreviewCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              UserAvatar(name: userName, colors: colors),
+              UserAvatar(name: review.user.name, colors: colors),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colors.textPrimary,
-                      ),
+                      review.user.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    StarRatingWidget(rating: review.rating),
+                    StarRatingWidget(rating: review.rating.toDouble()),
                   ],
                 ),
               ),
-              if (isMyReview) ReviewActions(review: review),
+              if (isMyReview) ReviewActionsMenu(review: review),
             ],
           ),
           const SizedBox(height: 8),
           Text(
             review.review,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(color: colors.textSecondary),
           ),
         ],

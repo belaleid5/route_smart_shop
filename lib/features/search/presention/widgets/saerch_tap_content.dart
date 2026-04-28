@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/product/product_grid_view.dart';
 import 'package:route_smart/core/extensions/cart_extenions.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart'; // مهم جداً للـ pushName
 import 'package:route_smart/core/extensions/wishlist_extention.dart';
-import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
-import 'package:route_smart/features/details/presention/page/product_details_page.dart';
+import 'package:route_smart/core/routes/routes_names.dart'; // مهم جداً للـ AppRoutesNames
 import 'package:route_smart/features/search/presention/manger/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
 import 'package:route_smart/features/search/presention/widgets/search_brands_list.dart';
 import 'package:route_smart/features/search/presention/widgets/search_category_grid_view.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
 
 class SearchTabContent extends StatelessWidget {
   const SearchTabContent({
@@ -48,7 +46,7 @@ class SearchTabContent extends StatelessWidget {
           onProductTap: (product) => _navigateToDetails(context, product),
           onFavoriteTap: (product) =>
               context.toggleWishlist(product.id ?? ''),
-              onAddToCartTap: (product) => context.toggleCart(product.id ?? ''),
+          onAddToCartTap: (product) => context.toggleCart(product.id ?? ''),
         ),
 
       SearchTab.categories => SearchCategoriesGridView(
@@ -70,17 +68,10 @@ class SearchTabContent extends StatelessWidget {
   }
 
   void _navigateToDetails(BuildContext context, ProductDataModel product) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: context.read<WishlistBloc>()),
-            BlocProvider.value(value: context.read<CartBloc>()),
-          ],
-          child: ProductDetailsPage(product: product),
-        ),
-      ),
+   
+    context.pushName(
+      AppRoutesNames.productDetails,
+      arguments: product,
     );
   }
 }

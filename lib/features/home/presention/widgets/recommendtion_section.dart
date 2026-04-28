@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/gird_view_shimmer.dart';
 import 'package:route_smart/core/common/widgets/product/product_grid_view.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
@@ -8,25 +9,15 @@ import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/wishlist_extention.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
-import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
-import 'package:route_smart/features/details/presention/page/product_details_page.dart';
+import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_state.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
 
 class RecommendedSection extends StatelessWidget {
   const RecommendedSection({super.key});
 
-  void _navigateToDetails(BuildContext context, dynamic product) {
-    context.push(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider.value(value: context.read<WishlistBloc>()),
-          BlocProvider.value(value: context.read<CartBloc>()),
-        ],
-        child: ProductDetailsPage(product: product),
-      ),
-    );
+  void _navigateToDetails(BuildContext context, ProductDataModel product) {
+    context.pushName(AppRoutesNames.productDetails, arguments: product);
   }
 
   @override
@@ -52,9 +43,7 @@ class RecommendedSection extends StatelessWidget {
               success: (products, hasReachedMax) {
                 if (products.isEmpty) {
                   return Center(
-                    child: Text(
-                      context.translate(LangKeys.noProductsFound),
-                    ),
+                    child: Text(context.translate(LangKeys.noProductsFound)),
                   ).animateFlipVertical();
                 }
                 return GridViewProducts(

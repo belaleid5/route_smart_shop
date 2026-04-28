@@ -30,6 +30,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
   @override
   void initState() {
     super.initState();
+    // تهيئة الحقول لو كنا في وضع التعديل
     _reviewController = TextEditingController(
       text: widget.existingReview?.review ?? '',
     );
@@ -56,8 +57,9 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Handle bar
+            // Handle bar (الشريط الرمادي الصغير في الأعلى)
             Center(
               child: Container(
                 width: 40,
@@ -79,35 +81,47 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
             ),
             const SizedBox(height: 20),
 
-            StarSelector(
-              rating: _rating,
-              onRatingChanged: (value) => setState(() => _rating = value),
+            // ويدجت اختيار النجوم
+            Center(
+              child: StarSelector(
+                rating: _rating,
+                onRatingChanged: (value) => setState(() => _rating = value),
+              ),
             ),
             const SizedBox(height: 20),
 
+            // حقل كتابة التعليق
             TextField(
               controller: _reviewController,
               maxLines: 3,
+              style: context.textStyle.copyWith(fontSize: 14),
               decoration: InputDecoration(
                 hintText: 'Share your experience...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: context.color.button, width: 2),
+                ),
               ),
             ),
             const SizedBox(height: 24),
 
+            // زر الإرسال مع مراقبة حالة الـ Loading
             SizedBox(
               width: double.infinity,
               height: 50,
               child: BlocBuilder<ReviewsBloc, ReviewsState>(
                 builder: (context, state) {
+                  // نتحقق إذا كان هناك عملية إضافة/تعديل جارية
                   final isLoading = state.maybeWhen(
                     actionLoading: () => true,
                     orElse: () => false,
                   );
 
                   return ElevatedButton(
+                    // الزر يتعطل إذا كان التقييم 0 أو كان هناك تحميل جاري
                     onPressed: (isLoading || _rating == 0) ? null : _submit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.color.button,
@@ -126,7 +140,10 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
                           )
                         : Text(
                             widget.isEditMode ? 'Update' : 'Submit',
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                   );
                 },
