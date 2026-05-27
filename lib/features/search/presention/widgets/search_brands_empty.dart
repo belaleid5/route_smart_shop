@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
@@ -27,7 +28,7 @@ class SearchEmptyState extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: context.color.primary.withValues(alpha: 0.4),
+              color: context.colors.primary.withValues(alpha: 0.4),
             ).animateFlipVertical(),
 
             verticalSpace(16),
@@ -37,9 +38,11 @@ class SearchEmptyState extends StatelessWidget {
               style: context.textStyle.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeightHelper.semiBold,
-                color: context.color.textSecondary,
+                color: context.colors.textSecondary,
               ),
-            ).animateRightLeft(duration: const Duration(milliseconds: 400)),
+            ).animateRightLeft(
+              duration: const Duration(milliseconds: 400),
+            ),
 
             verticalSpace(8),
 
@@ -47,7 +50,7 @@ class SearchEmptyState extends StatelessWidget {
               subtitle,
               style: context.textStyle.copyWith(
                 fontSize: 13,
-                color: context.color.textSecondary.withValues(alpha: 0.6),
+                color: context.colors.textSecondary.withValues(alpha: 0.6),
               ),
             ).animateRightLeft(
               isFromStart: false,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/features/details/data/models/product_details_response_model.dart';
+import 'package:route_smart/features/details/domain/entites/product_details_entit.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_app_bar.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_bottom_bar.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_cover_image.dart';
@@ -19,7 +19,7 @@ class ProductDetailsContent extends StatelessWidget {
     required this.onAddToCart,
   });
 
-  final ProductDetailsDataModel product;
+  final ProductDetailsEntity product;
   final String productId;
   final int quantity;
   final VoidCallback onIncrement;
@@ -36,8 +36,8 @@ class ProductDetailsContent extends StatelessWidget {
             slivers: [
               SliverToBoxAdapter(
                 child: ProductDetailsCoverImage(
-                  imageCover: product.imageCover ?? '',
-                  images: product.images ?? [],
+                  imageCover: product.imageCover,
+                  images: product.images,
                 ).animateBlur(),
               ),
               SliverToBoxAdapter(
@@ -55,9 +55,7 @@ class ProductDetailsContent extends StatelessWidget {
                   productId: productId,
                 ).animateBottomToTop(),
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 120),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 120)),
             ],
           ),
           const Positioned(

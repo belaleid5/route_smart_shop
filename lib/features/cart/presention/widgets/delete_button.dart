@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class DeleteButton extends StatelessWidget {
   const DeleteButton({super.key, required this.onDelete});
@@ -14,7 +15,7 @@ class DeleteButton extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: context.color.shades,
+          color: context.colors.shades,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -27,7 +28,7 @@ class DeleteButton extends StatelessWidget {
         child: Icon(
           Icons.delete_outline_rounded,
           size: 18,
-          color: context.color.textPrimary,
+          color: context.colors.textPrimary,
         ),
       ),
     );

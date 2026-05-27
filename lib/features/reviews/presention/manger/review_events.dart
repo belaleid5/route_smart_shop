@@ -1,29 +1,44 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+sealed class ReviewsEvent {
+  const ReviewsEvent();
+}
 
-part 'review_events.freezed.dart';
+final class ProductReviewsRequested extends ReviewsEvent {
+  final String productId;
+  const ProductReviewsRequested(this.productId);
+}
 
-@freezed
-sealed class ReviewsEvent with _$ReviewsEvent {
-  const factory ReviewsEvent.getProductReviews({
-    required String productId,
-    int? page,
-  }) = GetProductReviewsEvent;
+final class ReviewDeleteRequested extends ReviewsEvent {
+  final String productId;
+  final String reviewId;
 
-  const factory ReviewsEvent.createReview({
-    required String productId,
-    required String review,
-    required double rating,
-  }) = CreateReviewEvent;
+  const ReviewDeleteRequested({
+    required this.productId,
+    required this.reviewId,
+  });
+}
 
-  const factory ReviewsEvent.updateReview({
-    required String productId,
-    required String reviewId,
-    required String review,
-    required double rating,
-  }) = UpdateReviewEvent;
+final class ReviewCreateRequested extends ReviewsEvent {
+  final String productId;
+  final String reviewText;
+  final double rating; 
 
-  const factory ReviewsEvent.deleteReview({
-    required String productId,
-    required String reviewId,
-  }) = DeleteReviewEvent;
+  const ReviewCreateRequested({
+    required this.productId,
+    required this.reviewText,
+    required this.rating,
+  });
+}
+
+final class ReviewUpdateRequested extends ReviewsEvent {
+  final String productId;
+  final String reviewId;
+  final String reviewText;
+  final double rating; 
+
+  const ReviewUpdateRequested({
+    required this.productId,
+    required this.reviewId,
+    required this.reviewText,
+    required this.rating,
+  });
 }

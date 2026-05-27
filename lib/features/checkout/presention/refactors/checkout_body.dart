@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
-import 'package:route_smart/features/cart/data/models/cart_item_model.dart';
-import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
+import 'package:route_smart/features/cart/domain/entites/cart_item_entity.dart';
+import 'package:route_smart/features/checkout/domain/entites/address_entity.dart';
+import 'package:route_smart/features/checkout/domain/entites/shipping_address_entity.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_event.dart';
 import 'package:route_smart/features/checkout/presention/manger/checkout_state.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_address_section.dart';
+import 'package:route_smart/features/checkout/presention/widgets/checkout_address_sheet.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_app_bar.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_button.dart';
 import 'package:route_smart/features/checkout/presention/widgets/checkout_products_section.dart';
@@ -28,7 +30,7 @@ class CheckoutBody extends StatefulWidget {
   });
 
   final String cartId;
-  final List<CartItemModel> cartItems;
+  final List<CartItemEntity> cartItems;
   final double totalPrice;
 
   @override
@@ -36,17 +38,21 @@ class CheckoutBody extends StatefulWidget {
 }
 
 class _CheckoutBodyState extends State<CheckoutBody> {
-  AddressModel? _selectedAddress;
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash; // ✅ استخدم الـ imported
-  List<AddressModel> _cachedAddresses = [];
+  AddressEntity? _selectedAddress;
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
+  List<AddressEntity> _cachedAddresses = [];
 
-  void _onAddressSelected(AddressModel address) {
-    setState(() => _selectedAddress = address);
+  @override
+  void initState() {
+    super.initState();
+    context.read<CheckoutBloc>().add(const GetAddressesEvent());
   }
 
-  void _onPaymentMethodChanged(PaymentMethod method) {
-    setState(() => _selectedPaymentMethod = method);
-  }
+  void _onAddressSelected(AddressEntity address) =>
+      setState(() => _selectedAddress = address);
+
+  void _onPaymentMethodChanged(PaymentMethod method) =>
+      setState(() => _selectedPaymentMethod = method);
 
   void _handleCheckout() {
     if (_selectedAddress == null) {
@@ -57,25 +63,33 @@ class _CheckoutBodyState extends State<CheckoutBody> {
       return;
     }
 
-    final shippingAddress = ShippingAddressModel(
+    final shippingAddress = ShippingAddressEntity(
       details: _selectedAddress!.details ?? '',
       phone: _selectedAddress!.phone ?? '',
       city: _selectedAddress!.city ?? '',
     );
 
+    final bloc = context.read<CheckoutBloc>();
+
     if (_selectedPaymentMethod == PaymentMethod.cash) {
-      context.read<CheckoutBloc>().add(
-            CheckoutEvent.createCashOrder(
-              cartId: widget.cartId,
-              shippingAddress: shippingAddress,
-            ),
-          );
+      bloc.add(
+        CreateCashOrderEvent(
+          cartId: widget.cartId,
+          shippingAddress: shippingAddress,
+        ),
+      );
     } else {
-      showPaymentResultDialog(context, isSuccess: true);
+      bloc.add(
+        PayWithCardEvent(
+          amount: widget.totalPrice,
+          cartId: widget.cartId,
+          shippingAddress: shippingAddress,
+        ),
+      );
     }
   }
 
-  void _autoSelectFirstAddress(List<AddressModel> addresses) {
+  void _handleAddressesLoaded(List<AddressEntity> addresses) {
     if (addresses.isNotEmpty) {
       setState(() {
         _cachedAddresses = addresses;
@@ -87,42 +101,28 @@ class _CheckoutBodyState extends State<CheckoutBody> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CheckoutBloc, CheckoutState>(
-      listenWhen: (previous, current) => current.maybeWhen(
-        addressesLoaded: (_) => true,
-        orderCreated: (_) => true,
-        paymentSuccess: () => true,
-        error: (_) => true,
-        orElse: () => false,
-      ),
+      listenWhen: (_, current) =>
+          current is CheckoutAddressesLoaded ||
+          current is CheckoutOrderCreated ||
+          current is CheckoutPaymentSuccess ||
+          current is CheckoutError,
       listener: (context, state) {
-        state.maybeWhen(
-          addressesLoaded: _autoSelectFirstAddress,
-          orderCreated: (_) {
+        switch (state) {
+          case CheckoutAddressesLoaded(:final addresses):
+            _handleAddressesLoaded(addresses);
+          case CheckoutOrderCreated():
             showPaymentResultDialog(context, isSuccess: true);
-          },
-          paymentSuccess: () {
+          case CheckoutPaymentSuccess():
             showPaymentResultDialog(context, isSuccess: true);
-          },
-          error: (message) {
+          case CheckoutError(:final message):
             CustomToast.showError(context, message);
-          },
-          orElse: () {},
-        );
+          default:
+            break;
+        }
       },
       builder: (context, state) {
-        final isLoading = state.maybeWhen(
-          loading: () => true,
-          processingPayment: () => true,
-          orElse: () => false,
-        );
-
-        final addresses = state.maybeWhen(
-          addressesLoaded: (fresh) {
-            if (fresh.isNotEmpty) _cachedAddresses = fresh;
-            return _cachedAddresses;
-          },
-          orElse: () => _cachedAddresses,
-        );
+        final isLoading =
+            state is CheckoutLoading || state is CheckoutProcessingPayment;
 
         return SafeArea(
           child: Column(
@@ -137,10 +137,24 @@ class _CheckoutBodyState extends State<CheckoutBody> {
                     children: [
                       verticalSpace(16),
                       CheckoutAddressSection(
-                        addresses: addresses,
+                        addresses: _cachedAddresses,
                         selectedAddress: _selectedAddress,
                         onAddressSelected: _onAddressSelected,
                         isLoading: isLoading,
+                        onAddAddress: () =>
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: context.colors.background,
+                              builder: (_) => BlocProvider.value(
+                                value: context.read<CheckoutBloc>(),
+                                child: const CheckoutAddAddressSheet(),
+                              ),
+                            ).then((_) {
+                              context.read<CheckoutBloc>().add(
+                                const GetAddressesEvent(),
+                              );
+                            }),
                       ).animateRightLeft(isFromStart: false),
                       verticalSpace(24),
                       CheckoutProductsSection(
@@ -149,7 +163,7 @@ class _CheckoutBodyState extends State<CheckoutBody> {
                       verticalSpace(24),
                       CheckoutPaymentMethod(
                         selectedMethod: _selectedPaymentMethod,
-                        onMethodChanged: _onPaymentMethodChanged, // ✅ دلوقتي مطابق
+                        onMethodChanged: _onPaymentMethodChanged,
                       ).animateRightLeft(isFromStart: false),
                       verticalSpace(24),
                       CheckoutTotalRow(

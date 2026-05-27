@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class DotIndicator extends StatelessWidget {
   const DotIndicator({super.key, required this.isSelected});
@@ -15,8 +16,8 @@ class DotIndicator extends StatelessWidget {
       height: 8,
       decoration: BoxDecoration(
         color: isSelected
-            ? context.color.button
-            : context.color.button.withOpacity(0.3),
+            ? context.colors.button
+            : context.colors.button.withOpacity(0.3),
         borderRadius: BorderRadius.circular(4),
       ),
     );

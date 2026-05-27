@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/details/presention/widgets/details_quantity_button.dart';
 
 class ProductDetailsQuantityRow extends StatelessWidget {
@@ -23,7 +24,7 @@ class ProductDetailsQuantityRow extends StatelessWidget {
           style: context.textStyle.copyWith(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         const Spacer(),
@@ -38,7 +39,7 @@ class ProductDetailsQuantityRow extends StatelessWidget {
           style: context.textStyle.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         const SizedBox(width: 16),

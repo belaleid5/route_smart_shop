@@ -1,30 +1,63 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
-part 'search_state.freezed.dart';
+// features/search/presentation/manager/search_state.dart
 
-@freezed
-sealed class SearchState with _$SearchState {
-  const factory SearchState.initial() = SearchInitial;
+import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
+import 'package:route_smart/core/common/domain/entites/category_entity.dart';
+import 'package:route_smart/core/common/domain/entites/product_entity.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 
-  const factory SearchState.loading() = SearchLoading;
+sealed class SearchState {
+  const SearchState();
+}
 
-  const factory SearchState.success({
-    required SearchFilterParams params,
-    required List<ProductDataModel> products,
+final class SearchInitial extends SearchState {
+  const SearchInitial();
+}
 
-    @Default([]) List<CategoryData> categories,
-    @Default([]) List<BrandData> brands,
+final class SearchLoading extends SearchState {
+  const SearchLoading();
+}
 
-    @Default(0) int totalProducts,
-    @Default(0) int totalBrands,
-    @Default(0) int totalCategories,
+final class SearchError extends SearchState {
+  const SearchError(this.message);
+  final String message;
+}
 
-    @Default(false) bool isLoadingMore,
-    @Default(false) bool hasReachedMax,
-  }) = SearchSuccess;
+final class SearchSuccess extends SearchState {
+  const SearchSuccess({
+    required this.params,
+    required this.products,
+    this.categories = const [],
+    this.brands = const [],
+    this.isLoadingMore = false,
+    this.hasReachedMax = false,
+  });
 
-  const factory SearchState.error(String message) = SearchError;
+  final SearchFilterParams params;
+  final List<ProductEntity> products;
+  final List<CategoryEntity> categories;
+  final List<BrandEntity> brands;
+  final bool isLoadingMore;
+  final bool hasReachedMax;
+
+  int get totalProducts => products.length;
+  int get totalBrands => brands.length;
+  int get totalCategories => categories.length;
+
+  SearchSuccess copyWith({
+    SearchFilterParams? params,
+    List<ProductEntity>? products,
+    List<CategoryEntity>? categories,
+    List<BrandEntity>? brands,
+    bool? isLoadingMore,
+    bool? hasReachedMax,
+  }) {
+    return SearchSuccess(
+      params: params ?? this.params,
+      products: products ?? this.products,
+      categories: categories ?? this.categories,
+      brands: brands ?? this.brands,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
 }

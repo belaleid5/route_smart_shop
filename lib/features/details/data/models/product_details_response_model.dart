@@ -1,26 +1,22 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
-import 'package:route_smart/features/home/data/models/sub_category_response_model.dart';
+// features/details/data/models/product_details_response_model.dart
 
-part 'product_details_response_model.g.dart';
+import 'package:route_smart/features/details/domain/entites/product_details_entit.dart';
 
-@JsonSerializable()
 class ProductDetailsResponseModel {
-  @JsonKey(name: 'data')
   final ProductDetailsDataModel? data;
 
   const ProductDetailsResponseModel({this.data});
 
-  factory ProductDetailsResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductDetailsResponseModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProductDetailsResponseModelToJson(this);
+  factory ProductDetailsResponseModel.fromJson(Map<String, dynamic> json) {
+    return ProductDetailsResponseModel(
+      data: json['data'] != null
+          ? ProductDetailsDataModel.fromJson(json['data'])
+          : null,
+    );
+  }
 }
 
-@JsonSerializable()
 class ProductDetailsDataModel {
-  @JsonKey(name: '_id')
   final String? id;
   final String? title;
   final String? slug;
@@ -32,18 +28,6 @@ class ProductDetailsDataModel {
   final List<String>? images;
   final double? ratingsAverage;
   final int? ratingsQuantity;
-
-  @JsonKey(name: 'category')
-  final CategoryData? category;     
-
-  @JsonKey(name: 'brand')
-  final BrandData? brand;         
-
-  @JsonKey(name: 'subcategory')
-  final List<SubcategoryResponseModel>? subcategory;
-
-  final String? createdAt;
-  final String? updatedAt;
 
   const ProductDetailsDataModel({
     this.id,
@@ -57,15 +41,45 @@ class ProductDetailsDataModel {
     this.images,
     this.ratingsAverage,
     this.ratingsQuantity,
-    this.category,
-    this.brand,
-    this.subcategory,
-    this.createdAt,
-    this.updatedAt,
   });
 
-  factory ProductDetailsDataModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductDetailsDataModelFromJson(json);
+  factory ProductDetailsDataModel.fromJson(Map<String, dynamic> json) {
+    return ProductDetailsDataModel(
+      id: json['_id'] as String?,
+      title: json['title'] as String?,
+      slug: json['slug'] as String?,
+      description: json['description'] as String?,
+      quantity: json['quantity'] as int?,
+      sold: json['sold'] as int?,
+      price: (json['price'] as num?)?.toDouble(),
+      imageCover: json['imageCover'] as String?,
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    
+      ratingsAverage: (json['ratingsAverage'] as num?)?.toDouble(),
+      ratingsQuantity: json['ratingsQuantity'] as int?,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$ProductDetailsDataModelToJson(this);
+ 
+  ProductDetailsEntity toEntity() {
+    return ProductDetailsEntity(
+      id: id ?? '',
+      title: title ?? '',
+      slug: slug ?? '',
+      description: description ?? '',
+      quantity: quantity ?? 0,  
+      sold: sold ?? 0,         
+      price: price ?? 0.0,
+      imageCover: imageCover ?? '',
+      images: images ?? [],
+      ratingsAverage: ratingsAverage ?? 0.0,
+      ratingsQuantity: ratingsQuantity ?? 0,
+      category: null,
+      brand: null,
+      createdAt: null,
+      updatedAt: null,
+    );
+  }
 }

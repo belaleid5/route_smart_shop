@@ -1,12 +1,36 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+sealed class CartEvent {
+  const CartEvent();
+}
 
-part 'cart_event.freezed.dart';
+final class AddToCartRequested extends CartEvent {
+  const AddToCartRequested({
+    required this.productId,
+    this.quantity = 1, 
+  });
 
-@freezed
-class CartEvent with _$CartEvent {
-  const factory CartEvent.getCart()                                        = GetCartEvent;
-  const factory CartEvent.addToCart(String productId)                      = AddToCartEvent;
-  const factory CartEvent.updateQuantity(String productId, int count)      = UpdateQuantityEvent; // ✅
-  const factory CartEvent.removeItem(String productId)                     = RemoveItemEvent; // ✅
-  const factory CartEvent.clearCart()                                      = ClearCartEvent;
+  final String productId;
+  final int quantity;
+}
+
+final class RemoveFromCartRequested extends CartEvent {
+  const RemoveFromCartRequested({required this.productId});
+  final String productId;
+}
+
+final class UpdateQuantityRequested extends CartEvent {
+  const UpdateQuantityRequested({
+    required this.productId,
+    required this.quantity,
+  });
+
+  final String productId;
+  final int quantity;
+}
+
+final class GetCartRequested extends CartEvent {
+  const GetCartRequested();
+}
+
+final class ClearCartRequested extends CartEvent {
+  const ClearCartRequested();
 }

@@ -1,15 +1,42 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/domain/entites/category_entity.dart';
 
-part 'categories_state.freezed.dart';
+sealed class CategoriesState {
+  const CategoriesState();
+}
 
-@freezed
-class CategoriesState with _$CategoriesState {
-  const factory CategoriesState.initial() = _Initial;
-  const factory CategoriesState.loading() = _Loading; // لودينج أول صفحة
-  const factory CategoriesState.success({
-    @Default([]) List<CategoryData> categories,
-    @Default(false) bool hasReachedMax,
-  }) = _Success;
-  const factory CategoriesState.error(String message) = _Error;
-}                     
+final class CategoriesInitial extends CategoriesState {
+  const CategoriesInitial();
+}
+
+final class CategoriesLoading extends CategoriesState {
+  const CategoriesLoading();
+}
+
+final class CategoriesSuccess extends CategoriesState {
+  const CategoriesSuccess({
+    this.categories = const [],
+    this.hasReachedMax = false,
+  });
+
+  final List<CategoryEntity> categories;
+  final bool hasReachedMax;
+
+  CategoriesSuccess copyWith({
+    List<CategoryEntity>? categories,
+    bool? hasReachedMax,
+  }) {
+    return CategoriesSuccess(
+      categories: categories ?? this.categories,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
+
+
+}
+
+final class CategoriesError extends CategoriesState {
+  const CategoriesError(this.message);
+  final String message;
+
+  
+}

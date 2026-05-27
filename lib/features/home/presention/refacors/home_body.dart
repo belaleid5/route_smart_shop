@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/app/app_cubit/app_cubit_cubit.dart';
 import 'package:route_smart/core/common/widgets/search/search_input_field.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/core/routes/routes_names.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/home/presention/widgets/categories_section.dart';
 import 'package:route_smart/features/home/presention/widgets/flash_deals_section.dart';
 import 'package:route_smart/features/home/presention/widgets/pupolar_brands_section.dart';
 import 'package:route_smart/features/home/presention/widgets/recommendtion_section.dart';
 
-class HomeBody extends StatefulWidget { 
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
   @override
@@ -20,12 +21,12 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(); 
+    _searchController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _searchController.dispose(); 
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -42,7 +43,7 @@ class _HomeBodyState extends State<HomeBody> {
                 vertical: 8.0,
               ),
               child: SearchInputField(
-                onTap: () => context.pushName(AppRoutesNames.search),
+                onTap: () => context.read<AppCubit>().changeTab(1),
                 readOnly: true,
                 controller: _searchController,
                 onChanged: (String value) {},
@@ -54,7 +55,7 @@ class _HomeBodyState extends State<HomeBody> {
           const SliverToBoxAdapter(child: PopularBrandsSection()),
           const SliverToBoxAdapter(child: FlashDealsSection()),
           const SliverToBoxAdapter(child: RecommendedSection()),
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          SliverToBoxAdapter(child: verticalSpace(100)),
         ],
       ),
     );

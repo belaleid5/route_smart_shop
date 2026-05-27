@@ -1,85 +1,115 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorage {
-  factory SecureStorage() {
-    return _storage;
+  SecureStorage._();
+
+  static final SecureStorage _instance = SecureStorage._();
+  factory SecureStorage() => _instance;
+
+  static const _androidOptions = AndroidOptions(
+    // ignore: deprecated_member_use
+    encryptedSharedPreferences: true,
+  );
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(
+    aOptions: _androidOptions,
+  );
+
+  // ================== String ==================
+  Future<void> write(String key, String value) async {
+    try {
+      await _storage.write(key: key, value: value);
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage write error: $e');
+    }
   }
 
-  SecureStorage._internal();
-  static final SecureStorage _storage = SecureStorage._internal();
-
-  static late FlutterSecureStorage secureStorage;
-
-  /// Below method is to initialize the SecureStorage instance.
-  /// (Secure Storage can be initialized directly, unlike SharedPreferences)
-  Future<dynamic> initSecureStorage() async {
-    // We provide a consistent configuration here
-    secureStorage = const FlutterSecureStorage(
-      // Configuration can be added here if needed, like specific Android or iOS options.
-      // Example for iOS: options: const IOSOptions(accessibility: KeychainAccessibility.first_unlock)
-    );
+  Future<String?> read(String key) async {
+    try {
+      return await _storage.read(key: key);
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage read error: $e');
+      return null;
+    }
   }
 
-  /// Below method is to return the SecureStorage instance.
-  FlutterSecureStorage getSecureStorageInstance() {
-    return secureStorage;
-  }
-
-  /// Below method is to set the string value (encrypted) in the SecureStorage.
-  Future<void> setString(String key, String stringValue) async {
-    await secureStorage.write(key: key, value: stringValue);
-  }
-
-  /// Below method is to get the string value (decrypted) from the SecureStorage.
   Future<String?> getString(String key) async {
-    return await secureStorage.read(key: key);
+    return await read(key);
   }
 
-  /// Below method is to read all stored values (decrypted).
-  Future<Map<String, String>> readAllPreferences() async {
-    return await secureStorage.readAll();
+  // ================== Boolean ==================
+  Future<void> writeBool(String key, bool value) async {
+    try {
+      await _storage.write(key: key, value: value.toString());
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage writeBool error: $e');
+    }
   }
 
-  /// Below method is to set a boolean value.
-  /// (SecureStorage stores only Strings, so we convert it)
-  Future<void> setBoolean(String key, bool booleanValue) async {
-    await secureStorage.write(key: key, value: booleanValue.toString());
+  Future<bool?> readBool(String key) async {
+    try {
+      final value = await _storage.read(key: key);
+      if (value == null) return null;
+      return value == 'true';
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage readBool error: $e');
+      return null;
+    }
   }
 
-  /// Below method is to get a boolean value.
-  Future<bool?> getBoolean(String key) async {
-    final String? stringValue = await secureStorage.read(key: key);
-    if (stringValue == null) return null;
-    if (stringValue == 'true') return true;
-    if (stringValue == 'false') return false;
-    return null; // Return null if the value is not a valid boolean string
+  // ================== Int ==================
+  Future<void> writeInt(String key, int value) async {
+    try {
+      await _storage.write(key: key, value: value.toString());
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage writeInt error: $e');
+    }
   }
 
-  /// Below method is to set an int value.
-  /// (We convert it to String for storage)
-  Future<void> setInt(String key, int intValue) async {
-    await secureStorage.write(key: key, value: intValue.toString());
+  Future<int?> readInt(String key) async {
+    try {
+      final value = await _storage.read(key: key);
+      if (value == null) return null;
+      return int.tryParse(value);
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage readInt error: $e');
+      return null;
+    }
   }
 
-  /// Below method is to get an int value.
-  Future<int?> getInt(String key) async {
-    final String? stringValue = await secureStorage.read(key: key);
-    if (stringValue == null) return null;
-    return int.tryParse(stringValue); // Using tryParse is safer
+  // ================== Utilities ==================
+  Future<void> delete(String key) async {
+    try {
+      await _storage.delete(key: key);
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage delete error: $e');
+    }
   }
 
-  /// Below method is to remove the received preference.
-  Future<void> removePreference(String key) async {
-    await secureStorage.delete(key: key);
+  Future<bool> containsKey(String key) async {
+    try {
+      return await _storage.containsKey(key: key);
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage containsKey error: $e');
+      return false;
+    }
   }
 
-  /// Below method is to check the availability of the received preference.
-  Future<bool> containPreference(String key) async {
-    return await secureStorage.containsKey(key: key);
+  Future<void> clear() async {
+    try {
+      await _storage.deleteAll();
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage clear error: $e');
+    }
   }
 
-  /// Below method is to clear the SecureStorage.
-  Future<void> clearPreferences() async {
-    await secureStorage.deleteAll();
+  Future<Map<String, String>> readAll() async {
+    try {
+      return await _storage.readAll();
+    } catch (e) {
+      if (kDebugMode) debugPrint('SecureStorage readAll error: $e');
+      return {};
+    }
   }
 }

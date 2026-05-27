@@ -1,11 +1,17 @@
+sealed class WishlistEvent {
+  const WishlistEvent();
+}
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+final class GetWishlistEvent extends WishlistEvent {
+  const GetWishlistEvent();
+}
 
-part 'wishlist_event.freezed.dart'; 
+final class AddToWishlistEvent extends WishlistEvent {
+  final String productId;
+  const AddToWishlistEvent(this.productId);
+}
 
-@freezed
-class WishlistEvent with _$WishlistEvent {
-  const factory WishlistEvent.getWishlist() = GetWishlistEvent;
-  const factory WishlistEvent.addToWishlist(String productId) = AddToWishlistEvent;
-  const factory WishlistEvent.removeFromWishlist(String productId) = RemoveFromWishlistEvent;
+final class RemoveFromWishlistEvent extends WishlistEvent {
+  final String productId;
+  const RemoveFromWishlistEvent(this.productId);
 }

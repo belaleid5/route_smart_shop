@@ -1,11 +1,9 @@
-// lib/features/search/presentation/widgets/search_brand_list_item.dart
-
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/search/presention/widgets/search_list_item_info.dart';
 
 import 'search_brand_arrow.dart';
-import 'search_brand_logo.dart';
+import 'search_list_item_image.dart';
 
 class SearchListItem extends StatelessWidget {
   const SearchListItem({
@@ -29,16 +27,16 @@ class SearchListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: context.color.white,
+          color: context.colors.secondary,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: context.color.primary.withValues(alpha: 0.06),
+              color: context.colors.primary.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],
-          border: Border.all(color: context.color.stroke),
+          border: Border.all(color: context.colors.stroke),
         ),
         child: Row(
           children: [

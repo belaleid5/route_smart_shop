@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart'; // ✅
 
 class CheckoutAddressEmpty extends StatelessWidget {
   const CheckoutAddressEmpty({super.key});
@@ -10,14 +12,14 @@ class CheckoutAddressEmpty extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: context.color.shades,
+        color: context.colors.shades,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.color.stroke),
+        border: Border.all(color: context.colors.stroke),
       ),
       child: Text(
-        'No address found. Please add one.',
+        context.translate(LangKeys.noAddressFound),
         style: context.textStyle.copyWith(
-          color: context.color.textSecondary,
+          color: context.colors.textSecondary,
         ),
       ),
     );

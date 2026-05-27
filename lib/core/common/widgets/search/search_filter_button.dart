@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class SearchFilterButton extends StatelessWidget {
   const SearchFilterButton({
@@ -13,6 +13,10 @@ class SearchFilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = hasActiveFilters
+        ? context.colors.primary
+        : context.colors.icon;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -22,26 +26,28 @@ class SearchFilterButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: hasActiveFilters
-              ? context.color.primary.withValues(alpha: 0.1)
-              : Colors.transparent,
+              ? context.colors.primary.withValues(alpha: 0.1)
+              : context.colors.white,
           border: Border.all(
             color: hasActiveFilters
-                ? context.color.primary
-                : context.color.stroke,
+                ? context.colors.primary
+                : context.colors.stroke,
             width: hasActiveFilters ? 1.5 : 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: hasActiveFilters
+                  ? context.colors.primary.withValues(alpha: 0.25)
+                  : Colors.black.withValues(alpha: 0.06),
+              blurRadius: hasActiveFilters ? 10 : 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(
-              Icons.tune_rounded,
-              size: 20,
-              color: hasActiveFilters
-                  ? context.color.primary
-                  : context.color.textPrimary.withValues(alpha: 0.6),
-            ),
-
+            Icon(Icons.tune_rounded, size: 20, color: iconColor),
             if (hasActiveFilters)
               Positioned(
                 top: 8,
@@ -51,7 +57,7 @@ class SearchFilterButton extends StatelessWidget {
                   height: 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: context.color.primary,
+                    color: context.colors.primary,
                   ),
                 ),
               ),

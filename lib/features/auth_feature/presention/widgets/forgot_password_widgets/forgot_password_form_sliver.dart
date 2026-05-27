@@ -3,22 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/core/extensions/custom_toast.dart'; // تأكد من وجود الـ Toast هنا
+import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/data/models/forgot_password/forgot_password_request_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_state.dart';
 import 'package:route_smart/features/auth_feature/presention/widgets/forgot_password_widgets/bloc_builder_forgot_password_button_auth.dart';
+import 'package:route_smart/features/auth_feature/presention/widgets/reset_password_widgets/go_to_text_button_to_login.dart';
 
 class ForgotPasswordFormSliver extends StatefulWidget {
   const ForgotPasswordFormSliver({super.key});
 
   @override
-  State<ForgotPasswordFormSliver> createState() =>
-      _ForgotPasswordFormSliverState();
+  State<ForgotPasswordFormSliver> createState() => _ForgotPasswordFormSliverState();
 }
 
 class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
@@ -56,7 +57,7 @@ class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
                   AdaptiveInputField(
                     context: context,
                     controller: _emailController,
-                    title: 'EMAIL ADDRESS',
+                    title: context.translate(LangKeys.email),
                     hintText: 'name@example.com',
                     prefix: const Icon(Icons.email_outlined),
                     heightAfterIt: 30,
@@ -68,20 +69,7 @@ class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
 
                   verticalSpace(40),
 
-                  TextButton.icon(
-                    onPressed: () => context.pop(),
-                    icon: Icon(
-                      Icons.arrow_back,
-                      size: 18,
-                      color: context.color.black,
-                    ),
-                    label: Text(
-                      'Back to Login',
-                      style: context.textStyle.copyWith(
-                        color: context.color.black,
-                      ),
-                    ),
-                  ).animateBottomToTop(),
+                  const GotTextButtonToLogin().animateBottomToTop(),
                 ],
               ),
             ),
@@ -92,17 +80,15 @@ class _ForgotPasswordFormSliverState extends State<ForgotPasswordFormSliver> {
   }
 
   void _onStateChanged(BuildContext context, ForgotPasswordState state) {
-    state.whenOrNull(
-      success: (message) {
-        CustomToast.showSuccess(
-          context,
-          message.message ?? "Reset code sent to your email",
-        );
+    switch (state) {
+      case ForgotPasswordSuccess():
+        final msg = state.data.message ?? "Reset code sent to your email";
+        CustomToast.showSuccess(context, msg);
         context.pushReplacementNamed(AppRoutesNames.verifyCode);
-      },
-      error: (errorMessage) {
-        CustomToast.showError(context, context.translate(errorMessage));
-      },
-    );
+      case ForgotPasswordError():
+        CustomToast.showError(context, state.message);
+      default:
+        break; // Ignore Initial and Loading states in listener
+    }
   }
 }

@@ -1,118 +1,133 @@
-import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
-import 'package:route_smart/features/wishlist/data/repo/wishlisrt_repo.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_event.dart';
-import 'package:route_smart/features/wishlist/presention/manger/wishlist_state.dart';
+import 'package:route_smart/features/wishlist/domain/usecase/add_to_wishlist_use_case.dart';
+import 'package:route_smart/features/wishlist/domain/usecase/get_wishlist_use_case.dart';
+import 'package:route_smart/features/wishlist/domain/usecase/remove_from_wishlist_use_case.dart';
+import 'wishlist_event.dart';
+import 'wishlist_state.dart';
 
 class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
-  final WishlistRepository repository;
-
-  WishlistBloc(this.repository) : super(const WishlistState.initial()) {
-    on<GetWishlistEvent>(_onGetWishlist);
-    on<AddToWishlistEvent>(_onAddToWishlist);
-    on<RemoveFromWishlistEvent>(_onRemoveFromWishlist);
+  WishlistBloc({
+    required GetWishlistUseCase getWishlistUseCase,
+    required AddToWishlistUseCase addToWishlistUseCase,
+    required RemoveFromWishlistUseCase removeFromWishlistUseCase,
+  })  : _getWishlistUseCase = getWishlistUseCase,
+        _addToWishlistUseCase = addToWishlistUseCase,
+        _removeFromWishlistUseCase = removeFromWishlistUseCase,
+        super(const WishlistInitial()) {
+    on<GetWishlistEvent>(_onGetWishlist, transformer: restartable());
+    
+    on<AddToWishlistEvent>(_onAddToWishlist, transformer: droppable());
+    on<RemoveFromWishlistEvent>(_onRemoveFromWishlist, transformer: droppable());
   }
+
+  final GetWishlistUseCase _getWishlistUseCase;
+  final AddToWishlistUseCase _addToWishlistUseCase;
+  final RemoveFromWishlistUseCase _removeFromWishlistUseCase;
+
 
   Future<void> _onGetWishlist(
     GetWishlistEvent event,
     Emitter<WishlistState> emit,
   ) async {
-    if (state is InitialState) {
-      emit(const WishlistState.loading());
-    }
+    if (state is WishlistInProgress) return;
 
-    final result = await repository.getWishlist();
-
-    result.when(
-      success: (items) {
-        final ids = items.map((e) => e.id).toSet();
-        emit(WishlistState.loaded(items: items, wishlistIds: ids));
-      },
-      failure: (error) => emit(WishlistState.error(error)),
-    );
-  }
-
-  Future<void> _onAddToWishlist(
-    AddToWishlistEvent event,
-    Emitter<WishlistState> emit,
-  ) async {
     final current = state;
-    final productId = event.productId;
 
-    if (current is! LoadedState) {
-      await _onGetWishlist(const GetWishlistEvent(), emit);
-      final newState = state;
-      if (newState is LoadedState && !newState.wishlistIds.contains(productId)) {
-        add(WishlistEvent.addToWishlist(productId));
-      }
-      return;
+    if (current is WishlistSuccess) {
+      emit(current.copyWith(isLoading: true));
+    } else {
+      emit(const WishlistInProgress());
     }
 
+    final result = await _getWishlistUseCase();
 
+    switch (result) {
+      case Success(:final data):
+        final ids = data
+            .where((e) => e.id.isNotEmpty)
+            .map((e) => e.id)
+            .toSet();
+        emit(WishlistSuccess(items: data, wishlistIds: ids));
 
-    final updatedIds = Set<String>.from(current.wishlistIds)..add(productId);
-    emit(WishlistState.loaded(
-      items: current.items,
-      wishlistIds: updatedIds,
-    ));
-
-    final result = await repository.addToWishlist(productId);
-
-    result.when(
-      success: (_) {
-        add(const GetWishlistEvent());
-      },
-      failure: (error) {
-   
-        emit(WishlistState.loaded(
-          items: current.items,
-          wishlistIds: current.wishlistIds,
-        ));
-        emit(WishlistState.error(error));
-      },
-    );
+      case Failure(:final message):
+        if (kDebugMode) debugPrint('❌ WishlistBloc._onGetWishlist: $message');
+        emit(WishlistFailure(message));
+    }
   }
+
+
+ Future<void> _onAddToWishlist(
+  AddToWishlistEvent event,
+  Emitter<WishlistState> emit,
+) async {
+  final productId = event.productId;
+
+  final current = state is WishlistSuccess
+      ? state as WishlistSuccess
+      : const WishlistSuccess(items: [], wishlistIds: {});
+
+  if (current.wishlistIds.contains(productId)) return;
+
+  final optimisticIds = Set<String>.from(current.wishlistIds)..add(productId);
+  emit(current.copyWith(wishlistIds: optimisticIds));
+
+  final result = await _addToWishlistUseCase(productId);
+
+  switch (result) {
+    case Success():
+      add(const GetWishlistEvent());
+      break;
+
+    case Failure(:final message):
+      final rollbackIds = Set<String>.from(current.wishlistIds);
+      emit(WishlistActionFailure(
+        message: message,
+        items: current.items,
+        wishlistIds: rollbackIds,
+      ));
+  }
+}
+
+
 
   Future<void> _onRemoveFromWishlist(
     RemoveFromWishlistEvent event,
     Emitter<WishlistState> emit,
   ) async {
-    final currentState = state;
-    if (currentState is! LoadedState) return;
+    final current = state;
+    if (current is! WishlistSuccess) return;
 
-    final previousItems = currentState.items;
-    final previousIds = currentState.wishlistIds;
     final productId = event.productId;
+    if (!current.wishlistIds.contains(productId)) return;
 
-    if (!previousIds.contains(productId)) {
-      return;
-    }
-
-
-
-    final updatedItems =
-        previousItems.where((item) => item.id != productId).toList();
-    final updatedIds = Set<String>.from(previousIds)..remove(productId);
-
-    emit(WishlistState.loaded(
-      items: updatedItems,
-      wishlistIds: updatedIds,
+    final optimisticItems =
+        current.items.where((item) => item.id != productId).toList();
+    final optimisticIds = Set<String>.from(current.wishlistIds)
+      ..remove(productId);
+    emit(current.copyWith(
+      items: optimisticItems,
+      wishlistIds: optimisticIds,
     ));
 
-    final result = await repository.removeFromWishlist(productId);
+    final result = await _removeFromWishlistUseCase(productId);
 
-    result.when(
-      success: (_) {
-      },
-      failure: (error) {
- 
-        emit(WishlistState.loaded(
-          items: previousItems,
-          wishlistIds: previousIds,
+    switch (result) {
+      case Success():
+        break;
+
+      case Failure(:final message):
+        if (kDebugMode) {
+          debugPrint('❌ WishlistBloc._onRemoveFromWishlist: $message');
+        }
+   
+        emit(WishlistActionFailure(
+          message: message,
+          items: current.items,
+          wishlistIds: current.wishlistIds,
         ));
-        emit(WishlistState.error(error));
-      },
-    );
+    }
   }
 }
-

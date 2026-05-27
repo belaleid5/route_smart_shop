@@ -1,23 +1,10 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/helper/json_reader.dart';
 
 import 'cart_item_model.dart';
 
-part 'cart_model.g.dart';
-
-@JsonSerializable()
-class Cart {
-  @JsonKey(name: '_id')
-  final String id;
-
-  @JsonKey(name: 'cartOwner')
-  final String userId;
-
-  @JsonKey(name: 'products')
-  final List<CartItemModel> items;
-
-  @JsonKey(name: 'totalCartPrice')
-  final double totalPrice;
-
+// Note: Class name kept as `Cart` to avoid breaking existing code.
+// Consider renaming to `CartModel` in a future refactor.
+final class Cart {
   const Cart({
     required this.id,
     required this.userId,
@@ -25,16 +12,39 @@ class Cart {
     required this.totalPrice,
   });
 
+  final String id;
+  final String userId;
+  final List<CartItemModel> items;
+  final double totalPrice;
+
   factory Cart.fromJson(Map<String, dynamic> json) {
-    // Handle nested data object from API response
-    final data = json['data'] as Map<String, dynamic>?;
+    final dataJson = JsonReader.map(json['data']);
+    final source = dataJson ?? json;
 
-    if (data != null) {
-      return _$CartFromJson(data);
-    }
+    final itemsJson = JsonReader.mapList(
+      source['products'] ?? source['items'],
+    );
 
-    return _$CartFromJson(json);
+    return Cart(
+      id: JsonReader.string(
+        source['_id'] ?? source['id'] ?? json['cartId'],
+      ),
+      userId: JsonReader.string(
+        source['cartOwner'] ?? source['userId'],
+      ),
+      items: itemsJson.map(CartItemModel.fromJson).toList(growable: false),
+      totalPrice: JsonReader.decimal(
+        source['totalCartPrice'] ?? source['totalPrice'],
+      ),
+    );
   }
 
-  Map<String, dynamic> toJson() => _$CartToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'cartOwner': userId,
+      'products': items.map((item) => item.toJson()).toList(),
+      'totalCartPrice': totalPrice,
+    };
+  }
 }

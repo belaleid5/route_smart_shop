@@ -1,6 +1,7 @@
 // features/auth_feature/presention/views/login_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/auth_feature/presention/refactors/sign_in_body.dart';
 
 class SignInPage extends StatelessWidget {
@@ -8,8 +9,12 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
+      backgroundColor: context.colors.background,
       body: SignInBody(),
     );
   }
 }
+
+
+

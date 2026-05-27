@@ -1,20 +1,13 @@
-import 'package:json_annotation/json_annotation.dart';
 
-part 'review_user_model.g.dart';
+import 'package:route_smart/features/reviews/domain/entites/review_user_entity.dart';
 
-@JsonSerializable()
-class ReviewUserModel {
-  @JsonKey(name: '_id')
-  final String id;
-  final String name;
+class ReviewUserModel extends ReviewUserEntity {
+  const ReviewUserModel({super.id, super.name});
 
-  const ReviewUserModel({
-    required this.id,
-    required this.name,
-  });
-
-  factory ReviewUserModel.fromJson(Map<String, dynamic> json) =>
-      _$ReviewUserModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ReviewUserModelToJson(this);
+  factory ReviewUserModel.fromJson(Map<String, dynamic> json) {
+    return ReviewUserModel(
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+    );
+  }
 }

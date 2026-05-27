@@ -4,25 +4,26 @@ import 'package:route_smart/features/auth_feature/data/repo/auth_repo.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_state.dart';
 
-
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final AuthRepositoryImpl _authRepository;
 
-  SignInBloc(this._authRepository) : super(const SignInState.initial()) {
-    
-    on<SignInSubmitted>((event, emit) async {
-      emit(const SignInState.loading());
+  SignInBloc(this._authRepository) : super(const SignInInitial()) {
+    on<SignInSubmitted>(_onSignInSubmitted);
+  }
 
-      final result = await _authRepository.signIn(event.signInRequest);
-      result.when(
-        success: (registerResponse) {
-          emit(SignInState.success(registerResponse));
-        },
-        failure: (errorMessage) {
-          emit(SignInState.error(error: errorMessage));
-        },
-      );
-    });
+  Future<void> _onSignInSubmitted(
+    SignInSubmitted event,
+    Emitter<SignInState> emit,
+  ) async {
+    emit(const SignInLoading());
+
+    final result = await _authRepository.signIn(event.request);
+
+    switch (result) {
+      case Success(:final data):
+        emit(SignInSuccess(data));
+      case Failure(:final message):
+        emit(SignInError(message: message));
+    }
   }
 }
-

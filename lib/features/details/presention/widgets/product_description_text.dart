@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class ProductDescriptionText extends StatefulWidget {
   const ProductDescriptionText({super.key, required this.description});
@@ -24,7 +25,7 @@ class _ProductDescriptionTextState extends State<ProductDescriptionText> {
           overflow: expanded ? TextOverflow.visible : TextOverflow.ellipsis,
           style: context.textStyle.copyWith(
             fontSize: 14,
-            color: context.color.textPrimary.withOpacity(0.6),
+            color: context.colors.textPrimary.withOpacity(0.6),
             height: 1.6,
           ),
         ),
@@ -37,7 +38,7 @@ class _ProductDescriptionTextState extends State<ProductDescriptionText> {
             style: context.textStyle.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: context.color.button,
+              color: context.colors.button,
             ),
           ),
         ),

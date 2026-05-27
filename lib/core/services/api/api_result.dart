@@ -1,8 +1,35 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-part 'api_result.freezed.dart';
+sealed class ApiResult<T> {
+  const ApiResult();
 
-@Freezed()
-abstract class ApiResult<T> with _$ApiResult<T> {
-  const factory ApiResult.success(T data) = Success<T>;
-  const factory ApiResult.failure(String errorHandler) = Failure<T>;
+  factory ApiResult.success(T data) => Success<T>(data);
+  factory ApiResult.failure(String message) => Failure<T>(message);
+
+  R map<R>({
+    required R Function(T data) success,
+    required R Function(String message) failure,
+  }) {
+    return switch (this) {
+      Success<T>(:final data) => success(data),
+      Failure<T>(:final message) => failure(message),
+    };
+  }
+
+  R when<R>({
+    required R Function(T data) success,
+    required R Function(String message) failure,
+  }) =>
+      map(success: success, failure: failure);
+
+  bool get isSuccess => this is Success<T>;
+  bool get isFailure => this is Failure<T>;
+}
+
+final class Success<T> extends ApiResult<T> {
+  const Success(this.data);
+  final T data;
+}
+
+final class Failure<T> extends ApiResult<T> {
+  const Failure(this.message);
+  final String message;
 }

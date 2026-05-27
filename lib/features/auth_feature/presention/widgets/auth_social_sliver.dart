@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class AuthSocialSliver extends StatelessWidget {
@@ -17,18 +19,18 @@ class AuthSocialSliver extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(child: Divider()),
+                Expanded(child: Divider(color: context.colors.divider)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    'OR CONTINUE WITH',
+                    context.translate(LangKeys.orContinueWith).toUpperCase(),
                     style: context.textStyle.copyWith(
-                      color: Colors.grey.shade400,
+                      color: context.colors.textSecondary,
                       fontSize: 12,
                     ),
                   ),
                 ),
-                const Expanded(child: Divider()),
+                Expanded(child: Divider(color: context.colors.divider)),
               ],
             ),
             verticalSpace(30),
@@ -37,16 +39,8 @@ class AuthSocialSliver extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildSocialButton(
-                  'Google',
-                  AppImages.googleIcon,
-                  context.color.primary,
-                ),
-                _buildSocialButton(
-                  'iOS Apple',
-                  AppImages.appleIcon,
-                  context.color.primary,
-                ),
+                _buildSocialButton(context, AppImages.googleIcon),
+                _buildSocialButton(context, AppImages.appleIcon),
               ],
             ).animateBottomToTop(),
           ],
@@ -55,16 +49,16 @@ class AuthSocialSliver extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialButton(String label, String icon, Color? color) {
+  Widget _buildSocialButton(BuildContext context, String icon) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(12),
+        color: context.colors.white,
+        shape: BoxShape.circle,
       ),
       child: CustomImage(
-        color: color,
-        applySvgColor: true,
+        color: context.colors.white,
+
         height: 55,
         imageType: ImagesType.svg,
         imagePath: icon,

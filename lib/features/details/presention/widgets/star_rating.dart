@@ -1,8 +1,9 @@
+// features/details/presention/widgets/star_rating_widget.dart
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class StarRating extends StatelessWidget {
-  const StarRating({required this.rating, required this.colors});
+  const StarRating({super.key, required this.rating, required this.colors});
 
   final double rating;
   final MyColors colors;

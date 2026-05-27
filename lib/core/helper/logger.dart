@@ -1,20 +1,37 @@
 import 'dart:developer' as developer;
+import 'package:flutter/foundation.dart';
 
-/// A simple logger implementation for the ImageBuilder package
-class Logger {
-  const Logger();
+class AppLogger {
+  const AppLogger._();
 
-  /// Log a warning message
-  void warning(String message, {String? tag}) {
+  static const String _defaultTag = 'RouteSmart';
+
+  static void debug(String message, {String? tag}) {
+    if (!kDebugMode) return;
     developer.log(
       message,
-      name: tag ?? 'ImageBuilder',
-      level: 900, // Warning level
+      name: tag ?? _defaultTag,
+      level: 700,
     );
   }
 
-  /// Log an error message
-  void error(
+  static void info(String message, {String? tag}) {
+    developer.log(
+      message,
+      name: tag ?? _defaultTag,
+      level: 800,
+    );
+  }
+
+  static void warning(String message, {String? tag}) {
+    developer.log(
+      message,
+      name: tag ?? _defaultTag,
+      level: 900,
+    );
+  }
+
+  static void error(
     String message, {
     String? tag,
     Object? error,
@@ -22,28 +39,10 @@ class Logger {
   }) {
     developer.log(
       message,
-      name: tag ?? 'ImageBuilder',
-      level: 1000, // Error level
+      name: tag ?? _defaultTag,
+      level: 1000,
       error: error,
       stackTrace: stackTrace,
-    );
-  }
-
-  /// Log an info message
-  void info(String message, {String? tag}) {
-    developer.log(
-      message,
-      name: tag ?? 'ImageBuilder',
-      level: 800, // Info level
-    );
-  }
-
-  /// Log a debug message
-  void debug(String message, {String? tag}) {
-    developer.log(
-      message,
-      name: tag ?? 'ImageBuilder',
-      level: 700, // Debug level
     );
   }
 }

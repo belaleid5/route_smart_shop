@@ -1,23 +1,15 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/common/domain/entites/pagination_metadata_entity.dart';
 
-part 'meta_data_model.g.dart';
-
-@JsonSerializable()
-class Metadata {
-  final int? currentPage;
-  final int? numberOfPages;
-  final int? limit;
-  final int? nextPage;
-
-  const Metadata({
-    this.currentPage,
-    this.numberOfPages,
-    this.limit,
-    this.nextPage,
+class PaginationMetadataModel extends PaginationMetadataEntity {
+  const PaginationMetadataModel({
+    required super.currentPage,
+    required super.numberOfPages,
   });
 
-  factory Metadata.fromJson(Map<String, dynamic> json) =>
-      _$MetadataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MetadataToJson(this);
+  factory PaginationMetadataModel.fromJson(Map<String, dynamic> json) {
+    return PaginationMetadataModel(
+      currentPage: json['currentPage'] as int? ?? 1,
+      numberOfPages: json['numberOfPages'] as int? ?? 1,
+    );
+  }
 }

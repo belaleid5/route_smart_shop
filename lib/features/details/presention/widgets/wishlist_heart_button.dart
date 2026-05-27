@@ -1,6 +1,7 @@
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
 import 'package:route_smart/features/wishlist/presention/manger/wishlist_state.dart';
 
@@ -35,12 +36,12 @@ class WishlistHeartButton extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isFavorite
-                  ? context.color.primary.withOpacity(0.15)
+                  ? context.colors.primary.withOpacity(0.15)
                   : Colors.transparent,
               border: Border.all(
                 color: isFavorite
-                    ? context.color.primary
-                    : context.color.textPrimary.withValues(alpha: 0.15),
+                    ? context.colors.primary
+                    : context.colors.textPrimary.withValues(alpha: 0.15),
               ),
             ),
             child: AnimatedSwitcher(
@@ -53,8 +54,8 @@ class WishlistHeartButton extends StatelessWidget {
                     : Icons.favorite_border_rounded,
                 key: ValueKey(isFavorite),
                 color: isFavorite
-                    ? context.color.primary
-                    : context.color.textPrimary,
+                    ? context.colors.primary
+                    : context.colors.textPrimary,
                 size: 20,
               ),
             ),

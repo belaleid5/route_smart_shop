@@ -1,7 +1,8 @@
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/loading_widget.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
 import 'package:route_smart/features/reviews/presention/manger/reviews_state.dart';
@@ -9,7 +10,7 @@ import 'package:route_smart/features/reviews/presention/manger/reviews_state.dar
 class AddReviewSubmitButton extends StatelessWidget {
   final bool isEditing;
   final VoidCallback onSubmit;
-  final bool isDisabled; 
+  final bool isDisabled;
 
   const AddReviewSubmitButton({
     super.key,
@@ -22,17 +23,14 @@ class AddReviewSubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ReviewsBloc, ReviewsState>(
       builder: (context, state) {
-        final isLoading = state.maybeWhen(
-          actionLoading: () => true,
-          orElse: () => false,
-        );
+        final isLoading = state is ReviewActionInProgress;
 
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             onPressed: (isLoading || isDisabled) ? null : onSubmit,
             style: ElevatedButton.styleFrom(
-              backgroundColor: context.color.button,
+              backgroundColor: context.colors.button,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

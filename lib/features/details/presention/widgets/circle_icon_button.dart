@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class CircleIconButton extends StatelessWidget {
-  const CircleIconButton({
-    super.key,
-    required this.icon,
-    required this.onTap,
-  });
+  const CircleIconButton({super.key, required this.icon, required this.onTap});
 
   final IconData icon;
   final VoidCallback onTap;
@@ -19,7 +16,7 @@ class CircleIconButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: context.color.shades,
+          color: context.colors.shades,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -29,7 +26,7 @@ class CircleIconButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, size: 18, color: context.color.textPrimary),
+        child: Icon(icon, size: 18, color: context.colors.textPrimary),
       ),
     );
   }

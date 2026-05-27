@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/custom_toast.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/details/presention/widgets/error_state_review.dart';
 import 'package:route_smart/features/details/presention/widgets/loading_state_review.dart';
 import 'package:route_smart/features/details/presention/widgets/review_header.dart';
 import 'package:route_smart/features/details/presention/widgets/reviw_success.dart';
-import 'package:route_smart/features/reviews/presention/manger/review_events.dart';
+import 'package:route_smart/features/reviews/presention/manger/review_events.dart'; // مسار الـ Event
 import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
 import 'package:route_smart/features/reviews/presention/manger/reviews_state.dart';
 
@@ -19,35 +21,20 @@ class ReviewsPreviewSection extends StatelessWidget {
     final colors = context.colors;
 
     return BlocConsumer<ReviewsBloc, ReviewsState>(
-      listenWhen: (_, current) => current.maybeWhen(
-        reviewCreated: () => true,
-        reviewDeleted: () => true,
-        actionError: (_) => true,
-        orElse: () => false,
-      ),
+      listenWhen: (_, current) =>
+          current is ReviewCreated ||
+          current is ReviewDeleted ||
+          current is ReviewActionFailure, 
       listener: (context, state) {
-        state.maybeWhen(
-          reviewCreated: () {
-            context.read<ReviewsBloc>().add(
-              ReviewsEvent.getProductReviews(productId: productId),
-            );
-          },
-          reviewDeleted: () {
-            context.read<ReviewsBloc>().add(
-              ReviewsEvent.getProductReviews(productId: productId),
-            );
-          },
-          actionError: (message) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(message)));
-          },
-          orElse: () {},
-        );
+        if (state is ReviewCreated || state is ReviewDeleted) {
+          context.read<ReviewsBloc>().add(ProductReviewsRequested(productId)); // ✅ استدعاء الكلاس مباشرة
+        } else if (state is ReviewActionFailure) {
+          CustomToast.showError(context, state.message);
+        }
       },
       builder: (context, state) {
         return ColoredBox(
-          color: colors.white,
+          color: colors.background,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
@@ -55,37 +42,31 @@ class ReviewsPreviewSection extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ReviewsHeader(
-                  totalReviews: state.maybeWhen(
-                    success: (response) => response.results,
-                    orElse: () => 0,
-                  ),
+                  totalReviews: state is ReviewsSuccess
+                      ? state.response.results ?? 0
+                      : 0,
                   productId: productId,
                   colors: colors,
                 ),
-                const SizedBox(height: 12),
-
-                state.when(
-                  initial: () => const SizedBox.shrink(),
-                  loading: () => LoadingStateReview(colors: colors),
-                  success: (response) =>
-                      ReviewsSuccessState(colors: colors, response: response),
-                  error: (message) => ErrorStateReview(
+                verticalSpace(12),
+                
+                switch (state) {
+                  ReviewsInitial() => const SizedBox.shrink(),
+                  
+                  ReviewsSuccess(:final response) => ReviewsSuccessState(
+                    colors: colors,
+                    response: response,
+                  ),
+                  
+                  ReviewsFailure() || ReviewActionFailure() => ErrorStateReview(
                     colors: colors,
                     onRetry: () => context.read<ReviewsBloc>().add(
-                      ReviewsEvent.getProductReviews(productId: productId),
+                      ProductReviewsRequested(productId),
                     ),
                   ),
-                  actionLoading: () => LoadingStateReview(colors: colors),
-                  reviewCreated: () => LoadingStateReview(colors: colors),
-                  reviewUpdated: () => LoadingStateReview(colors: colors),
-                  reviewDeleted: () => LoadingStateReview(colors: colors),
-                  actionError: (_) => ErrorStateReview(
-                    colors: colors,
-                    onRetry: () => context.read<ReviewsBloc>().add(
-                      ReviewsEvent.getProductReviews(productId: productId),
-                    ),
-                  ),
-                ),
+                  
+                  _ => LoadingStateReview(colors: colors),
+                },
               ],
             ),
           ),

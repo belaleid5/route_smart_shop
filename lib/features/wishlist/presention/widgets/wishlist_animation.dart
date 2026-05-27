@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/core/extensions/cart_extenions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/common/widgets/smooth_list_view.dart';
-import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
+import 'package:route_smart/features/wishlist/domain/entites/wishlist_entity.dart';
 import 'package:route_smart/features/wishlist/presention/manger/wishlist_bloc.dart';
 import 'package:route_smart/features/wishlist/presention/manger/wishlist_event.dart';
 import 'package:route_smart/features/wishlist/presention/widgets/wishlist_item_wrapper.dart';
 
 class WishlistAnimatedListView extends StatefulWidget {
-  const WishlistAnimatedListView({super.key, required this.items});
+  const WishlistAnimatedListView({
+    super.key,
+    required this.items,
+    required this.onAddToCart,
+  });
 
-  final List<WishlistItemModel> items;
+  final List<WishlistEntity> items;
+  final void Function(String productId) onAddToCart;
 
   @override
   State<WishlistAnimatedListView> createState() =>
@@ -21,15 +25,13 @@ class WishlistAnimatedListView extends StatefulWidget {
 class _WishlistAnimatedListViewState extends State<WishlistAnimatedListView> {
   final Set<String> _removingIds = {};
 
-  void _handleRemove(BuildContext context, WishlistItemModel item) {
+  void _handleRemove(BuildContext context, WishlistEntity item) {
+    final bloc = context.read<WishlistBloc>();
     setState(() => _removingIds.add(item.id));
 
     Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) {
-        // ignore: use_build_context_synchronously
-        context.read<WishlistBloc>().add(
-              WishlistEvent.removeFromWishlist(item.id),
-            );
+        bloc.add(RemoveFromWishlistEvent(item.id));
         setState(() => _removingIds.remove(item.id));
       }
     });
@@ -51,7 +53,7 @@ class _WishlistAnimatedListViewState extends State<WishlistAnimatedListView> {
           index: index,
           isRemoving: isRemoving,
           onRemove: () => _handleRemove(context, item),
-          onAddToCart: () => context.addToCartSafe(item.id),
+          onAddToCart: () => widget.onAddToCart(item.id),
         );
       },
       duration: const Duration(milliseconds: 800),

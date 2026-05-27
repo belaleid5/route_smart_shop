@@ -1,9 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+sealed class ProductsEvent {
+  const ProductsEvent();
+}
 
-part 'product_event.freezed.dart';
+final class GetProductsEvent extends ProductsEvent {
+  const GetProductsEvent();
+}
 
-@freezed
-class ProductsEvent with _$ProductsEvent {
-  const factory ProductsEvent.getProducts() = GetProductsEvent;
-  const factory ProductsEvent.refreshProducts() = RefreshProductsEvent;
+final class RefreshProductsEvent extends ProductsEvent {
+  const RefreshProductsEvent();
 }

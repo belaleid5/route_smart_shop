@@ -1,12 +1,25 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:route_smart/features/auth_feature/data/models/auth_response_model.dart';
 
-part 'register_state.freezed.dart';
+abstract class RegisterState {
+  const RegisterState();
+}
 
-@freezed
-class RegisterState<T> with _$RegisterState<T> {
-  const factory RegisterState.initial() = _Initial;
-  const factory RegisterState.loading() = Loading;
-  const factory RegisterState.success(AuthResponseModel data) = Success<T>;
-  const factory RegisterState.error({required String error}) = Error;
+class RegisterInitial extends RegisterState {
+  const RegisterInitial();
+}
+
+class RegisterLoading extends RegisterState {
+  const RegisterLoading();
+}
+
+class RegisterSuccess extends RegisterState {
+  final AuthResponseModel data;
+
+  const RegisterSuccess(this.data);
+}
+
+class RegisterError extends RegisterState {
+  final String message;
+
+  const RegisterError({required this.message});
 }

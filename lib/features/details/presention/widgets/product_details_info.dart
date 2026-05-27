@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/features/details/data/models/product_details_response_model.dart';
+import 'package:route_smart/features/details/domain/entites/product_details_entit.dart';
 import 'package:route_smart/features/details/presention/widgets/product_description_text.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_brand_row.dart';
 import 'package:route_smart/features/details/presention/widgets/product_details_quantity_row.dart';
@@ -20,7 +22,7 @@ class ProductDetailsInfo extends StatelessWidget {
     required this.onToggleWishlist,
   });
 
-  final ProductDetailsDataModel product;
+   final ProductDetailsEntity product;
   final String productId;
   final int quantity;
   final VoidCallback onIncrement;
@@ -31,7 +33,7 @@ class ProductDetailsInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.color.shades,
+        color: context.colors.shades,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
@@ -43,11 +45,11 @@ class ProductDetailsInfo extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  product.title ?? '',
+                  product.title,
                   style: context.textStyle.copyWith(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: context.color.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ).animateRightLeft(isFromStart: false),
               ),
@@ -60,12 +62,12 @@ class ProductDetailsInfo extends StatelessWidget {
           ),
           verticalSpace(10),
           ProductDetailsRatingRow(
-            rating: product.ratingsAverage ?? 0,
-            reviewCount: product.ratingsQuantity ?? 0,
+            rating: product.ratingsAverage,
+            reviewCount: product.ratingsQuantity,
           ).animateRightLeft(isFromStart: false),
           verticalSpace(16),
           ProductDescriptionText(
-            description: product.description ?? '',
+            description: product.description,
           ).animateBottomToTop(),
           verticalSpace(20),
           ProductDetailsBrandRow(

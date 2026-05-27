@@ -1,24 +1,38 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/models/order_response_model.dart';
+import 'package:route_smart/features/checkout/domain/entites/address_entity.dart';
+import 'package:route_smart/features/checkout/domain/entites/order_entity.dart';
 
-part 'checkout_state.freezed.dart';
 
-@freezed
-class CheckoutState with _$CheckoutState {
-  const factory CheckoutState.initial() = _Initial;
+sealed class CheckoutState {
+  const CheckoutState();
+}
 
-  const factory CheckoutState.loading() = _Loading;
+final class CheckoutInitial extends CheckoutState {
+  const CheckoutInitial();
+}
 
-  const factory CheckoutState.addressesLoaded(List<AddressModel> addresses) =
-      _AddressesLoaded;
+final class CheckoutLoading extends CheckoutState {
+  const CheckoutLoading();
+}
 
-  const factory CheckoutState.orderCreated(OrderResponseModel order) =
-      _OrderCreated;
+final class CheckoutAddressesLoaded extends CheckoutState {
+  final List<AddressEntity> addresses;
+  const CheckoutAddressesLoaded(this.addresses);
+}
 
-  const factory CheckoutState.processingPayment() = _ProcessingPayment;
+final class CheckoutOrderCreated extends CheckoutState {
+  final OrderEntity order;
+  const CheckoutOrderCreated(this.order);
+}
 
-  const factory CheckoutState.paymentSuccess() = _PaymentSuccess;
+final class CheckoutProcessingPayment extends CheckoutState {
+  const CheckoutProcessingPayment();
+}
 
-  const factory CheckoutState.error(String message) = _Error;
+final class CheckoutPaymentSuccess extends CheckoutState {
+  const CheckoutPaymentSuccess();
+}
+
+final class CheckoutError extends CheckoutState {
+  final String message;
+  const CheckoutError(this.message);
 }

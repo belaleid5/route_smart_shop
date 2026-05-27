@@ -4,6 +4,7 @@ import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class CustomFormFieldPhoneNumber extends StatelessWidget {
   const CustomFormFieldPhoneNumber({
@@ -18,8 +19,11 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Phone Number', style: Theme.of(context).textTheme.labelLarge),
-        verticalSpace( 10),
+        Text(
+          context.translate(LangKeys.phoneNumber),
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        verticalSpace(10),
         Row(
           children: [
             Container(
@@ -31,7 +35,7 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
                 border: Border.all(color: MyColors.light.stroke),
                 borderRadius: BorderRadius.circular(10.67),
               ),
-              child:  Text(
+              child: Text(
                 '+20',
                 style: context.textStyle.copyWith(fontWeight: FontWeight.bold),
               ),
@@ -48,7 +52,7 @@ class CustomFormFieldPhoneNumber extends StatelessWidget {
             ),
           ],
         ),
-        verticalSpace( 20),
+        verticalSpace(20),
       ],
     );
   }

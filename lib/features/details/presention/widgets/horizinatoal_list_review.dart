@@ -3,6 +3,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/smooth_list_view.dart';
 import 'package:route_smart/features/details/presention/widgets/review_card.dart';
 import 'package:route_smart/features/reviews/data/models/review_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/review_entity.dart';
 
 class HorizontalReviewsList extends StatelessWidget {
   const HorizontalReviewsList({
@@ -13,7 +14,7 @@ class HorizontalReviewsList extends StatelessWidget {
     required this.cardWidth,
   });
 
-  final List<ReviewModel> reviews;
+  final List<ReviewEntity> reviews;
   final MyColors colors;
   final double listHeight;
   final double cardWidth;

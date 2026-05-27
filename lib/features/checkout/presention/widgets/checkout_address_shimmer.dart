@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_shimmer.dart';
 import 'package:route_smart/core/helper/spacing.dart';
@@ -28,23 +29,14 @@ class _AddressCardShimmer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: context.color.shades,
+        color: context.colors.shades,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.color.stroke,
-        ),
+        border: Border.all(color: context.colors.stroke),
       ),
       child: Row(
         children: [
-          // ── Map Icon Placeholder ───────────────────
-          ShimmerWidget.rounded(
-            width: 80,
-            height: 70,
-            radius: 12,
-          ),
+          ShimmerWidget.rounded(width: 80, height: 70, radius: 12),
           const SizedBox(width: 14),
-
-          // ── Address Info ───────────────────────────
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,8 +49,6 @@ class _AddressCardShimmer extends StatelessWidget {
               ],
             ),
           ),
-
-          // ── Selection Icon ─────────────────────────
           const SizedBox(width: 8),
           ShimmerWidget.circular(size: 24),
         ],

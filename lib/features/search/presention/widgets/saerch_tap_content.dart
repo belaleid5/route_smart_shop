@@ -1,77 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
 import 'package:route_smart/core/common/widgets/product/product_grid_view.dart';
 import 'package:route_smart/core/extensions/cart_extenions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart'; // مهم جداً للـ pushName
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/wishlist_extention.dart';
-import 'package:route_smart/core/routes/routes_names.dart'; // مهم جداً للـ AppRoutesNames
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
+import 'package:route_smart/core/routes/routes_names.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
+import 'package:route_smart/features/search/presention/widgets/seach_cateogries_list.dart';
 import 'package:route_smart/features/search/presention/widgets/search_brands_list.dart';
-import 'package:route_smart/features/search/presention/widgets/search_category_grid_view.dart';
 
 class SearchTabContent extends StatelessWidget {
   const SearchTabContent({
     super.key,
     required this.state,
-    required this.keyword,
+    required this.scrollController,
   });
 
   final SearchSuccess state;
-  final String keyword;
-
-  List<ProductDataModel> _filterProducts(List<ProductDataModel> products) {
-    final q = keyword.trim().toLowerCase();
-    if (q.isEmpty) return products;
-
-    return products.where((product) {
-      final title = (product.title ?? '').toLowerCase();
-      final brand = (product.brand?.name ?? '').toLowerCase();
-      final category = (product.category?.name ?? '').toLowerCase();
-
-      return title.startsWith(q) ||
-          brand.startsWith(q) ||
-          category.startsWith(q);
-    }).toList();
-  }
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
-    final filteredProducts = _filterProducts(state.products);
-
     return switch (state.params.activeTab) {
       SearchTab.products => GridViewProducts(
-          products: filteredProducts,
-          hasReachedMax: state.isLoadingMore,
-          onProductTap: (product) => _navigateToDetails(context, product),
-          onFavoriteTap: (product) =>
-              context.toggleWishlist(product.id ?? ''),
-          onAddToCartTap: (product) => context.toggleCart(product.id ?? ''),
+          products: state.products,
+          hasReachedMax: state.hasReachedMax,
+          onProductTap: (product) => context.pushNamed(
+            AppRoutesNames.productDetails,
+            arguments: product,
+          ),
+          onFavoriteTap: (product) => context.toggleWishlistItem(product.id),
+          onAddToCartTap: (product) => context.addToCart(product.id),
         ),
 
-      SearchTab.categories => SearchCategoriesGridView(
-          categories: state.categories.where((category) {
-            final q = keyword.trim().toLowerCase();
-            if (q.isEmpty) return true;
-            return (category.name ?? '').toLowerCase().startsWith(q);
-          }).toList(),
+      SearchTab.categories => SearchCategoriesList(
+          categories: state.categories,
         ),
+
 
       SearchTab.brands => SearchBrandsList(
-          brands: state.brands.where((brand) {
-            final q = keyword.trim().toLowerCase();
-            if (q.isEmpty) return true;
-            return (brand.name ?? '').toLowerCase().startsWith(q);
-          }).toList(),
+          brands: state.brands,
         ),
     };
-  }
-
-  void _navigateToDetails(BuildContext context, ProductDataModel product) {
-   
-    context.pushName(
-      AppRoutesNames.productDetails,
-      arguments: product,
-    );
   }
 }

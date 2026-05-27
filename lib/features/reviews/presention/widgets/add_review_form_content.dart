@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/features/reviews/presention/widgets/add_review_submit_button.dart';
 import 'package:route_smart/features/reviews/presention/widgets/selector_rating.dart';
@@ -24,7 +25,7 @@ class AddReviewFormContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.color.background,
+        color: context.colors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(
@@ -43,59 +44,57 @@ class AddReviewFormContent extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: context.color.divider.withOpacity(0.5),
+                color: context.colors.divider.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          
+
           Text(
-            isEditing 
-              ? context.translate(LangKeys.editReview) 
-              : context.translate(LangKeys.addReview),
+            isEditing
+                ? context.translate(LangKeys.edit)
+                : context.translate(LangKeys.review),
             style: context.textStyle.copyWith(
-              fontSize: 20, 
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: context.color.textPrimary,
+              color: context.colors.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
 
-          // اختيار التقييم
           Center(
             child: StarSelector(
-              rating: rating, 
-              onRatingChanged: onRatingChanged
+              rating: rating,
+              onRatingChanged: onRatingChanged,
             ),
           ),
           const SizedBox(height: 16),
 
-          // حقل النص
           TextField(
             controller: reviewController,
             maxLines: 4,
             style: context.textStyle.copyWith(fontSize: 14),
             decoration: InputDecoration(
               hintText: context.translate('write_your_review'),
-              hintStyle: TextStyle(color: context.color.textSecondary),
+              hintStyle: TextStyle(color: context.colors.textSecondary),
               filled: true,
-              fillColor: context.color.textSecondary.withOpacity(0.05),
+              fillColor: context.colors.textSecondary.withOpacity(0.05),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: context.color.button),
+                borderSide: BorderSide(color: context.colors.button),
               ),
             ),
           ),
           const SizedBox(height: 24),
 
           AddReviewSubmitButton(
-            isEditing: isEditing, 
+            isEditing: isEditing,
             onSubmit: onSubmit,
-            isDisabled: rating == 0, 
+            isDisabled: rating == 0,
           ),
         ],
       ),

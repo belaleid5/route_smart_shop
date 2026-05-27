@@ -1,9 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:route_smart/features/auth_feature/data/models/user_data_model.dart';
 
-part 'auth_response_model.g.dart';
-
-@JsonSerializable()
 class AuthResponseModel {
   final String? message;
   final UserDataModel? user;
@@ -11,7 +7,19 @@ class AuthResponseModel {
 
   AuthResponseModel({this.message, this.user, this.token});
 
-  factory AuthResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$AuthResponseModelFromJson(json);
-  Map<String, dynamic> toJson() => _$AuthResponseModelToJson(this);
+  factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
+    return AuthResponseModel(
+      message: json['message'] as String?,
+      user: json['user'] == null 
+          ? null 
+          : UserDataModel.fromJson(json['user'] as Map<String, dynamic>),
+      token: json['token'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'message': message,
+        'user': user?.toJson(),
+        'token': token,
+      };
 }

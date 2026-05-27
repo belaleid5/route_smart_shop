@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class EmptyCartView extends StatelessWidget {
   const EmptyCartView({super.key});
@@ -14,14 +16,13 @@ class EmptyCartView extends StatelessWidget {
           Icon(
             Icons.shopping_cart_outlined,
             size: 80,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
           verticalSpace(16),
           Text(
-            context.translate('cart_empty'),
-            style: context.textStyle.copyWith(
-              fontSize: 18,
-              color: context.color.textPrimary,
+            context.translate(LangKeys.cartEmpty),
+            style: context.titleMedium.copyWith(
+              color: context.colors.textPrimary,
             ),
           ),
         ],

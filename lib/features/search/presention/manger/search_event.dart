@@ -1,36 +1,40 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
+// features/search/presentation/manager/search_event.dart
 
-part 'search_event.freezed.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 
-// search_event.dart
+sealed class SearchEvent {
+  const SearchEvent();
+}
 
-// search_event.dart
+final class SearchEventSearch extends SearchEvent {
+  const SearchEventSearch({this.params});
+  final SearchFilterParams? params;
+}
 
-@freezed
-class SearchEvent with _$SearchEvent {
-  const factory SearchEvent.search({
-    SearchFilterParams? params,
-  }) = SearchEventSearch;
+final class SearchEventLoadNextPage extends SearchEvent {
+  const SearchEventLoadNextPage();
+}
 
-  const factory SearchEvent.loadNextPage()    = SearchEventLoadNextPage;
-  const factory SearchEvent.autoFetch()       = SearchEventAutoFetch; // ✅ جديد
+final class SearchEventCategorySelected extends SearchEvent {
+  const SearchEventCategorySelected({required this.categoryId});
+  final String? categoryId;
+}
 
-  const factory SearchEvent.categorySelected({
-    required String? categoryId,
-  }) = SearchEventCategorySelected;
+final class SearchEventSortChanged extends SearchEvent {
+  const SearchEventSortChanged({required this.sort});
+  final String? sort;
+}
 
-  const factory SearchEvent.sortChanged({
-    required String? sort,
-  }) = SearchEventSortChanged;
+final class SearchEventCleared extends SearchEvent {
+  const SearchEventCleared();
+}
 
-  const factory SearchEvent.cleared()         = SearchEventCleared;
+final class SearchEventTabChanged extends SearchEvent {
+  const SearchEventTabChanged({required this.tab});
+  final SearchTab tab;
+}
 
-  const factory SearchEvent.tabChanged({
-    required SearchTab tab,
-  }) = SearchEventTabChanged;
-
-  const factory SearchEvent.keywordChanged({
-    required String keyword,
-  }) = SearchEventKeywordChanged;
+final class SearchEventKeywordChanged extends SearchEvent {
+  const SearchEventKeywordChanged({required this.keyword});
+  final String keyword;
 }

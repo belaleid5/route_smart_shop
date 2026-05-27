@@ -1,25 +1,28 @@
-// lib/core/styles/theme/app_theme.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; 
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/styles/fonts/font_family_helper.dart';
+import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
 /// Centralized theme configuration for Route Shop.
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get light => _buildTheme(
+  static ThemeData buildLight(String langCode) => _buildTheme(
         brightness: Brightness.light,
         colors: MyColors.light,
+        langCode: langCode,
       );
 
-  static ThemeData get dark => _buildTheme(
+  static ThemeData buildDark(String langCode) => _buildTheme(
         brightness: Brightness.dark,
         colors: MyColors.dark,
+        langCode: langCode,
       );
 
   static ThemeData _buildTheme({
     required Brightness brightness,
     required MyColors colors,
+    required String langCode,
   }) {
     return ThemeData(
       brightness: brightness,
@@ -28,7 +31,7 @@ class AppTheme {
         brightness: brightness,
       ),
       extensions: [colors],
-      textTheme: _buildTextTheme(colors),
+      textTheme: _buildTextTheme(colors, langCode),
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,
         foregroundColor: colors.textPrimary,
@@ -36,45 +39,52 @@ class AppTheme {
         centerTitle: false,
       ),
       inputDecorationTheme: _buildInputTheme(colors),
-      elevatedButtonTheme: _buildButtonTheme(colors),
+      elevatedButtonTheme: _buildButtonTheme(colors, langCode),
       checkboxTheme: _buildCheckboxTheme(colors),
       scaffoldBackgroundColor: colors.background,
     );
   }
 
-  static TextTheme _buildTextTheme(MyColors colors) {
+  static TextTheme _buildTextTheme(MyColors colors, String langCode) {
+    final fontFamily = FontFamilyHelper.getFontFamily(langCode);
     return TextTheme(
-      displayLarge: GoogleFonts.plusJakartaSans(
+      displayLarge: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 32,
-        fontWeight: FontWeight.w800,
+        fontWeight: FontWeightHelper.extraBold,
         color: colors.textPrimary,
         height: 1.2,
       ),
-      titleLarge: GoogleFonts.plusJakartaSans(
+      titleLarge: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 24,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeightHelper.bold,
         color: colors.textPrimary,
       ),
-      titleMedium: GoogleFonts.plusJakartaSans(
+      titleMedium: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 18,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeightHelper.semiBold,
         color: colors.textPrimary,
       ),
-      bodyLarge: GoogleFonts.plusJakartaSans(
+      bodyLarge: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 16,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeightHelper.regular,
         color: colors.textPrimary,
         height: 1.5,
       ),
-      bodyMedium: GoogleFonts.plusJakartaSans(
+      bodyMedium: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 14,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeightHelper.regular,
         color: colors.textSecondary,
         height: 1.4,
       ),
-      labelSmall: GoogleFonts.plusJakartaSans(
+      labelSmall: TextStyle(
+        fontFamily: fontFamily,
         fontSize: 11,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeightHelper.medium,
         color: colors.textSecondary,
         letterSpacing: 1.2,
       ),
@@ -110,7 +120,10 @@ class AppTheme {
     );
   }
 
-  static ElevatedButtonThemeData _buildButtonTheme(MyColors colors) {
+  static ElevatedButtonThemeData _buildButtonTheme(
+    MyColors colors,
+    String langCode,
+  ) {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: colors.button,
@@ -120,9 +133,10 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
         ),
         elevation: 0,
-        textStyle: GoogleFonts.plusJakartaSans(
+        textStyle: TextStyle(
+          fontFamily: FontFamilyHelper.getFontFamily(langCode),
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeightHelper.semiBold,
         ),
       ),
     );

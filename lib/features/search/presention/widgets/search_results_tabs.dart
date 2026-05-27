@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
 import 'package:route_smart/features/search/presention/widgets/saerch_tap_content.dart';
 import 'package:route_smart/features/search/presention/widgets/search_results_summary.dart';
@@ -10,19 +10,16 @@ class SearchResultsTabs extends StatelessWidget {
     super.key,
     required this.state,
     required this.scrollController,
-    required this.keyword,
     required this.onTabChanged,
   });
 
   final SearchSuccess state;
   final ScrollController scrollController;
-  final String keyword;
   final ValueChanged<SearchTab> onTabChanged;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SearchTabBar(
@@ -32,13 +29,17 @@ class SearchResultsTabs extends StatelessWidget {
           totalCategories: state.totalCategories,
           onTabChanged: onTabChanged,
         ),
+
         SearchResultsSummary(
           total: state.totalProducts,
           limit: state.params.limit,
         ),
-        SearchTabContent(
-          state: state,
-          keyword: keyword,
+
+        Expanded(                       
+          child: SearchTabContent(
+            state: state,
+            scrollController: scrollController,
+          ),
         ),
       ],
     );

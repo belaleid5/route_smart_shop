@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class CustomTextFormPassword extends StatefulWidget {
   const CustomTextFormPassword({
@@ -14,6 +14,7 @@ class CustomTextFormPassword extends StatefulWidget {
     this.autofocus = false,
     this.focusNode,
   });
+
   final TextEditingController controller;
   final String? title;
   final String? hintText;
@@ -31,9 +32,7 @@ class _CustomTextFormPasswordState extends State<CustomTextFormPassword> {
   bool _isPasswordVisible = false;
 
   void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordVisible = !_isPasswordVisible;
-    });
+    setState(() => _isPasswordVisible = !_isPasswordVisible);
   }
 
   @override
@@ -42,10 +41,7 @@ class _CustomTextFormPasswordState extends State<CustomTextFormPassword> {
       context: context,
       controller: widget.controller,
       title: widget.title,
-      hintText:
-          widget.hintText ??
-          (widget.isConfirmPassword ? 'Confirm Password' : 'Password'),
-
+      hintText: widget.hintText ?? (widget.isConfirmPassword ? 'Confirm Password' : 'Password'),
       validate: widget.validate,
       keyboardType: TextInputType.visiblePassword,
       textCapitalization: TextCapitalization.none,
@@ -55,12 +51,10 @@ class _CustomTextFormPasswordState extends State<CustomTextFormPassword> {
       focusNode: widget.focusNode,
       maxLines: 1,
       suffix: Icon(
-        _isPasswordVisible
-            ? Icons.visibility_off_outlined
-            : Icons.visibility_outlined,
+        _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
         size: 20,
       ),
-      suffixColor: context.color.icon,
+      suffixColor: context.colors.icon,
       suffixPressed: _togglePasswordVisibility,
     );
   }

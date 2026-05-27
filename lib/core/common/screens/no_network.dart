@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class NoNetwork extends StatelessWidget {
@@ -9,26 +12,28 @@ class NoNetwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.colors.background,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              AppImages.noNetwork,
-              height: 100,
-              width: 100,
-            ), // Use your no network image here
+            CustomImage(
+              imageType: ImagesType.svg,
+              imagePath: AppImages.noNetwork,
+            ),
             verticalSpace(20),
             Text(
-              'No Network Connection',
-              style: context.textStyle.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              context.translate(LangKeys.noNetwork),
+              style: context.titleMedium.copyWith(
+                color: context.colors.textPrimary,
               ),
             ),
             verticalSpace(10),
-            const Text(
-              'Please check your internet settings and try again.',
+            Text(
+              context.translate(LangKeys.noNetworkMessage),
+              style: context.bodyMedium.copyWith(
+                color: context.colors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

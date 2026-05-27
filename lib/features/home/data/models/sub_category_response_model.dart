@@ -1,46 +1,91 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'sub_category_response_model.g.dart';
-
-
-@JsonSerializable()
 class SubcategoryResponseModel {
-  @JsonKey(name: '_id')
+  final int? results;
+  final List<Subcategory>? data;
+
+  const SubcategoryResponseModel({
+    this.results,
+    this.data,
+  });
+
+  factory SubcategoryResponseModel.fromJson(Map<String, dynamic> json) {
+    return SubcategoryResponseModel(
+      results: json['results'] as int?,
+      data: json['data'] != null
+          ? (json['data'] as List)
+              .map((e) => Subcategory.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (results != null) 'results': results,
+      if (data != null) 'data': data?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class Subcategory {
   final String? id;
   final String? name;
   final String? slug;
   final String? category;
 
-  SubcategoryResponseModel({this.id, this.name, this.slug, this.category});
+  const Subcategory({
+    this.id,
+    this.name,
+    this.slug,
+    this.category,
+  });
 
-  factory SubcategoryResponseModel.fromJson(Map<String, dynamic> json) => _$SubcategoryResponseModelFromJson(json);
-  Map<String, dynamic> toJson() => _$SubcategoryResponseModelToJson(this);
+  factory Subcategory.fromJson(Map<String, dynamic> json) {
+    return Subcategory(
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      slug: json['slug'] as String?,
+      category: json['category'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) '_id': id,
+      if (name != null) 'name': name,
+      if (slug != null) 'slug': slug,
+      if (category != null) 'category': category,
+    };
+  }
 }
 
-@JsonSerializable()
-class Category {
-  @JsonKey(name: '_id')
-  final String? id;
-  final String? name;
-  final String? slug;
-  final String? image;
-
-  Category({this.id, this.name, this.slug, this.image});
-
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
-  Map<String, dynamic> toJson() => _$CategoryToJson(this);
-}
-
-@JsonSerializable()
 class Brand {
-  @JsonKey(name: '_id')
   final String? id;
   final String? name;
   final String? slug;
   final String? image;
 
-  Brand({this.id, this.name, this.slug, this.image});
+  const Brand({
+    this.id,
+    this.name,
+    this.slug,
+    this.image,
+  });
 
-  factory Brand.fromJson(Map<String, dynamic> json) => _$BrandFromJson(json);
-  Map<String, dynamic> toJson() => _$BrandToJson(this);
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    return Brand(
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      slug: json['slug'] as String?,
+      image: json['image'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) '_id': id,
+      if (name != null) 'name': name,
+      if (slug != null) 'slug': slug,
+      if (image != null) 'image': image,
+    };
+  }
 }

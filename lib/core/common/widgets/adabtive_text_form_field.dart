@@ -34,6 +34,7 @@ class AdaptiveInputField extends StatelessWidget {
     this.enabled,
     this.suffix,
     this.suffixPressed,
+    this.filedColor,
     this.constraints,
     this.textAlign = TextAlign.start,
     this.maxLines,
@@ -41,7 +42,7 @@ class AdaptiveInputField extends StatelessWidget {
     this.isPassword = false,
     this.inputFormatters,
     this.textCapitalization = TextCapitalization.words,
-    this.borderColor, // إضافة المتغير هنا
+    this.borderColor,
   });
 
   final BuildContext context;
@@ -64,6 +65,7 @@ class AdaptiveInputField extends StatelessWidget {
   final String? Function(String?)? validate;
   final bool isPassword;
   final bool? enabled;
+  final Color? filedColor;
   final Widget? suffix;
   final dynamic Function()? suffixPressed;
   final BoxConstraints? constraints;
@@ -78,27 +80,27 @@ class AdaptiveInputField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final double radius;
   final bool doOnTapOutside;
-  final Color? borderColor; // تعريف المتغير
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
-    // تحديد لون الحواف الافتراضي إذا لم يتم تمريره
-    final Color effectiveBorderColor = borderColor ?? MyColors.light.stroke;
+    final colors = context.colors;
+    final effectiveBorderColor = borderColor ?? colors.stroke;
+    final effectiveFocusColor = borderColor ?? colors.primary; 
 
     return Column(
       crossAxisAlignment: crossAxisAlignment!,
       children: [
-        if (title != null)
+        if (title != null) ...[
           Text(title!, style: Theme.of(context).textTheme.labelLarge),
-        if (title != null) verticalSpace(10),
+          verticalSpace(10),
+        ],
         TextFormField(
           readOnly: readOnly,
           controller: controller,
           keyboardType: keyboardType,
           onTapOutside: doOnTapOutside
-              ? (PointerDownEvent event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                }
+              ? (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus()
               : null,
           obscureText: isPassword,
           textDirection: textDirection,
@@ -117,7 +119,7 @@ class AdaptiveInputField extends StatelessWidget {
           textCapitalization: textCapitalization,
           textAlignVertical: TextAlignVertical.center,
           style: context.textStyle.copyWith(
-            color: context.color.textSecondary,
+            color: colors.textPrimary, // ✅ تحديث لون النص
             fontWeight: FontWeight.w400,
             fontSize: 14,
           ),
@@ -125,67 +127,45 @@ class AdaptiveInputField extends StatelessWidget {
           decoration: InputDecoration(
             icon: textFormFieldIcon,
             errorText: errorText,
-            fillColor: MyColors.light.white,
+            fillColor: filedColor ?? colors.fieldBackground, // ✅ تحديث لون الخلفية
             filled: true,
             hintText: hintText,
             contentPadding: const EdgeInsets.all(15),
             constraints: constraints,
             counterText: counterText,
             hintStyle: context.textStyle.copyWith(
-              color: context.color.textSecondary,
+              color: colors.textSecondary,
               fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
-            errorStyle: Theme.of(context).textTheme.labelLarge,
-
-            // الحالة العادية
+            errorStyle: Theme.of(context).textTheme.labelSmall?.copyWith(color: colors.button),
+            
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: effectiveBorderColor),
               borderRadius: BorderRadius.circular(radius),
             ),
-
-            // حالة التركيز (Focus)
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color:
-                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
-              ),
+              borderSide: BorderSide(color: effectiveFocusColor, width: 1.5),
               borderRadius: BorderRadius.circular(radius),
             ),
-
-            // حالة الخطأ
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color:
-                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
-              ),
+              borderSide: BorderSide(color: colors.button),
               borderRadius: BorderRadius.circular(radius),
             ),
-
-            // حالة التركيز مع وجود خطأ
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color:
-                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
-              ),
+              borderSide: BorderSide(color: colors.button, width: 1.5),
               borderRadius: BorderRadius.circular(radius),
             ),
-
-            // حالة التعطيل (Disabled)
             disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color:
-                    borderColor ?? MyColors.light.black.withValues(alpha: 0.2),
-              ),
+              borderSide: BorderSide(color: colors.stroke.withOpacity(0.5)),
               borderRadius: BorderRadius.circular(radius),
             ),
-
             prefixIcon: prefix,
             suffixIcon: suffix != null
                 ? IconButton(
                     onPressed: suffixPressed,
                     icon: suffix!,
-                    color: suffixColor,
+                    color: suffixColor ?? colors.icon,
                   )
                 : null,
           ),

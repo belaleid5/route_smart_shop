@@ -1,18 +1,77 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/features/reviews/data/models/reviews_response_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/reviews_response_entity.dart';
 
-part 'reviews_state.freezed.dart';
+sealed class ReviewsState {
+  const ReviewsState();
+}
 
-@freezed
-class ReviewsState with _$ReviewsState {
-  const factory ReviewsState.initial() = _Initial;
-  const factory ReviewsState.loading() = _Loading;
-  const factory ReviewsState.success(ReviewsResponseModel response) = _Success;
-  const factory ReviewsState.error(String message) = _Error;
+final class ReviewsInitial extends ReviewsState {
+  const ReviewsInitial();
+}
 
-  const factory ReviewsState.actionLoading() = _ActionLoading;
-  const factory ReviewsState.reviewCreated() = _ReviewCreated;
-  const factory ReviewsState.reviewUpdated() = _ReviewUpdated;
-  const factory ReviewsState.reviewDeleted() = _ReviewDeleted;
-  const factory ReviewsState.actionError(String message) = _ActionError;
+final class ReviewsInProgress extends ReviewsState {
+  const ReviewsInProgress();
+}
+
+final class ReviewsSuccess extends ReviewsState {
+  final ReviewsResponseEntity response; // ✅ Entity
+
+  const ReviewsSuccess(this.response);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewsSuccess &&
+          runtimeType == other.runtimeType &&
+          response == other.response;
+
+  @override
+  int get hashCode => response.hashCode;
+}
+
+final class ReviewsFailure extends ReviewsState { 
+  final String message;
+
+  const ReviewsFailure(this.message);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewsFailure &&
+          runtimeType == other.runtimeType &&
+          message == other.message;
+
+  @override
+  int get hashCode => message.hashCode;
+}
+
+final class ReviewActionInProgress extends ReviewsState {
+  const ReviewActionInProgress();
+}
+
+final class ReviewCreated extends ReviewsState {
+  const ReviewCreated();
+}
+
+final class ReviewUpdated extends ReviewsState {
+  const ReviewUpdated();
+}
+
+final class ReviewDeleted extends ReviewsState {
+  const ReviewDeleted();
+}
+
+final class ReviewActionFailure extends ReviewsState {
+  final String message;
+
+  const ReviewActionFailure(this.message);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewActionFailure &&
+          runtimeType == other.runtimeType &&
+          message == other.message;
+
+  @override
+  int get hashCode => message.hashCode;
 }

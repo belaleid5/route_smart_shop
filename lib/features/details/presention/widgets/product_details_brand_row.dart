@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/helper/spacing.dart';
 
 class ProductDetailsBrandRow extends StatelessWidget {
   const ProductDetailsBrandRow({super.key, required this.brand});
 
-  final BrandData? brand;
+  final BrandEntity? brand;
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +26,20 @@ class ProductDetailsBrandRow extends StatelessWidget {
                   style: context.textStyle.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: context.color.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
+              verticalSpace(4),
               Icon(
                 Icons.verified_rounded,
                 size: 16,
-                color: context.color.button,
+                color: context.colors.button,
               ),
             ],
           ),
         ),
-        const SizedBox(width: 12),
+        verticalSpace(12),
 
         SizedBox(
           height: 38,
@@ -45,7 +47,7 @@ class ProductDetailsBrandRow extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: context.color.button,
+              backgroundColor: context.colors.button,
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18),

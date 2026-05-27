@@ -1,4 +1,7 @@
+// lib/core/common/widgets/custom_toast.dart
+
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 enum ToastType { success, error, info }
@@ -16,53 +19,49 @@ class CustomToast {
         ? message
         : 'Something went wrong';
 
-    debugPrint(' CustomToast.show called');
-    debugPrint('   Message: $safeMessage');
-    debugPrint('   Type: $type');
+ 
 
     try {
       final overlay = Overlay.of(context, rootOverlay: true);
-      debugPrint('    Overlay obtained');
-
+   
       late OverlayEntry overlayEntry;
 
       overlayEntry = OverlayEntry(
         builder: (ctx) {
-          debugPrint('   Building toast widget');
           return _ToastWidget(
             message: safeMessage,
             type: type,
             duration: duration,
             onDismissed: () {
-              debugPrint('    Dismissing toast');
-              overlayEntry
-                ..remove()
-                ..dispose();
+          
+              if (overlayEntry.mounted) {
+                overlayEntry.remove();
+                overlayEntry.dispose();
+              }
             },
           );
         },
       );
 
       overlay.insert(overlayEntry);
-      debugPrint('    Toast inserted into overlay');
     } catch (e, stackTrace) {
-      debugPrint('   Error showing toast: $e');
+      debugPrint('   ❌ Error showing toast: $e');
       debugPrint('   Stack: $stackTrace');
     }
   }
 
   static void showSuccess(BuildContext context, String? message) {
-    debugPrint(' showSuccess called');
+
     show(context, message, type: ToastType.success);
   }
 
   static void showError(BuildContext context, String? message) {
-    debugPrint(' showError called');
+  
     show(context, message, type: ToastType.error);
   }
 
   static void showInfo(BuildContext context, String? message) {
-    debugPrint('showInfo called');
+    
     show(context, message);
   }
 }
@@ -93,7 +92,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   @override
   void initState() {
     super.initState();
-    debugPrint('   Toast widget initState');
+  
     _initAnimations();
     _scheduleAutoDismiss();
   }
@@ -112,26 +111,31 @@ class _ToastWidgetState extends State<_ToastWidget>
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     await _controller.forward();
-    debugPrint('    Animation started');
+    
   }
 
   void _scheduleAutoDismiss() {
     Future.delayed(widget.duration, () async {
       if (mounted) {
-        debugPrint('   Auto-dismissing toast');
+        debugPrint('   ⏰ Auto-dismissing toast');
         await _dismiss();
       }
     });
   }
 
   Future<void> _dismiss() async {
+    if (!mounted) return;
+    
     await _controller.reverse();
-    widget.onDismissed();
+    
+    if (mounted) {
+      widget.onDismissed();
+    }
   }
 
   @override
   void dispose() {
-    debugPrint('    Toast widget dispose');
+ 
     _controller.dispose();
     super.dispose();
   }
@@ -140,7 +144,7 @@ class _ToastWidgetState extends State<_ToastWidget>
     switch (widget.type) {
       case ToastType.success:
         return ToastConfig(
-          color: context.color.button,
+          color: context.colors.button,
           icon: Icons.check_circle_rounded,
         );
       case ToastType.error:
@@ -150,7 +154,7 @@ class _ToastWidgetState extends State<_ToastWidget>
         );
       case ToastType.info:
         return ToastConfig(
-          color: context.color.button,
+          color: context.colors.button,
           icon: Icons.info_rounded,
         );
     }
@@ -158,11 +162,10 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(' Building toast UI');
     final config = _getConfig(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final backgroundColor = isDark ? context.color.shades : Colors.white;
+    final backgroundColor = isDark ? context.colors.shades : Colors.white;
     final closeIconColor = isDark ? Colors.grey[400] : Colors.grey[600];
 
     return Positioned(
@@ -181,14 +184,11 @@ class _ToastWidgetState extends State<_ToastWidget>
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(12),
                 border: isDark
-                    ? Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
-                      )
+                    ? Border.all(color: Colors.white.withValues(alpha: 0.1))
                     : null,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black
-                        .withValues(alpha: isDark ? 0.3 : 0.1),
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -218,7 +218,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                     child: Text(
                       widget.message,
                       style: context.textStyle.copyWith(
-                        color: context.color.textPrimary,
+                        color: context.colors.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         height: 1.4,
@@ -231,11 +231,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        size: 18,
-                        color: closeIconColor,
-                      ),
+                      child: Icon(Icons.close, size: 18, color: closeIconColor),
                     ),
                   ),
                 ],

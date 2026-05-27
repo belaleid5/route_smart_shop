@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class SearchInputField extends StatelessWidget {
   const SearchInputField({
@@ -24,7 +25,7 @@ class SearchInputField extends StatelessWidget {
       readOnly: readOnly,
       context: context,
       controller: controller,
-      hintText: 'Search...',
+      hintText: LangKeys.search,
       keyboardType: TextInputType.text,
       onSubmit: onSearch,
       onChange: onChanged,

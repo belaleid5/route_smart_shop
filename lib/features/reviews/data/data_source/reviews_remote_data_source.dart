@@ -15,14 +15,12 @@ abstract class ReviewsRemoteDataSource {
 
   Future<ReviewModel> getReviewById(String id);
 
-  // ✅ تعديل: void بدل ReviewsResponseModel
   Future<void> createReview(
     String productId,
     String review,
     num rating,
   );
 
-  // ✅ تعديل: void بدل ReviewsResponseModel
   Future<void> updateReview(
     String reviewId,
     String review,
@@ -43,12 +41,12 @@ class ReviewsRemoteDataSourceImpl implements ReviewsRemoteDataSource {
     String productId,
     int? page,
   ) async {
-    return _apiService.getProductReviews(productId, page);
+    return _apiService.getProductReviews(page:  page, productId: productId);
   }
 
   @override
   Future<ReviewsResponseModel> getAllReviews(int? page) async {
-    return _apiService.getAllReviews(page);
+    return _apiService.getAllReviews(page: page);
   }
 
   @override

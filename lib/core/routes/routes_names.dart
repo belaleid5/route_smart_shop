@@ -5,6 +5,7 @@ class AppRoutesNames {
   static const onBoarding = '/onboarding';
   static const register = '/register';
   static const signIn = '/signIn';
+  static const profile = '/profile';
   static const forgotPassword = '/forgot_password';
   static const verifyCode = '/verify_code';
   static const reset_password = '/reset_password';
@@ -19,6 +20,11 @@ class AppRoutesNames {
    static const paymentDetails = '/payment_details';
   static const reviews = '/reviews';
   static const productDetails = '/productDetails';
+  static const categoryDetails = '/category_details';
+  static const allCategories = '/all_categories';
+static const allBrands = '/all_brands';
+static const allFlashDeals = '/all_flash_deals';
+static const filteredProducts = '/filtered_products'; 
 
 
 

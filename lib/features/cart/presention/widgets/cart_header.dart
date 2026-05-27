@@ -1,6 +1,7 @@
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_event.dart';
 import 'package:route_smart/features/cart/presention/widgets/cart_count_badge.dart';
@@ -21,16 +22,15 @@ class CartHeader extends StatelessWidget {
             style: context.textStyle.copyWith(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: context.color.textPrimary,
+              color: context.colors.textPrimary,
             ),
           ),
           const SizedBox(width: 12),
           CartCountBadge(count: itemCount),
           const Spacer(),
           TextButton(
-            onPressed: () => context.read<CartBloc>().add(
-                  const CartEvent.clearCart(),
-                ),
+            onPressed: () =>
+                context.read<CartBloc>().add(const ClearCartRequested()),
             child: Text(
               context.translate('clear_all'),
               style: context.textStyle.copyWith(

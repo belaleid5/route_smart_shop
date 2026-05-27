@@ -1,6 +1,7 @@
 // lib/core/common/widgets/product_rating_badge.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
@@ -23,11 +24,7 @@ class ProductRatingBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.star_rounded,
-            size: 12,
-            color: ratingColor,
-          ),
+          Icon(Icons.star_rounded, size: 12, color: ratingColor),
           const SizedBox(width: 2),
           Text(
             ratingValue.toStringAsFixed(1),
@@ -43,9 +40,9 @@ class ProductRatingBadge extends StatelessWidget {
   }
 
   Color _ratingColor(double rating) {
-    if (rating >= 4.5) return const Color(0xFF22C55E); 
-    if (rating >= 3.5) return const Color(0xFFF59E0B); 
+    if (rating >= 4.5) return const Color(0xFF22C55E);
+    if (rating >= 3.5) return const Color(0xFFF59E0B);
     if (rating >= 2.5) return const Color(0xFFF97316);
-    return const Color(0xFFEF4444);                  
+    return const Color(0xFFEF4444);
   }
 }

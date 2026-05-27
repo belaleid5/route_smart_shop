@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class CardDotsIndicator extends StatelessWidget {
   const CardDotsIndicator({
@@ -21,7 +22,9 @@ class CardDotsIndicator extends StatelessWidget {
           height: 8,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            color: isActive ? Colors.black : Colors.grey.shade300,
+            color: isActive
+                ? context.colors.primary
+                : context.colors.stroke,
             shape: BoxShape.circle,
           ),
         );

@@ -1,41 +1,37 @@
-import 'package:flutter/widgets.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
 class BrandChip extends StatelessWidget {
-  final BrandData brand;
+  final BrandEntity brand;
 
   const BrandChip({super.key, required this.brand});
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return GestureDetector(
       onTap: () {
         debugPrint('Tapped on Brand: ${brand.name}');
       },
       child: Container(
-        constraints: const BoxConstraints(minWidth: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        width: 80,
+        alignment: Alignment.center,
+
         decoration: BoxDecoration(
-          color: context.color.white,
+          color: colors.background,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: context.color.textSecondary.withOpacity(0.2),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: context.color.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: colors.textSecondary.withOpacity(0.15)),
         ),
         child: Text(
-          brand.name!,
+          brand.name,
           style: context.textStyle.copyWith(
-            fontWeight: FontWeight.w600,
+            color: context.colors.textPrimary,
             fontSize: 14,
-            color: context.color.textPrimary,
+            fontWeight: FontWeightHelper.semiBold,
           ),
         ),
       ),

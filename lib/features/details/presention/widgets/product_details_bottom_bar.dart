@@ -1,7 +1,8 @@
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/cart_extenions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_bloc.dart';
 import 'package:route_smart/features/cart/presention/manger/cart_state.dart';
@@ -28,7 +29,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
         MediaQuery.of(context).padding.bottom + 16,
       ),
       decoration: BoxDecoration(
-        color: context.color.shades,
+        color: context.colors.shades,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
@@ -48,7 +49,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
                 context.translate(LangKeys.price),
                 style: context.textStyle.copyWith(
                   fontSize: 12,
-                  color: context.color.textPrimary.withValues(alpha: 0.5),
+                  color: context.colors.textPrimary.withValues(alpha: 0.5),
                 ),
               ),
               Text(
@@ -56,7 +57,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
                 style: context.textStyle.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: context.color.textPrimary,
+                  color: context.colors.textPrimary,
                 ),
               ),
             ],
@@ -112,7 +113,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: context.color.button,
+          backgroundColor: context.colors.button,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -129,11 +130,7 @@ class ProductDetailsBottomBar extends StatelessWidget {
       height: 54,
       child: ElevatedButton.icon(
         onPressed: null,
-        icon: const Icon(
-          Icons.check_rounded,
-          color: Colors.white,
-          size: 20,
-        ),
+        icon: const Icon(Icons.check_rounded, color: Colors.white, size: 20),
         label: Text(
           context.translate(LangKeys.productAlreadyInCart),
           style: context.textStyle.copyWith(
@@ -143,9 +140,8 @@ class ProductDetailsBottomBar extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: context.color.button.withValues(alpha: 0.6),
-          disabledBackgroundColor:
-              context.color.button.withValues(alpha: 0.6),
+          backgroundColor: context.colors.button.withValues(alpha: 0.6),
+          disabledBackgroundColor: context.colors.button.withValues(alpha: 0.6),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -154,4 +150,4 @@ class ProductDetailsBottomBar extends StatelessWidget {
       ),
     );
   }
-}   
+}

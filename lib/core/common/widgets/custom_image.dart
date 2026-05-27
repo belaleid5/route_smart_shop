@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:route_smart/core/services/cach/cach_manger.dart';
-import 'package:route_smart/core/styles/app_images.dart';
-import 'package:route_smart/core/extensions/custom_shimmer.dart'; 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:route_smart/core/extensions/custom_shimmer.dart';
+import 'package:route_smart/core/services/cach/cach_manger.dart';
+import 'package:route_smart/core/styles/app_images.dart';
 
 enum ImagesType { svg, png, network, asset, file, memory, networkSvg }
 
@@ -55,8 +55,6 @@ class CustomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
-
-    // تجهيز الشيمر ليكون متطابقاً مع أبعاد وشكل الصورة المطلوبة
     final placeholder = _PlaceholderImage(
       width: width,
       height: height,
@@ -71,11 +69,7 @@ class CustomImage extends StatelessWidget {
           height: height,
           width: width,
           fit: boxFit,
-          colorFilter: applySvgColor
-              ? ColorFilter.mode(color ?? Colors.red, BlendMode.srcIn)
-              : null,
         );
-
       case ImagesType.networkSvg:
         if (!_isValidUrl(_securePath)) return _errorImage();
         imageWidget = SizedBox(
@@ -84,13 +78,9 @@ class CustomImage extends StatelessWidget {
           child: SvgPicture.network(
             _securePath,
             fit: boxFit,
-            colorFilter: applySvgColor
-                ? ColorFilter.mode(color ?? Colors.red, BlendMode.srcIn)
-                : null,
             placeholderBuilder: (_) => placeholder,
           ),
         );
-
       case ImagesType.png:
       case ImagesType.asset:
         imageWidget = Image.asset(
@@ -101,29 +91,24 @@ class CustomImage extends StatelessWidget {
           fit: boxFit,
           cacheWidth: width?.toInt(),
           cacheHeight: height?.toInt(),
-          errorBuilder: (context, error, stackTrace) => _errorImage(),
+          errorBuilder: (_, __, ___) => _errorImage(),
         );
-
       case ImagesType.file:
         imageWidget = Image.file(
           File(imagePath),
           height: height,
           width: width,
-          color: color,
           fit: boxFit,
-          errorBuilder: (context, error, stackTrace) => _errorImage(),
+          errorBuilder: (_, __, ___) => _errorImage(),
         );
-
       case ImagesType.memory:
         imageWidget = Image.memory(
           base64Decode(imagePath.split('base64,').last),
           height: height,
           width: width,
-          color: color,
           fit: boxFit,
-          errorBuilder: (context, error, stackTrace) => _errorImage(),
+          errorBuilder: (_, __, ___) => _errorImage(),
         );
-
       case ImagesType.network:
         if (!_isValidUrl(_securePath)) return _errorImage();
         imageWidget = kIsWeb
@@ -131,9 +116,8 @@ class CustomImage extends StatelessWidget {
                 _securePath,
                 height: height,
                 width: width,
-                color: color,
                 fit: boxFit,
-                errorBuilder: (context, error, stackTrace) => _errorImage(),
+                errorBuilder: (_, __, ___) => _errorImage(),
               )
             : CachedNetworkImage(
                 imageUrl: _securePath,
@@ -145,28 +129,25 @@ class CustomImage extends StatelessWidget {
                 cacheKey: _securePath,
                 color: color,
                 fit: boxFit,
-                
-                // ✅ إعدادات التلاشي (Fade) لمنع الفراغ اللحظي
-                fadeInDuration: const Duration(milliseconds: 500), // وقت ظهور الصورة
-                fadeOutDuration: const Duration(milliseconds: 300), // وقت اختفاء الشيمر
-                fadeInCurve: Curves.easeInOut, // حركة ظهور انسيابية
-                
+                fadeInDuration: const Duration(milliseconds: 300),
+                fadeOutDuration: const Duration(milliseconds: 200),
                 placeholder: (context, url) => placeholder,
                 errorWidget: (context, url, error) {
-                  debugPrint('❌ CachedNetworkImage error: $error');
+                  debugPrint('❌ Image Error: $error');
                   return _errorImage();
                 },
               );
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(isCircular ? (width ?? 100) / 2 : borderRadius),
+      borderRadius: BorderRadius.circular(
+        isCircular ? (width ?? 100) / 2 : borderRadius,
+      ),
       child: imageWidget,
     );
   }
 }
 
-// ══════════════════════════════════════════════════════
 class _PlaceholderImage extends StatelessWidget {
   const _PlaceholderImage({
     this.width,
@@ -175,9 +156,7 @@ class _PlaceholderImage extends StatelessWidget {
     this.isCircular = false,
   });
 
-  final double? width;
-  final double? height;
-  final double borderRadius;
+  final double? width, height, borderRadius;
   final bool isCircular;
 
   @override
@@ -185,16 +164,14 @@ class _PlaceholderImage extends StatelessWidget {
     if (isCircular && width != null) {
       return ShimmerWidget.circular(size: width!);
     }
-    
     return ShimmerWidget.rectangular(
       width: width ?? double.infinity,
       height: height ?? double.infinity,
-      borderRadius: BorderRadius.circular(borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius!),
     );
   }
 }
 
-// ══════════════════════════════════════════════════════
 class ErrorImage extends StatelessWidget {
   const ErrorImage({
     super.key,
@@ -204,18 +181,34 @@ class ErrorImage extends StatelessWidget {
     this.fallbackPath,
   });
 
-  final double? errorWidth;
-  final double? errorHeight;
+  final double? errorWidth, errorHeight;
   final BoxFit? fit;
   final String? fallbackPath;
 
+  bool _isSvg(String path) => path.toLowerCase().endsWith('.svg');
+
   @override
   Widget build(BuildContext context) {
+    final path = fallbackPath ?? AppImages.noNetwork;
+    final w = errorWidth ?? 92;
+    final h = errorHeight ?? 92;
+    final boxFit = fit ?? BoxFit.cover;
+
+
+    if (_isSvg(path)) {
+      return SvgPicture.asset(
+        path,
+        height: h,
+        width: w,
+        fit: boxFit,
+      );
+    }
+
     return Image.asset(
-      fallbackPath ?? AppImages.noNetwork,
-      height: errorHeight ?? 92,
-      width: errorWidth ?? 92,
-      fit: fit ?? BoxFit.cover,
+      path,
+      height: h,
+      width: w,
+      fit: boxFit,
     );
   }
 }

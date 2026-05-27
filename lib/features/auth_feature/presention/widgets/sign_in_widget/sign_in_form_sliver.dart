@@ -1,18 +1,16 @@
-// features/auth_feature/presention/widgets/login_form_sliver.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/common/widgets/custom_form_password.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
-import 'package:route_smart/core/services/flutter_secure.dart';
-import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_in/sign_in_request_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_state.dart';
@@ -29,7 +27,6 @@ class SignInFormSliver extends StatefulWidget {
 
 class _SignInFormSliverState extends State<SignInFormSliver> {
   final _formKey = GlobalKey<FormState>();
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -51,8 +48,6 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
     context.read<SignInBloc>().add(SignInSubmitted(request));
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
@@ -69,7 +64,7 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
                   AdaptiveInputField(
                     context: context,
                     controller: _emailController,
-                    title: 'EMAIL ADDRESS',
+                    title: context.translate(LangKeys.emailAddress).toUpperCase(),
                     hintText: 'name@example.com',
                     heightAfterIt: 20,
                     keyboardType: TextInputType.emailAddress,
@@ -78,22 +73,23 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
 
                   CustomTextFormPassword(
                     controller: _passwordController,
-                    title: 'PASSWORD',
+                    title: context.translate(LangKeys.password).toUpperCase(),
                     hintText: '••••••••',
                     heightAfterIt: 30,
                     validate: AppValidators.validatePassword,
                   ).animateBottomToTop(),
+                  
                   SectionForgetPassword().animateBottomToTop(),
+                  verticalSpace(10), 
 
                   BlocBuilderSignInButtonAuth(onSubmit: _onSubmit),
 
                   verticalSpace(25),
 
                   CustomTexGoTo(
-                    onTap: () =>
-                        context.pushReplacementNamed(AppRoutesNames.register),
-                    title: "Don't have an account?",
-                    textNextTo: " Sign Up",
+                    onTap: () => context.pushReplacementNamed(AppRoutesNames.register),
+                    title: context.translate(LangKeys.dontHaveAccount),
+                    textNextTo: context.translate(LangKeys.signUp),
                   ).animateBottomToTop(),
                 ],
               ),
@@ -105,22 +101,20 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
   }
 
   void _onStateChanged(BuildContext context, SignInState state) {
-    state.whenOrNull(
-      success: (data) async{
-        final token = data.token; 
-
-        if (token != null) {
-         
-          await SecureStorage().setString(PrefKeys.accessToken, token);
-        }
-        // ignore: use_build_context_synchronously
-        CustomToast.showSuccess(context, data.message ?? "Welcome Back!");
-         context.pushNamedAndRemoveUntil(AppRoutesNames.mainScreen);
-      },
-      error: (message) {
-               CustomToast.showError(context, context.translate(message));
-
-      },
-    );
+    switch (state) {
+      case SignInSuccess():
+     
+        final msg = state.data.message ?? context.translate(LangKeys.welcome);
+        CustomToast.showSuccess(context, msg);
+        
+      
+        context.pushNamedAndRemoveUntil(AppRoutesNames.mainScreen);
+      
+      case SignInError():
+        CustomToast.showError(context, state.message);
+      
+      default:
+        break; // Ignore Initial and Loading
+    }
   }
 }

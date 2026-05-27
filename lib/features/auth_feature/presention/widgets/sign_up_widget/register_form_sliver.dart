@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_smart/core/common/widgets/adabtive_text_form_field.dart';
 import 'package:route_smart/core/common/widgets/custom_form_password.dart';
+
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/app_validators.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/data/models/sign_up/register_request_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_state.dart';
@@ -26,7 +29,6 @@ class RegisterFormSliver extends StatefulWidget {
 
 class _RegisterFormSliverState extends State<RegisterFormSliver> {
   final _formKey = GlobalKey<FormState>();
-
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -70,60 +72,47 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
               child: Column(
                 children: [
                   AdaptiveInputField(
-                    context: context,
-                    controller: _nameController,
-                    title: 'Full Name',
+                    context: context, controller: _nameController,
+                    title: context.translate(LangKeys.fullName),
                     hintText: 'Ahmed Abd Al-Muti',
                     prefix: const Icon(Icons.person_outline),
-                    heightAfterIt: 20,
-                    validate: AppValidators.validateFullName,
+                    heightAfterIt: 20, validate: AppValidators.validateFullName,
                   ).animateBottomToTop(),
 
                   AdaptiveInputField(
-                    context: context,
-                    controller: _emailController,
-                    title: 'Email Address',
+                    context: context, controller: _emailController,
+                    title: context.translate(LangKeys.emailAddress),
                     hintText: 'ahmedmuttii4012@gmail.com',
                     prefix: const Icon(Icons.email_outlined),
-                    heightAfterIt: 20,
-                    keyboardType: TextInputType.emailAddress,
+                    heightAfterIt: 20, keyboardType: TextInputType.emailAddress,
                     validate: AppValidators.validateEmail,
                   ).animateBottomToTop(),
 
-                  CustomFormFieldPhoneNumber(
-                    phoneController: _phoneController,
-                  ).animateBottomToTop(),
+                  CustomFormFieldPhoneNumber(phoneController: _phoneController)
+                      .animateBottomToTop(),
 
                   CustomTextFormPassword(
                     controller: _passwordController,
-                    title: 'Password',
+                    title: context.translate(LangKeys.password),
                     hintText: 'Ahmed@123',
-                    heightAfterIt: 20,
-                    validate: AppValidators.validatePassword,
+                    heightAfterIt: 20, validate: AppValidators.validatePassword,
                   ).animateBottomToTop(),
 
                   CustomTextFormPassword(
                     controller: _confirmPasswordController,
-                    title: 'Confirm Password',
-                    isConfirmPassword: true,
-                    heightAfterIt: 15,
-                    validate: (value) => AppValidators.validateConfirmPassword(
-                      value,
-                      _passwordController.text,
-                    ),
+                    title: context.translate(LangKeys.confirmPassword),
+                    isConfirmPassword: true, heightAfterIt: 15,
+                    validate: (value) => AppValidators.validateConfirmPassword(value, _passwordController.text),
                   ).animateBottomToTop(),
 
                   const WidgetCustomCheckBoxAgreeTerms(),
-
                   verticalSpace(25),
 
                   BlocBuilderButtonAuth(onSubmit: _onSubmit),
-
                   verticalSpace(25),
 
                   CustomTexGoTo(
-                    onTap: () =>
-                        context.pushReplacementNamed(AppRoutesNames.signIn),
+                    onTap: () => context.pushReplacementNamed(AppRoutesNames.signIn),
                   ).animateBottomToTop(),
                 ],
               ),
@@ -135,18 +124,17 @@ class _RegisterFormSliverState extends State<RegisterFormSliver> {
   }
 
   void _onStateChanged(BuildContext context, RegisterState state) {
-    state.whenOrNull(
-      success: (data) {
-        CustomToast.showSuccess(
-          context,
-          data.message ?? "Account Created Successfully",
-        );
+    switch (state) {
+      case RegisterSuccess():
+        final msg = state.data.message ?? context.translate(LangKeys.accountCreatedSuccess);
+        CustomToast.showSuccess(context, msg);
         context.pushNamedAndRemoveUntil(AppRoutesNames.signIn);
-      },
-      error: (message) {
-               CustomToast.showError(context, context.translate(message));
-;
-      },
-    );
+      
+      case RegisterError():
+        CustomToast.showError(context, state.message);
+      
+      default:
+        break; // Ignore Initial and Loading states
+    }
   }
 }

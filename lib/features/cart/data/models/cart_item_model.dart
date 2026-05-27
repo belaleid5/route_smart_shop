@@ -1,21 +1,8 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/helper/json_reader.dart';
 
-part 'cart_item_model.g.dart';
+import 'cart_product_model.dart';
 
-@JsonSerializable()
-class CartItemModel {
-  @JsonKey(name: '_id')
-  final String cartItemId;
-
-  final String productId;
-  final String productName;
-
-  @JsonKey(name: 'count')
-  final int quantity;
-
-  final double price;
-  final String? imageUrl;
-
+final class CartItemModel {
   const CartItemModel({
     required this.cartItemId,
     required this.productId,
@@ -25,22 +12,57 @@ class CartItemModel {
     this.imageUrl,
   });
 
+  final String cartItemId;
+  final String productId;
+  final String productName;
+  final int quantity;
+  final double price;
+  final String? imageUrl;
+
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
-    final productData = json['product'] as Map<String, dynamic>?;
+    final productJson = JsonReader.map(json['product']);
+    final product = productJson == null
+        ? null
+        : CartProductModel.fromJson(productJson);
+
+    final rawProduct = json['product'];
+
+    final fallbackProductId = JsonReader.string(
+      json['productId'] ?? (rawProduct is String ? rawProduct : null),
+    );
 
     return CartItemModel(
-      cartItemId: json['_id'] as String? ?? '',
-      productId: productData?['_id'] as String? ?? '',
-      productName: productData?['title'] as String? ?? '',
-      quantity: json['count'] as int? ?? 0,
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      imageUrl: productData?['imageCover'] as String?,
+      cartItemId: JsonReader.string(json['_id'] ?? json['cartItemId']),
+      productId: product?.id.isNotEmpty == true ? product!.id : fallbackProductId,
+      productName: product?.title.isNotEmpty == true
+          ? product!.title
+          : JsonReader.string(json['productName'] ?? json['title']),
+      quantity: JsonReader.integer(json['count'] ?? json['quantity']),
+      price: JsonReader.decimal(
+        json['price'],
+        fallback: product?.price ?? 0,
+      ),
+      imageUrl: product?.imageUrl ??
+          JsonReader.nullableString(
+            json['imageUrl'] ?? json['imageCover'],
+          ),
     );
   }
 
-  Map<String, dynamic> toJson() => _$CartItemModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': cartItemId,
+      'productId': productId,
+      'productName': productName,
+      'count': quantity,
+      'price': price,
+      'imageUrl': imageUrl,
+    };
+  }
 
-  CartItemModel copyWith({int? quantity}) {
+  CartItemModel copyWith({
+    int? quantity,
+  }) {
     return CartItemModel(
       cartItemId: cartItemId,
       productId: productId,

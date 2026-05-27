@@ -1,23 +1,24 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:route_smart/features/reviews/data/models/review_model.dart';
-import 'package:route_smart/features/reviews/data/models/reviews_metadata_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/reviews_response_entity.dart';
 
-part 'reviews_response_model.g.dart';
+import 'review_model.dart';
+import 'reviews_metadata_model.dart';
 
-@JsonSerializable()
-class ReviewsResponseModel {
-  final int results;
-  final ReviewsMetadataModel metadata;
-  final List<ReviewModel> data;
-
+class ReviewsResponseModel extends ReviewsResponseEntity {
   const ReviewsResponseModel({
-    required this.results,
-    required this.metadata,
-    required this.data,
+    super.results,
+    super.metadata,
+    super.data,
   });
 
-  factory ReviewsResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$ReviewsResponseModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ReviewsResponseModelToJson(this);
+  factory ReviewsResponseModel.fromJson(Map<String, dynamic> json) {
+    return ReviewsResponseModel(
+      results: json['results'] as int?,
+      metadata: json['metadata'] != null
+          ? ReviewsMetadataModel.fromJson(json['metadata'])
+          : null,
+      data: json['data'] != null
+          ? (json['data'] as List).map((e) => ReviewModel.fromJson(e)).toList()
+          : null,
+    );
+  }
 }

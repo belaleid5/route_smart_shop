@@ -1,7 +1,8 @@
-// lib/features/wishlist/presentation/widgets/wishlist_recently_viewed_section.dart
-
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 import 'wishlist_avatar.dart';
 import 'wishlist_circle_icon_button.dart';
@@ -26,9 +27,13 @@ class WishlistRecentlyViewedSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text(
-                'Recently viewed',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                context.translate(LangKeys.recentlyViewed),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.textPrimary,
+                ),
               ),
               const Spacer(),
               WishlistCircleIconButton(icon: Icons.arrow_forward, onTap: () {}),

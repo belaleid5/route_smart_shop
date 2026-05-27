@@ -1,24 +1,18 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'sign_in_request_model.g.dart';
-
-/// Request body model for the user registration endpoint.
-@JsonSerializable()
 class SignInRequestModel {
-  const SignInRequestModel({
-
-    required this.email,
-    required this.password,
-
-  });
-
-
   final String email;
   final String password;
 
+  const SignInRequestModel({required this.email, required this.password});
 
-  factory SignInRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$SignInRequestModelFromJson(json);
+  factory SignInRequestModel.fromJson(Map<String, dynamic> json) {
+    return SignInRequestModel(
+      email: json['email'] as String,
+      password: json['password'] as String,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$SignInRequestModelToJson(this);
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'password': password,
+      };
 }

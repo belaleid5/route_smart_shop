@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
 class SearchCategoryTile extends StatelessWidget {
-  const SearchCategoryTile({
-    super.key,
-    required this.name,
-  });
+  const SearchCategoryTile({super.key, required this.name});
 
   final String name;
 
@@ -14,10 +12,10 @@ class SearchCategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: context.color.fieldBackground,
+        color: context.colors.fieldBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: context.color.primary.withValues(alpha: 0.2),
+          color: context.colors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Center(
@@ -25,7 +23,7 @@ class SearchCategoryTile extends StatelessWidget {
           name,
           style: context.textStyle.copyWith(
             fontWeight: FontWeightHelper.medium,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
       ),

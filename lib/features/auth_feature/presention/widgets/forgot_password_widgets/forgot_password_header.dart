@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class ForgotPasswordHeaderSliver extends StatelessWidget {
@@ -19,9 +21,9 @@ class ForgotPasswordHeaderSliver extends StatelessWidget {
           ),
           verticalSpace(24),
           Text(
-            'Forgot Password',
-            style: context.textStyle.copyWith(
-              fontSize: 18,
+            context.translate(LangKeys.forgotPassword),
+            style: context.titleLarge.copyWith(
+              fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -29,13 +31,13 @@ class ForgotPasswordHeaderSliver extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              "Don't worry! Enter the email address associated with your account and we'll send you a link to reset your password.",
+              context.translate(LangKeys.forgotPasswordSubtitle),
               textAlign: TextAlign.center,
-              style: context.textStyle.copyWith(
+              style: context.bodyMedium.copyWith(
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 height: 1.5,
-                color: context.color.textSecondary,
+                color: context.colors.textSecondary,
               ),
             ),
           ),

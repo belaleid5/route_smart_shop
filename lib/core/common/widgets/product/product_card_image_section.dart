@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/product/prduct_discount_badge.dart';
+import 'package:route_smart/core/common/widgets/product/product_add_to_cart.dart';
 import 'package:route_smart/core/common/widgets/product/product_image.dart';
 import 'package:route_smart/core/common/widgets/product/product_wishlist_button.dart';
-import 'package:route_smart/core/common/widgets/product_add_to_cart.dart';
 
 class ProductCardImageSection extends StatelessWidget {
   const ProductCardImageSection({
@@ -12,6 +12,7 @@ class ProductCardImageSection extends StatelessWidget {
     this.onFavoriteTap,
     this.productId,
     this.onAddToCart,
+    this.isAddedToCart = false,
   });
 
   final String imageUrl;
@@ -19,6 +20,7 @@ class ProductCardImageSection extends StatelessWidget {
   final VoidCallback? onFavoriteTap;
   final String? productId;
   final VoidCallback? onAddToCart;
+  final bool isAddedToCart;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +45,9 @@ class ProductCardImageSection extends StatelessWidget {
           bottom: 8,
           right: 8,
           child: ProductAddToCartButton(
-            productId: productId, 
+            productId: productId,
             onTap: onAddToCart,
+            isAdded: isAddedToCart,
           ),
         ),
       ],

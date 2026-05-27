@@ -1,14 +1,18 @@
-import 'package:json_annotation/json_annotation.dart';
-part 'message_response_model.g.dart';
-
-@JsonSerializable()
 class MessageResponseModel {
-  final String? statusMsg, message;
+  final String? statusMsg;
+  final String? message;
 
+  MessageResponseModel({this.statusMsg, this.message});
 
-  MessageResponseModel({this.statusMsg,this.message});
+  factory MessageResponseModel.fromJson(Map<String, dynamic> json) {
+    return MessageResponseModel(
+      statusMsg: json['statusMsg'] as String?,
+      message: json['message'] as String?,
+    );
+  }
 
-  factory MessageResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$MessageResponseModelFromJson(json);
-  Map<String, dynamic> toJson() => _$MessageResponseModelToJson(this);
+  Map<String, dynamic> toJson() => {
+        'statusMsg': statusMsg,
+        'message': message,
+      };
 }

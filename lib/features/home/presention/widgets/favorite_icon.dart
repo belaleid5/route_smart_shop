@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class FavoriteIcon extends StatelessWidget {
-  const FavoriteIcon({super.key});
+  final bool isFavorite;
+
+  const FavoriteIcon({super.key, this.isFavorite = false});
 
   @override
   Widget build(BuildContext context) {
@@ -10,12 +12,12 @@ class FavoriteIcon extends StatelessWidget {
       top: 8,
       right: 8,
       child: CircleAvatar(
-        backgroundColor: context.color.white,
-        radius: 14,
+        radius: 16,
+        backgroundColor: context.colors.white.withOpacity(0.9),
         child: Icon(
-          Icons.favorite_border,
-          size: 16,
-          color: context.color.textSecondary,
+          isFavorite ? Icons.favorite : Icons.favorite_border,
+          size: 18,
+          color: isFavorite ? Colors.red : context.colors.textSecondary,
         ),
       ),
     );

@@ -1,28 +1,29 @@
-
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:route_smart/core/app/app_cubit/app_cubit_cubit.dart';
 import 'package:route_smart/core/app/bloc_observer.dart';
 import 'package:route_smart/core/app/connectivitiy_controller.dart';
 import 'package:route_smart/core/app/env_varible.dart';
-import 'package:route_smart/core/constants/stripe_keys.dart';
 import 'package:route_smart/core/di/di.dart';
-import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_pref.dart';
 import 'package:route_smart/smart_shop_app.dart';
 
 void main() async {
-  await EnvVariable.instance.init(EnvType.dev);
-  await ConnectivityController.instance.init();
-
   WidgetsFlutterBinding.ensureInitialized();
+  await EnvVariable.instance.init(EnvType.dev);
+  Stripe.publishableKey = EnvVariable.instance.stripePublishableKey; 
+  await ConnectivityController.instance.init();
   Bloc.observer = AppBlocObserver();
-  await SecureStorage().initSecureStorage();
-  await SharedPref().initPreferences();
+  await SharedPref().init();
   await setupDI();
-  Stripe.publishableKey = StripeKeys.stripePublishableKey;
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(DevicePreview(builder: (context) => const RouteSmartShopApp()));
+
+  runApp(
+    BlocProvider(
+      create: (_) => sl<AppCubit>()..init(),
+      child: const RouteSmartShopApp(),
+    ),
+  );
 }

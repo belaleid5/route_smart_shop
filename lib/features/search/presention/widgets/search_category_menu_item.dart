@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/styles/fonts/font_weight_helper.dart';
 
@@ -8,7 +9,7 @@ class SearchCategoryMenuItem extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onTap,
-    this.icon, // ✅ optional
+    this.icon,
   });
 
   final String label;
@@ -24,19 +25,15 @@ class SearchCategoryMenuItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
-              ? context.color.primary.withValues(alpha: 0.08)
+              ? context.colors.primary.withValues(alpha: 0.08)
               : Colors.transparent,
         ),
         child: Row(
           children: [
-            // ── Leading Icon Circle ──────────────────────────────────────
             if (icon != null)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -44,21 +41,20 @@ class SearchCategoryMenuItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isSelected
-                      ? context.color.primary.withValues(alpha: 0.12)
-                      : context.color.stroke.withValues(alpha: 0.5),
+                      ? context.colors.primary.withValues(alpha: 0.12)
+                      : context.colors.stroke.withValues(alpha: 0.5),
                 ),
                 child: Icon(
                   icon,
                   size: 14,
                   color: isSelected
-                      ? context.color.primary
-                      : context.color.textPrimary.withValues(alpha: 0.5),
+                      ? context.colors.primary
+                      : context.colors.textPrimary.withValues(alpha: 0.5),
                 ),
               ),
 
             if (icon != null) const SizedBox(width: 10),
 
-            // ── Label ────────────────────────────────────────────────────
             Expanded(
               child: Text(
                 label,
@@ -68,24 +64,21 @@ class SearchCategoryMenuItem extends StatelessWidget {
                       ? FontWeightHelper.semiBold
                       : FontWeightHelper.medium,
                   color: isSelected
-                      ? context.color.primary
-                      : context.color.textPrimary,
+                      ? context.colors.primary
+                      : context.colors.textPrimary,
                 ),
               ),
             ),
 
-            // ── Check Icon (Animated) ────────────────────────────────────
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              transitionBuilder: (child, animation) => ScaleTransition(
-                scale: animation,
-                child: child,
-              ),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
               child: isSelected
                   ? Icon(
                       Icons.check_circle_rounded,
                       key: const ValueKey('check'),
-                      color: context.color.primary,
+                      color: context.colors.primary,
                       size: 18,
                     )
                   : const SizedBox(

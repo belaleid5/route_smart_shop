@@ -1,17 +1,42 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
+import 'package:route_smart/core/common/domain/entites/product_entity.dart';
 
-part 'product_state.freezed.dart';
+sealed class ProductsState {
+  const ProductsState();
+}
 
-@freezed
-class ProductsState with _$ProductsState {
-  const factory ProductsState.initial() = _Initial;
-  const factory ProductsState.loading() = _Loading;
+final class ProductsInitial extends ProductsState {
+  const ProductsInitial();
+}
 
-  const factory ProductsState.success({
-    @Default([]) List<ProductDataModel> products,
-    @Default(false) bool hasReachedMax,
-  }) = _Success;
+final class ProductsLoading extends ProductsState {
+  const ProductsLoading();
+}
 
-  const factory ProductsState.error(String message) = _Error;
+final class ProductsSuccess extends ProductsState {
+  const ProductsSuccess({
+    this.products = const [],
+    this.hasReachedMax = false,
+  });
+
+  final List<ProductEntity> products;
+  final bool hasReachedMax;
+
+  ProductsSuccess copyWith({
+    List<ProductEntity>? products,
+    bool? hasReachedMax,
+  }) {
+    return ProductsSuccess(
+      products: products ?? this.products,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
+
+
+}
+
+final class ProductsError extends ProductsState {
+  const ProductsError(this.message);
+  final String message;
+
+ 
 }

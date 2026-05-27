@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/common/widgets/main_carousel_slider.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/details/presention/widgets/dots_indicator.dart';
-
 
 class ProductDetailsCoverImage extends StatefulWidget {
   const ProductDetailsCoverImage({
@@ -35,7 +34,8 @@ class _ProductDetailsCoverImageState extends State<ProductDetailsCoverImage> {
   @override
   void didUpdateWidget(covariant ProductDetailsCoverImage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.imageCover != oldWidget.imageCover || widget.images != oldWidget.images) {
+    if (widget.imageCover != oldWidget.imageCover ||
+        widget.images != oldWidget.images) {
       _updateImageList();
       _initCarouselOptions();
     }
@@ -67,13 +67,13 @@ class _ProductDetailsCoverImageState extends State<ProductDetailsCoverImage> {
       return const SizedBox.shrink();
     }
 
-final screenHeight = MediaQuery.sizeOf(context).height;
+    final screenHeight = MediaQuery.sizeOf(context).height;
     return SizedBox(
       height: screenHeight * 0.45,
       child: Stack(
         children: [
           MainCarouselSlider.builder(
-            itemCount: _allImages.length, 
+            itemCount: _allImages.length,
             options: _carouselOptions,
             itemBuilder: (context, index, realIndex) {
               return CustomImage(
@@ -86,7 +86,6 @@ final screenHeight = MediaQuery.sizeOf(context).height;
             },
           ),
 
-      
           if (_allImages.length > 1)
             Positioned(
               bottom: 16,
@@ -96,9 +95,7 @@ final screenHeight = MediaQuery.sizeOf(context).height;
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   _allImages.length,
-                  (index) => DotIndicator(
-                    isSelected: _currentIndex == index,
-                  ),
+                  (index) => DotIndicator(isSelected: _currentIndex == index),
                 ),
               ),
             ),
@@ -107,4 +104,3 @@ final screenHeight = MediaQuery.sizeOf(context).height;
     );
   }
 }
-

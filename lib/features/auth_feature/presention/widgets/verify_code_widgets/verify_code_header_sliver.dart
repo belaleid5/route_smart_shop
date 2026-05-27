@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
+import 'package:route_smart/core/styles/app_images.dart';
 
 class VerifyCodeHeaderSliver extends StatelessWidget {
   const VerifyCodeHeaderSliver({super.key});
@@ -16,33 +20,18 @@ class VerifyCodeHeaderSliver extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 onPressed: () => context.pop(),
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF1F2C37)),
+                icon: Icon(Icons.arrow_back, color: context.colors.textPrimary),
               ),
             ),
           ),
           verticalSpace(20),
-          // الـ Logo الحاوية البيضاء
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.color.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: context.color.black.withOpacity(0.05),
-                  blurRadius: 15,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.shopping_bag,
-              color: Color(0xFF4C53FF),
-              size: 45,
-            ),
+          CustomImage(
+            imageType: ImagesType.svg,
+            imagePath: AppImages.logoAppSvg,
           ),
           verticalSpace(30),
-           Text(
-            'Verify Code',
+          Text(
+            context.translate(LangKeys.verifyCode),
             style: context.textStyle.copyWith(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -52,10 +41,10 @@ class VerifyCodeHeaderSliver extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             child: Text(
-              'Enter the 6-digit code sent to your email address.',
+              context.translate(LangKeys.verifyCodeSubtitle),
               textAlign: TextAlign.center,
               style: context.textStyle.copyWith(
-                color: context.color.textSecondary,
+                color: context.colors.textSecondary,
                 fontSize: 16,
               ),
             ),

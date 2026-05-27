@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
+import 'package:route_smart/features/wishlist/domain/entites/wishlist_entity.dart';
 import 'package:route_smart/features/wishlist/presention/widgets/wishlist_card.dart';
 
 class WishlistItemWrapper extends StatelessWidget {
@@ -13,7 +13,7 @@ class WishlistItemWrapper extends StatelessWidget {
     required this.onAddToCart,
   });
 
-  final WishlistItemModel item;
+  final WishlistEntity item;
   final int index;
   final bool isRemoving;
   final VoidCallback onRemove;
@@ -36,16 +36,9 @@ class WishlistItemWrapper extends StatelessWidget {
             duration: 800.ms,
             curve: Curves.easeInBack,
           )
-          .fadeOut(
-            duration: 500.ms,
-            curve: Curves.easeIn,
-          )
-          .rotate(
-            begin: 0,
-            end: -0.05,
-            duration: 600.ms,
-          )
-          .then() 
+          .fadeOut(duration: 500.ms, curve: Curves.easeIn)
+          .rotate(begin: 0, end: -0.05, duration: 600.ms)
+          .then()
           .custom(
             duration: 600.ms,
             curve: Curves.easeInOutQuart,

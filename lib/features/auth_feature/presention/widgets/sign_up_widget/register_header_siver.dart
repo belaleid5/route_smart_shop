@@ -1,9 +1,13 @@
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/styles/app_images.dart';
+
+import 'package:route_smart/core/language/lang_keys.dart';
+
 
 class RegisterHeaderSliver extends StatelessWidget {
   const RegisterHeaderSliver({super.key});
@@ -22,33 +26,30 @@ class RegisterHeaderSliver extends StatelessWidget {
                 CustomImage(
                   height: 100,
                   imageType: ImagesType.svg,
-                  color: context.color.primary,
+                  color: context.colors.primary,
                   imagePath: AppImages.logoAppSvg,
                 ),
-
-                Text(
-                  'Route Shop',
-                  style: context.textStyle.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+               
               ],
             ).animateBottomToTop(),
-            verticalSpace( 40),
+            
+            verticalSpace(40),
+            
             Text(
-              'Create Account',
+              context.translate(LangKeys.createAccount), 
               style: context.textStyle.copyWith(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ).animateRightLeft(),
-            verticalSpace( 8),
+            
+            verticalSpace(8),
+            
             Text(
-              'Sign up to get started',
+              context.translate(LangKeys.signUpWelcome), 
               style: context.textStyle.copyWith(
                 fontSize: 16,
-                color: context.color.textSecondary,
+                color: context.colors.textSecondary,
               ),
             ).animateRightLeft(),
           ],

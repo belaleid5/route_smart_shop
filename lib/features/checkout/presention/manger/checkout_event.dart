@@ -1,25 +1,44 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/features/checkout/data/models/address_response_model.dart';
-import 'package:route_smart/features/checkout/data/models/shipping_address_model.dart';
+import 'package:route_smart/features/checkout/domain/entites/address_entity.dart';
+import 'package:route_smart/features/checkout/domain/entites/shipping_address_entity.dart';
 
-part 'checkout_event.freezed.dart';
+sealed class CheckoutEvent {
+  const CheckoutEvent();
+}
 
-@freezed
-class CheckoutEvent with _$CheckoutEvent {
-  const factory CheckoutEvent.getAddresses() = GetAddressesEvent;
+final class GetAddressesEvent extends CheckoutEvent {
+  const GetAddressesEvent();
+}
 
-  const factory CheckoutEvent.addAddress(AddressModel address) = AddAddressEvent;
+final class AddAddressEvent extends CheckoutEvent {
+  final AddressEntity address;
+  const AddAddressEvent(this.address);
+}
 
-  const factory CheckoutEvent.removeAddress(String addressId) = RemoveAddressEvent;
+final class RemoveAddressEvent extends CheckoutEvent {
+  final String addressId;
+  const RemoveAddressEvent(this.addressId);
+}
 
-  const factory CheckoutEvent.createCashOrder({
-    required String cartId,
-    required ShippingAddressModel shippingAddress,
-  }) = CreateCashOrderEvent;
+final class CreateCashOrderEvent extends CheckoutEvent {
+  final String cartId;
+  final ShippingAddressEntity shippingAddress;
 
-  const factory CheckoutEvent.payWithCard({
-    required double amount,
-    required String cartId,
-    required ShippingAddressModel shippingAddress,
-  }) = PayWithCardEvent;
+  const CreateCashOrderEvent({
+    required this.cartId,
+    required this.shippingAddress,
+  });
+}
+
+final class PayWithCardEvent extends CheckoutEvent {
+  final double amount;
+  final String cartId;
+  final ShippingAddressEntity shippingAddress;
+  final String currency;
+
+  const PayWithCardEvent({
+    required this.amount,
+    required this.cartId,
+    required this.shippingAddress,
+    this.currency = 'usd',
+  });
 }

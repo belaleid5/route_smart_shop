@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class QuantityButton extends StatelessWidget {
   const QuantityButton({
@@ -20,9 +20,16 @@ class QuantityButton extends StatelessWidget {
         height: 36,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: context.color.button, width: 1.5),
+          border: Border.all(
+            color: context.colors.button,
+            width: 1.5,
+          ),
         ),
-        child: Icon(icon, size: 18, color: context.color.button),
+        child: Icon(
+          icon,
+          size: 18,
+          color: context.colors.button,
+        ),
       ),
     );
   }

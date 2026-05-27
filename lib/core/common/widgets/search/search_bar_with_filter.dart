@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/domain/entites/category_entity.dart';
 import 'package:route_smart/core/common/widgets/search/search_category_menu_buttn.dart';
 import 'package:route_smart/core/common/widgets/search/search_clear_button.dart';
 import 'package:route_smart/core/common/widgets/search/search_filter_button.dart';
 import 'package:route_smart/core/common/widgets/search/search_input_field.dart';
-import 'package:route_smart/core/common/widgets/search/search_reset_icon.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
+import 'package:route_smart/core/common/widgets/search/search_refresh_button.dart';
+import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 import 'package:route_smart/features/search/presention/widgets/search_filter_bottom_sheet.dart';
 
 class SearchBarWithFilter extends StatelessWidget {
@@ -23,7 +24,7 @@ class SearchBarWithFilter extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final List<CategoryData> categories;
+  final List<CategoryEntity> categories;
   final String? selectedCategoryId;
   final ValueChanged<String?> onCategorySelected;
   final ValueChanged<String> onChanged;
@@ -37,12 +38,10 @@ class SearchBarWithFilter extends StatelessWidget {
   void _openFilterSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       isScrollControlled: true,
-      builder: (_) => SearchFilterBottomSheet(
-        params: params,
-        onApply: onParamsChanged,
-      ),
+      builder: (_) =>
+          SearchFilterBottomSheet(params: params, onApply: onParamsChanged),
     );
   }
 
@@ -55,9 +54,7 @@ class SearchBarWithFilter extends StatelessWidget {
           selectedId: selectedCategoryId,
           onSelected: onCategorySelected,
         ),
-
-        const SizedBox(width: 8),
-
+        horizontalSpace(12),
         Expanded(
           child: SearchInputField(
             controller: controller,
@@ -65,31 +62,24 @@ class SearchBarWithFilter extends StatelessWidget {
             onSearch: onSearch,
           ),
         ),
-
-        const SizedBox(width: 8),
-
+        horizontalSpace(12),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, animation) => ScaleTransition(
             scale: animation,
-            child: FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
+            child: FadeTransition(opacity: animation, child: child),
           ),
           child: _hasActiveFilters
               ? SearchClearButton(
                   key: const ValueKey('clear'),
                   onTap: onCleared,
                 )
-              : SearchResetButton(
-                  key: const ValueKey('reset'),
+              : SearchRefreshButton(
+                  key: const ValueKey('refresh'),
                   onTap: onCleared,
                 ),
         ),
-
-        const SizedBox(width: 8),
-
+        horizontalSpace(8),
         SearchFilterButton(
           hasActiveFilters: _hasActiveFilters,
           onTap: () => _openFilterSheet(context),

@@ -9,21 +9,20 @@ class BlocBuilderForgotPasswordButtonAuth extends StatelessWidget {
   const BlocBuilderForgotPasswordButtonAuth({super.key, this.onSubmit});
 
   final Function()? onSubmit;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
       builder: (context, state) {
-        final isLoading = state.maybeWhen(
-          loading: () => true,
-          orElse: () => false,
-        );
+  
+        final isLoading = state is ForgotPasswordLoading;
 
-        return ButtonAuth(isLoading: isLoading, onSubmit: onSubmit, 
-        text: 'Send Reset ',
+        return ButtonAuth(
+          isLoading: isLoading,
+          onSubmit: onSubmit,
+          text: 'Send Reset',
         ).animateShimmer();
       },
     );
   }
 }
-
-

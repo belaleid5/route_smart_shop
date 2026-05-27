@@ -1,11 +1,11 @@
 // features/details/presention/pages/product_details_page.dart
 
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
-import 'package:route_smart/features/details/presention/widgets/product_details_body.dart';
+import 'package:route_smart/core/common/domain/entites/product_entity.dart';
+import 'package:route_smart/features/details/presention/refactor/product_details_body.dart';
 
 class ProductDetailsPage extends StatelessWidget {
-  final ProductDataModel product;
+  final ProductEntity product;
 
   const ProductDetailsPage({super.key, required this.product});
 
@@ -13,8 +13,8 @@ class ProductDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ProductDetailsBody(
-        productId: product.id ?? '',
-        initialProduct: product, 
+        productId: product.id,
+        initialProduct: product,
       ),
     );
   }

@@ -10,21 +10,11 @@ import 'package:route_smart/features/auth_feature/data/models/verfication_code_m
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/verification_code_request_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<AuthResponseModel> signIn(SignInRequestModel signInRequest);
-
-  Future<AuthResponseModel> register(RegisterRequestModel registerRequest);
-
-  Future<MessageResponseModel> forgotPassword(
-    ForgotPasswordRequestModel forgotPasswordRequest,
-  );
-
-  Future<VerificationCodeResponseModel> verifyCode(
-    VerificationCodeRequestModel verifyResetCodeRequest,
-  );
-
-  Future<ResetPasswordResponse> resetPassword(
-    ResetPasswordRequestModel resetPasswordCodeRequest,
-  );
+  Future<AuthResponseModel> signIn(SignInRequestModel request);
+  Future<AuthResponseModel> register(RegisterRequestModel request);
+  Future<MessageResponseModel> forgotPassword(ForgotPasswordRequestModel request);
+  Future<VerificationCodeResponseModel> verifyCode(VerificationCodeRequestModel request);
+  Future<ResetPasswordResponse> resetPassword(ResetPasswordRequestModel request);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -33,38 +23,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<AuthResponseModel> signIn(SignInRequestModel signInRequest) async {
-    return await _apiService.signIn(signInRequest);
-  }
+  Future<AuthResponseModel> signIn(SignInRequestModel request) async => 
+      await _apiService.signIn(request);
 
   @override
-  Future<AuthResponseModel> register(
-    RegisterRequestModel registerRequest,
-  ) async {
-    return await _apiService.register(registerRequest);
-  }
+  Future<AuthResponseModel> register(RegisterRequestModel request) async => 
+      await _apiService.register(request);
 
   @override
-  Future<MessageResponseModel> forgotPassword(
-    ForgotPasswordRequestModel forgotPasswordRequest,
-  ) async {
-    return await _apiService.forgotPassword(forgotPasswordRequest);
-  }
-
-
-
+  Future<MessageResponseModel> forgotPassword(ForgotPasswordRequestModel request) async => 
+      await _apiService.forgotPassword(request);
 
   @override
-  Future<VerificationCodeResponseModel> verifyCode(
-    VerificationCodeRequestModel verifyResetCodeRequest,
-  ) async {
-    return await _apiService.verifyResetCode(verifyResetCodeRequest);
-  }
+  Future<VerificationCodeResponseModel> verifyCode(VerificationCodeRequestModel request) async => 
+      await _apiService.verifyResetCode(request);
 
   @override
-  Future<ResetPasswordResponse> resetPassword(
-    ResetPasswordRequestModel resetPasswordCodeRequest,
-  ) async {
-    return await _apiService.resetPassword(resetPasswordCodeRequest);
-  }
+  Future<ResetPasswordResponse> resetPassword(ResetPasswordRequestModel request) async => 
+      await _apiService.resetPassword(request);
 }

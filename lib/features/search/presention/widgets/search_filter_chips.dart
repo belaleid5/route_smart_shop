@@ -1,8 +1,7 @@
-// lib/features/search/presentation/widgets/search_filter_chips.dart
-
 import 'package:flutter/material.dart';
-import 'package:route_smart/features/search/presention/widgets/clear_chip.dart';
 import 'package:route_smart/core/constants/search_constants.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/features/search/presention/widgets/clear_chip.dart';
 import 'package:route_smart/features/search/presention/widgets/sort_chip.dart';
 
 class SearchFilterChips extends StatelessWidget {
@@ -28,15 +27,25 @@ class SearchFilterChips extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: SearchConstants.sortOptions.map((opt) {
-                  final isSelected = selectedSort == opt.value;
+                children: SearchConstants.sortOptions.map((option) {
+                  final labelKey = option['label'] ?? '';
+                  final sortValue = option['value'];
+                  final normalizedSortValue =
+                      sortValue == null || sortValue.isEmpty ? null : sortValue;
+
+                  final isSelected = selectedSort == normalizedSortValue;
+
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
-                    child: SearchSortChip(
-                      label: opt.label,
+                    child: SortChip(
+                      label: context.translate(labelKey),
                       isSelected: isSelected,
                       icon: Icons.filter_list,
-                      onTap: () => onSortChanged(isSelected ? null : opt.value),
+                      onTap: () {
+                        onSortChanged(
+                          isSelected ? null : normalizedSortValue,
+                        );
+                      },
                     ),
                   );
                 }).toList(),
@@ -45,7 +54,9 @@ class SearchFilterChips extends StatelessWidget {
           ),
           if (selectedSort != null) ...[
             const SizedBox(width: 8),
-            SearchClearChip(onTap: onCleared),
+            SearchClearChip(
+              
+              onTap: onCleared),
           ],
         ],
       ),

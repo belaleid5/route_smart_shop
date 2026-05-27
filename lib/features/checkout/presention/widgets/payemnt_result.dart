@@ -3,7 +3,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/checkout/presention/widgets/app_logo.dart';
 import 'package:route_smart/features/checkout/presention/widgets/bottom_nav_links.dart';
 import 'package:route_smart/features/checkout/presention/widgets/loading_content.dart';
-import 'package:route_smart/features/checkout/presention/widgets/success_content.dart';
+import 'package:route_smart/features/checkout/presention/widgets/payment_success_body.dart';
 
 Future<void> showPaymentResultDialog(
   BuildContext context, {
@@ -44,7 +44,7 @@ class PaymentResultDialog extends StatelessWidget {
               AppLogo(colors: colors),
               const Spacer(),
               isSuccess
-                  ? SuccessContent(colors: colors)
+                  ? PaymentSuccessBody(colors: colors)
                   : LoadingContent(colors: colors),
 
               const Spacer(),

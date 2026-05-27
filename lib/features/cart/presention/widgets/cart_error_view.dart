@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class CartErrorView extends StatelessWidget {
   const CartErrorView({
@@ -20,24 +22,27 @@ class CartErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: context.colors.primary,
+            ),
             verticalSpace(16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: context.textStyle.copyWith(
-                fontSize: 16,
-                color: context.color.textPrimary,
+              style: context.bodyMedium.copyWith(
+                color: context.colors.textPrimary,
               ),
             ),
             verticalSpace(24),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: Text(context.translate('retry')),
+              label: Text(context.translate(LangKeys.retry)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.color.button,
-                foregroundColor: Colors.white,
+                backgroundColor: context.colors.button,
+                foregroundColor: context.colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,

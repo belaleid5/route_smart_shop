@@ -7,22 +7,22 @@ import 'package:route_smart/features/auth_feature/presention/manger/reset_passwo
 class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   final AuthRepositoryImpl _authRepository;
 
-  ResetPasswordBloc(this._authRepository)
-    : super(const ResetPasswordState.initial()) {
-    on<ResetPasswordSubmitted>((event, emit) async {
-      emit(const ResetPasswordState.loading());
+  ResetPasswordBloc(this._authRepository) : super(const ResetPasswordInitial()) {
+    on<ResetPasswordSubmitted>(_onResetPasswordSubmitted);
+  }
 
-      final result = await _authRepository.resetPassword(
-        event.resetPasswordRequest,
-      );
-      result.when(
-        success: (registerResponse) {
-          emit(ResetPasswordState.success(registerResponse));
-        },
-        failure: (errorMessage) {
-          emit(ResetPasswordState.error(error: errorMessage));
-        },
-      );
-    });
+  Future<void> _onResetPasswordSubmitted(
+    ResetPasswordSubmitted event,
+    Emitter<ResetPasswordState> emit,
+  ) async {
+    emit(const ResetPasswordLoading());
+
+    final result = await _authRepository.resetPassword(event.request);
+    switch (result) {
+      case Success(:final data):
+        emit(ResetPasswordSuccess(data));
+      case Failure(:final message):
+        emit(ResetPasswordError(message: message));
+    }
   }
 }

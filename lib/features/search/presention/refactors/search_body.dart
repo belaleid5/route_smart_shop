@@ -1,18 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/common/domain/entites/category_entity.dart';
 import 'package:route_smart/core/common/widgets/search/search_app_bar.dart';
+import 'package:route_smart/features/search/domain/entites/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
 import 'package:route_smart/features/search/presention/manger/search_event.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
 import 'package:route_smart/features/search/presention/manger/search_state.dart';
 import 'package:route_smart/features/search/presention/widgets/search_body_builder.dart';
 
 class SearchBody extends StatefulWidget {
-  const SearchBody({
-    super.key,
-    this.showBackButton = false,
-  });
+  const SearchBody({super.key, this.showBackButton = false});
 
   final bool showBackButton;
 
@@ -23,8 +23,7 @@ class SearchBody extends StatefulWidget {
 class _SearchBodyState extends State<SearchBody> {
   late final TextEditingController _searchController;
   late final ScrollController _scrollController;
-
-  String _keyword = '';
+  Timer? _autoLoadTimer;
 
   @override
   void initState() {
@@ -32,16 +31,24 @@ class _SearchBodyState extends State<SearchBody> {
     _searchController = TextEditingController();
     _scrollController = ScrollController()..addListener(_onScroll);
     _triggerInitialSearch();
+    _startAutoAddProducts(); 
   }
 
   @override
   void dispose() {
-    context.read<SearchBloc>().stopAutoFetch();
+    _autoLoadTimer?.cancel();
     _searchController.dispose();
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
     super.dispose();
+  }
+
+  void _startAutoAddProducts() {
+    _autoLoadTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      context.read<SearchBloc>().add(const SearchEventLoadNextPage());
+
+    });
   }
 
   void _triggerInitialSearch() {
@@ -54,15 +61,14 @@ class _SearchBodyState extends State<SearchBody> {
     if (!_scrollController.hasClients) return;
     final position = _scrollController.position;
     final isNearBottom = position.pixels >= position.maxScrollExtent - 300;
-    if (isNearBottom) {
+
+    if (isNearBottom && !position.outOfRange) {
       context.read<SearchBloc>().add(const SearchEventLoadNextPage());
     }
   }
 
   void _onKeywordChanged(String keyword) {
-    setState(() {
-      _keyword = keyword;
-    });
+    context.read<SearchBloc>().add(SearchEventKeywordChanged(keyword: keyword));
   }
 
   void _onCategorySelected(String? categoryId) {
@@ -73,9 +79,6 @@ class _SearchBodyState extends State<SearchBody> {
 
   void _onCleared() {
     _searchController.clear();
-    setState(() {
-      _keyword = '';
-    });
     context.read<SearchBloc>().add(const SearchEventCleared());
   }
 
@@ -83,46 +86,54 @@ class _SearchBodyState extends State<SearchBody> {
     context.read<SearchBloc>().add(SearchEventSearch(params: params));
   }
 
-  List<CategoryData> _getCategories(SearchState state) =>
-      state is SearchSuccess ? state.categories : [];
-
-  String? _getSelectedCategoryId(SearchState state) =>
-      state is SearchSuccess ? state.params.categoryId : null;
-
-  SearchFilterParams _getCurrentParams(SearchState state) =>
-      state is SearchSuccess ? state.params : const SearchFilterParams();
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocBuilder<SearchBloc, SearchState>(
-            builder: (context, state) => SearchAppBar(
-              controller: _searchController,
-              onSearch: _onKeywordChanged,
-              onChanged: _onKeywordChanged,
-              categories: _getCategories(state),
-              selectedCategoryId: _getSelectedCategoryId(state),
-              onCategorySelected: _onCategorySelected,
-              params: _getCurrentParams(state),
-              onParamsChanged: _onParamsChanged,
-              onCleared: _onCleared,
-              showBackButton: widget.showBackButton,
-            ),
-          ),
-          Expanded(
-            child: BlocBuilder<SearchBloc, SearchState>(
-              builder: (context, state) => SearchBodyBuilder(
-                state: state,
-                scrollController: _scrollController,
-                keyword: _keyword,
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (context, state) {
+        List<CategoryEntity> categories = state is SearchSuccess
+            ? state.categories
+            : [];
+        final selectedCategoryId = state is SearchSuccess
+            ? state.params.categoryId
+            : null;
+        final currentParams = state is SearchSuccess
+            ? state.params
+            : const SearchFilterParams();
+
+        return CustomScrollView(
+          controller: _scrollController,
+          physics: NeverScrollableScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              automaticallyImplyLeading: false,
+              backgroundColor: context.colors.background,
+              elevation: 1,
+              expandedHeight: widget.showBackButton ? 175 : 160,
+              flexibleSpace: SearchAppBar(
+                controller: _searchController,
+                onSearch: _onKeywordChanged,
+                onChanged: _onKeywordChanged,
+                categories: categories,
+                selectedCategoryId: selectedCategoryId,
+                onCategorySelected: _onCategorySelected,
+                params: currentParams,
+                onParamsChanged: _onParamsChanged,
+                onCleared: _onCleared,
+                showBackButton: widget.showBackButton,
               ),
             ),
-          ),
-        ],
-      ),
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: SearchBodyBuilder(
+                state: state,
+                scrollController: _scrollController,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

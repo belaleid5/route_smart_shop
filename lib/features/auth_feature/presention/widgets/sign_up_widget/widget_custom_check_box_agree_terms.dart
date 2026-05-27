@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class WidgetCustomCheckBoxAgreeTerms extends StatefulWidget {
   const WidgetCustomCheckBoxAgreeTerms({super.key});
@@ -21,13 +23,13 @@ class _WidgetCustomCheckBoxAgreeTermsState
         Checkbox(
           value: _agreeToTerms,
           onChanged: (val) => setState(() => _agreeToTerms = val!),
-          activeColor: context.color.primary,
+          activeColor: context.colors.primary,
         ),
         Expanded(
           child: Text(
-            'By creating an account, you agree to our Terms and Privacy Policy',
+            context.translate(LangKeys.termsAndPrivacy),
             style: context.textStyle.copyWith(
-              color: context.color.textSecondary,
+              color: context.colors.textSecondary,
               fontSize: 12,
             ),
           ),

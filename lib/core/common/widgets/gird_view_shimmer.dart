@@ -3,8 +3,8 @@ import 'package:route_smart/core/common/widgets/grid_view.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/custom_shimmer.dart';
 
-class GirdViewProductsShimmer extends StatelessWidget {
-  const GirdViewProductsShimmer({super.key});
+class GridViewProductsShimmer extends StatelessWidget {
+  const GridViewProductsShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,11 @@ class GirdViewProductsShimmer extends StatelessWidget {
       itemCount: 4,
       hasMore: false,
       itemBuilder: (context, index) {
-        return const ShimmerGridItem(imageHeight: 120).animateBottomToTop(
-          duration: Duration(milliseconds: 300 + (index * 50)),
-        );
+        return ShimmerWidget.rectangular(
+          width: double.infinity,
+          height: 200, // Adjust based on design
+          borderRadius: BorderRadius.circular(16),
+        ).animateBottomToTop(duration: Duration(milliseconds: 300 + (index * 50)));
       },
     );
   }

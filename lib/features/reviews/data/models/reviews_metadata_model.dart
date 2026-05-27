@@ -1,23 +1,20 @@
-import 'package:json_annotation/json_annotation.dart';
 
-part 'reviews_metadata_model.g.dart';
+import 'package:route_smart/features/reviews/domain/entites/reviews_metadata_entity.dart';
 
-@JsonSerializable()
-class ReviewsMetadataModel {
-  final int currentPage;
-  final int numberOfPages;
-  final int limit;
-  final int? nextPage;
-
+class ReviewsMetadataModel extends ReviewsMetadataEntity {
   const ReviewsMetadataModel({
-    required this.currentPage,
-    required this.numberOfPages,
-    required this.limit,
-    this.nextPage,
+    super.currentPage,
+    super.numberOfPages,
+    super.limit,
+    super.nextPage,
   });
 
-  factory ReviewsMetadataModel.fromJson(Map<String, dynamic> json) =>
-      _$ReviewsMetadataModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ReviewsMetadataModelToJson(this);
+  factory ReviewsMetadataModel.fromJson(Map<String, dynamic> json) {
+    return ReviewsMetadataModel(
+      currentPage: json['currentPage'] as int?,
+      numberOfPages: json['numberOfPages'] as int?,
+      limit: json['limit'] as int?,
+      nextPage: json['nextPage'] as int?,
+    );
+  }
 }

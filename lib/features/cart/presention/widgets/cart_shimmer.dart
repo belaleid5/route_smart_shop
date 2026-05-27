@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/custom_shimmer.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 
@@ -16,19 +17,11 @@ class CartShimmerLoading extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                ShimmerWidget.rounded(
-                  width: 80,
-                  height: 30,
-                  radius: 8,
-                ),
+                ShimmerWidget.rounded(width: 80, height: 30, radius: 8),
                 const SizedBox(width: 8),
                 ShimmerWidget.circular(size: 30),
                 const Spacer(),
-                ShimmerWidget.rounded(
-                  width: 60,
-                  height: 20,
-                  radius: 8,
-                ),
+                ShimmerWidget.rounded(width: 60, height: 20, radius: 8),
               ],
             ),
           ),
@@ -64,17 +57,13 @@ class _CartItemShimmer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.color.shades,
+        color: context.colors.shades,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         children: [
           // Image
-          ShimmerWidget.rounded(
-            width: 90,
-            height: 90,
-            radius: 16,
-          ),
+          ShimmerWidget.rounded(width: 90, height: 90, radius: 16),
           const SizedBox(width: 14),
 
           // Info
@@ -83,30 +72,16 @@ class _CartItemShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                ShimmerWidget.text(
-                  width: double.infinity,
-                  height: 16,
-                ),
+                ShimmerWidget.text(width: double.infinity, height: 16),
                 verticalSpace(8),
-                ShimmerWidget.text(
-                  width: 120,
-                  height: 14,
-                ),
+                ShimmerWidget.text(width: 120, height: 14),
                 verticalSpace(12),
                 // Price + Quantity
                 Row(
                   children: [
-                    ShimmerWidget.rounded(
-                      width: 70,
-                      height: 22,
-                      radius: 4,
-                    ),
+                    ShimmerWidget.rounded(width: 70, height: 22, radius: 4),
                     const Spacer(),
-                    ShimmerWidget.rounded(
-                      width: 100,
-                      height: 34,
-                      radius: 8,
-                    ),
+                    ShimmerWidget.rounded(width: 100, height: 34, radius: 8),
                   ],
                 ),
               ],
@@ -130,16 +105,9 @@ class _CartBottomBarShimmer extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ShimmerWidget.text(
-                width: 40,
-                height: 12,
-              ),
+              ShimmerWidget.text(width: 40, height: 12),
               verticalSpace(4),
-              ShimmerWidget.rounded(
-                width: 80,
-                height: 24,
-                radius: 4,
-              ),
+              ShimmerWidget.rounded(width: 80, height: 24, radius: 4),
             ],
           ),
           const SizedBox(width: 16),

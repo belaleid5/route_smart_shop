@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/extensions/custom_toast.dart';
-import 'package:route_smart/core/helper/navigator_extenstion.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/auth_feature/data/models/verfication_code_model.dart/verification_code_request_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_event.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_state.dart';
@@ -17,10 +19,7 @@ import 'package:route_smart/features/auth_feature/presention/widgets/verify_code
 class VerifyCodeFormSliver extends StatefulWidget {
   final int otpLength;
 
-  const VerifyCodeFormSliver({
-    super.key,
-    this.otpLength = 6,
-  }); 
+  const VerifyCodeFormSliver({super.key, this.otpLength = 6});
 
   @override
   State<VerifyCodeFormSliver> createState() => _VerifyCodeFormSliverState();
@@ -55,12 +54,16 @@ class _VerifyCodeFormSliverState extends State<VerifyCodeFormSliver> {
     final defaultPinTheme = PinTheme(
       width: widget.otpLength == 6 ? 50 : 60,
       height: 60,
-      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      textStyle: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: context.colors.textPrimary,
+      ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F4F7),
+        color: context.colors.secondary,
         border: Border.all(
           width: 0.5,
-          color: context.color.primary.withOpacity(0.3),
+          color: context.colors.primary.withOpacity(0.3),
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -83,7 +86,7 @@ class _VerifyCodeFormSliverState extends State<VerifyCodeFormSliver> {
                       decoration: defaultPinTheme.decoration!.copyWith(
                         border: Border.all(
                           width: 1.5,
-                          color: context.color.primary,
+                          color: context.colors.primary,
                         ),
                       ),
                     ),
@@ -107,16 +110,20 @@ class _VerifyCodeFormSliverState extends State<VerifyCodeFormSliver> {
   }
 
   void _onStateChanged(BuildContext context, VerifyCodeState state) {
-    state.whenOrNull(
-      success: (response) {
-        CustomToast.showSuccess(context, "Code Verified Successfully!");
+    switch (state) {
+      case VerifyCodeSuccess():
+        CustomToast.showSuccess(
+          context,
+          context.translate(LangKeys.codeVerifiedSuccessfully),
+        );
         context.pushNamed(AppRoutesNames.reset_password);
-      },
-      error: (errorMessage) {
-                CustomToast.showError(context, context.translate(errorMessage));
-;
-        pinController.clear(); 
-      },
-    );
+      
+      case VerifyCodeError():
+        CustomToast.showError(context, state.message);
+        pinController.clear();
+      
+      default:
+        break;
+    }
   }
 }

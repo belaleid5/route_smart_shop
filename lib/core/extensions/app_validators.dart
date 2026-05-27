@@ -2,6 +2,8 @@
 import 'package:route_smart/core/helper/app_regix.dart';
 
 class AppValidators {
+  AppValidators._();
+
   // ================= Full Name Validator =================
   static String? validateFullName(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -16,8 +18,8 @@ class AppValidators {
       return 'Name must not exceed 50 characters';
     }
     
-    // Check if name contains only letters and spaces
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value.trim())) {
+  
+    if (!RegExp(r'^[\p{L}\s]+$', unicode: true).hasMatch(value.trim())) {
       return 'Name can only contain letters and spaces';
     }
     
@@ -37,7 +39,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= Password Validator =================
+
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -60,19 +62,19 @@ class AppValidators {
     }
     
     if (!AppRegex.hasSpecialCharacter(value)) {
-      return 'Password must contain at least one special character (@#\$%^&*!)';
+      return 'Password must contain at least one special character';
     }
     
     return null;
   }
 
-  // ================= Phone Validator =================
+
   static String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
     }
     
-    // Remove any spaces or special characters
+ 
     final cleanedPhone = value.replaceAll(RegExp(r'[^\d]'), '');
     
     if (cleanedPhone.length < 10) {
@@ -83,15 +85,10 @@ class AppValidators {
       return 'Phone number must not exceed 15 digits';
     }
     
-    // Optional: Egyptian phone validation
-    // if (!AppRegex.isPhoneNumberValid(cleanedPhone)) {
-    //   return 'Please enter a valid Egyptian phone number';
-    // }
-    
     return null;
   }
 
-  // ================= Confirm Password Validator =================
+ 
   static String? validateConfirmPassword(String? value, String password) {
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
@@ -104,7 +101,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= Generic Required Field Validator =================
+
   static String? validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -112,7 +109,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= Minimum Length Validator =================
+
   static String? validateMinLength(
     String? value,
     int minLength,
@@ -129,7 +126,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= Maximum Length Validator =================
+ 
   static String? validateMaxLength(
     String? value,
     int maxLength,
@@ -146,7 +143,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= Number Only Validator =================
+  
   static String? validateNumberOnly(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -159,7 +156,7 @@ class AppValidators {
     return null;
   }
 
-  // ================= URL Validator =================
+  
   static String? validateUrl(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'URL is required';

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class DetailsQuantityButton extends StatelessWidget {
   const DetailsQuantityButton({
@@ -21,18 +22,16 @@ class DetailsQuantityButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: filled ? context.color.button : Colors.transparent,
+          color: filled ? context.colors.button : Colors.transparent,
           shape: BoxShape.circle,
           border: filled
               ? null
-              : Border.all(
-                  color: context.color.textPrimary.withOpacity(0.3),
-                ),
+              : Border.all(color: context.colors.textPrimary.withOpacity(0.3)),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: filled ? Colors.white : context.color.textPrimary,
+          color: filled ? Colors.white : context.colors.textPrimary,
         ),
       ),
     );

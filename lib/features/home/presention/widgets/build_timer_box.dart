@@ -1,6 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class FlashDealTimer extends StatefulWidget {
   final int totalSeconds;
@@ -12,14 +13,14 @@ class FlashDealTimer extends StatefulWidget {
 }
 
 class _FlashDealTimerState extends State<FlashDealTimer> {
-  Timer? _timer; 
   late int _remainingSeconds;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _remainingSeconds = widget.totalSeconds;
-    _startCountdown();
+    _startTimer();
   }
 
   @override
@@ -28,27 +29,28 @@ class _FlashDealTimerState extends State<FlashDealTimer> {
     if (oldWidget.totalSeconds != widget.totalSeconds) {
       _timer?.cancel();
       _remainingSeconds = widget.totalSeconds;
-      _startCountdown();
+      _startTimer();
     }
   }
 
-  void _startCountdown() {
+  void _startTimer() {
     if (_remainingSeconds <= 0) return;
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
-        setState(() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() {
+        if (_remainingSeconds > 0) {
           _remainingSeconds--;
-        });
-      } else {
-        _timer?.cancel();
-      }
+        } else {
+          _timer?.cancel();
+        }
+      });
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); 
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -56,8 +58,8 @@ class _FlashDealTimerState extends State<FlashDealTimer> {
   Widget build(BuildContext context) {
     final duration = Duration(seconds: _remainingSeconds);
     final hours = duration.inHours.toString().padLeft(2, '0');
-    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -73,17 +75,17 @@ class _FlashDealTimerState extends State<FlashDealTimer> {
 
   Widget _buildBox(String time) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: context.color.primary,
-        borderRadius: BorderRadius.circular(4),
+        color: context.colors.primary,
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         time,
-        style: context.textStyle.copyWith(
-          color: context.color.white,
+        style: TextStyle(
+          color: context.colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontSize: 14,
         ),
       ),
     );
@@ -91,11 +93,12 @@ class _FlashDealTimerState extends State<FlashDealTimer> {
 
   Widget _buildDivider() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: Text(
         ':',
         style: TextStyle(
-          color: context.color.primary,
+          color: context.colors.primary,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),

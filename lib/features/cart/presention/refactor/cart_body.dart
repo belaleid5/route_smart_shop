@@ -21,66 +21,81 @@ class CartBody extends StatefulWidget {
 class _CartBodyState extends State<CartBody> {
   bool _hasLoadedOnce = false;
 
+  bool _isSuccessState(CartState state) {
+    return state is GetCartSuccess ||
+        state is AddToCartSuccess ||
+        state is UpdateQuantitySuccess ||
+        state is RemoveItemSuccess ||
+        state is ClearCartSuccess;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listenWhen: (previous, current) {
-        // لو الحالة السابقة كانت removeItemSuccess والحالية كمان → تجاهل
-        final wasRemove = previous.maybeWhen(
-          removeItemSuccess: (_) => true,
-          orElse: () => false,
-        );
-        final isRemove = current.maybeWhen(
-          removeItemSuccess: (_) => true,
-          orElse: () => false,
-        );
-        if (wasRemove && isRemove) return false;
+        final isDuplicateRemove =
+            previous is RemoveItemSuccess && current is RemoveItemSuccess;
 
-        return current.maybeWhen(
-          removeItemSuccess: (_) => true,
-          clearCartSuccess: (_) => true,
-          orElse: () => false,
-        );
+        if (isDuplicateRemove) return false;
+
+        return _isSuccessState(current);
       },
       listener: (context, state) {
-        state.maybeWhen(
-          getCartSuccess: (_) => _hasLoadedOnce = true,
-          addToCartSuccess: (_) => _hasLoadedOnce = true,
-          removeItemSuccess: (_) {
+        switch (state) {
+          case GetCartSuccess():
+          case AddToCartSuccess():
+          case UpdateQuantitySuccess():
+            _hasLoadedOnce = true;
+            break;
+
+          case RemoveItemSuccess():
             _hasLoadedOnce = true;
             CustomToast.showSuccess(
               context,
               context.translate(LangKeys.itemRemoved),
             );
-          },
-          updateQuantitySuccess: (_) => _hasLoadedOnce = true,
-          clearCartSuccess: (_) => CustomToast.showSuccess(
-            context,
-            context.translate(LangKeys.cartCleared),
-          ),
-          orElse: () {},
-        );
+            break;
+
+          case ClearCartSuccess():
+            _hasLoadedOnce = true;
+            CustomToast.showSuccess(
+              context,
+              context.translate(LangKeys.cartCleared),
+            );
+            break;
+
+          default:
+            break;
+        }
       },
       buildWhen: (previous, current) {
-        if (_hasLoadedOnce && current == const CartState.loading()) {
+        if (_hasLoadedOnce && current is GetCartLoading) {
           return false;
         }
         return true;
       },
-      builder: (context, state) => state.when(
-        initial: () => const CartShimmerLoading(),
-        loading: () => const CartShimmerLoading(),
-        getCartSuccess: (cart) => CartContent(cart: cart),
-        addToCartSuccess: (cart) => CartContent(cart: cart),
-        updateQuantitySuccess: (cart) => CartContent(cart: cart),
-        removeItemSuccess: (cart) => CartContent(cart: cart),
-        clearCartSuccess: (_) => const EmptyCartView(),
-        error: (message) => CartErrorView(
-          message: message,
-          onRetry: () =>
-              context.read<CartBloc>().add(const CartEvent.getCart()),
-        ),
-      ),
+      builder: (context, state) {
+        return switch (state) {
+          CartInitial() || GetCartLoading() => const CartShimmerLoading(),
+
+          GetCartSuccess(:final cart) ||
+          AddToCartSuccess(:final cart) ||
+          UpdateQuantitySuccess(:final cart) ||
+          RemoveItemSuccess(:final cart) =>
+            (cart.items.isEmpty)
+                ? const EmptyCartView()
+                : CartContent(cart: cart),
+
+          ClearCartSuccess() => const EmptyCartView(),
+
+          CartFailure(:final message) => CartErrorView(
+              message: context.translate(message),
+              onRetry: () {
+                context.read<CartBloc>().add(const GetCartRequested());
+              },
+            ),
+        };
+      },
     );
   }
 }

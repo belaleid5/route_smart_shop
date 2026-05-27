@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/styles/app_images.dart';
 
 class SignInHeaderSliver extends StatelessWidget {
@@ -19,7 +21,7 @@ class SignInHeaderSliver extends StatelessWidget {
             CustomImage(
                   height: 100,
                   imageType: ImagesType.svg,
-                  color: context.color.primary,
+                  color: context.colors.primary,
                   imagePath: AppImages.logoAppSvg,
                 )
                 .animateScaleNFadeHorizontal(
@@ -27,23 +29,23 @@ class SignInHeaderSliver extends StatelessWidget {
                 )
                 .animateBlur(duration: const Duration(milliseconds: 600)),
 
-            verticalSpace( 40),
+            verticalSpace(40),
 
             Text(
-              'Welcome Back',
+              context.translate(LangKeys.welcomeBack),
               style: context.textStyle.copyWith(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ).animateBottomToTop(duration: const Duration(milliseconds: 600)),
 
-            verticalSpace( 8),
+            verticalSpace(8),
 
             Text(
-              'Sign in to continue shopping',
+              context.translate(LangKeys.signInToContinue),
               style: context.textStyle.copyWith(
                 fontSize: 16,
-                color: context.color.textSecondary,
+                color: context.colors.textSecondary,
               ),
             ).animateRightLeft(
               duration: const Duration(milliseconds: 500),

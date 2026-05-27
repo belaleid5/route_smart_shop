@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/features/search/presention/widgets/search_chip_icon.dart';
 import 'package:route_smart/features/search/presention/widgets/search_chip_label.dart';
 
@@ -10,7 +12,7 @@ class SearchClearChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentColor = context.colors.textSecondary;
+    final contentColor = context.colors.primary;
 
     return GestureDetector(
       onTap: onTap,
@@ -28,7 +30,11 @@ class SearchClearChip extends StatelessWidget {
           children: [
             SearchChipIcon(icon: Icons.close, color: contentColor),
             const SizedBox(width: 6),
-            SearchChipLabel(label: 'Clear', color: contentColor),
+
+            SearchChipLabel(
+              label: context.translate(LangKeys.reset),
+              color: contentColor,
+            ),
           ],
         ),
       ),

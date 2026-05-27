@@ -9,15 +9,13 @@ class FlashDealShimmerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return PaginatedListView(
       scrollDirection: Axis.horizontal,
-      itemCount: 3,
+      itemCount: 4,
       hasMore: false,
       isLoading: false,
-      itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.only(right: 12),
-          child: FlashDealCardShimmer(),
-        );
-      },
+      itemBuilder: (_, __) => const Padding(
+        padding: EdgeInsets.only(right: 12),
+        child: FlashDealCardShimmer(),
+      ),
     );
   }
 }

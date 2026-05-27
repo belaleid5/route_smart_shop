@@ -7,7 +7,6 @@ import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart
 import 'package:route_smart/features/reviews/presention/manger/reviews_state.dart';
 import 'package:route_smart/features/reviews/presention/widgets/reviews_bloc_builder.dart';
 
-
 class ReviewsView extends StatefulWidget {
   const ReviewsView({super.key, required this.productId});
   final String productId;
@@ -22,34 +21,25 @@ class _ReviewsViewState extends State<ReviewsView> {
   @override
   void initState() {
     super.initState();
-    _userIdFuture = sl<SecureStorage>().getString(PrefKeys.userId);
+    _userIdFuture = sl<SecureStorage>().getString(PrefKeys.userId); 
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ReviewsBloc, ReviewsState>(
-    buildWhen: (previous, current) {
-        return current.maybeWhen(
-          initial: () => true,
-          loading: () => true,
-          success: (_) => true,
-          error: (_) => true,
-     
-          orElse: () => false, 
-        );
+      buildWhen: (previous, current) {
+        return current is ReviewsInitial ||
+               current is ReviewsInProgress ||
+               current is ReviewsSuccess ||
+               current is ReviewsFailure;
       },
-
       listenWhen: (previous, current) {
-        return current.maybeWhen(
-          reviewCreated: () => true,
-          reviewUpdated: () => true,
-          reviewDeleted: () => true,
-          actionError: (_) => true,
-          orElse: () => false,
-        );
+        return current is ReviewCreated ||
+               current is ReviewUpdated ||
+               current is ReviewDeleted ||
+               current is ReviewActionFailure;
       },
       listener: (context, state) => ReviewsListener.handle(context, state),
-
       builder: (context, state) {
         return ReviewsBuilder.build(
           context,

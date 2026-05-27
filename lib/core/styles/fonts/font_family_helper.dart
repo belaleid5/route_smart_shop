@@ -1,19 +1,21 @@
+
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
 import 'package:route_smart/core/services/shared_pref/shared_pref.dart';
 
-class FontFamilyHelper {
-  const FontFamilyHelper._();
+abstract final class FontFamilyHelper {
+  FontFamilyHelper._();
 
-  static const String cairoArabic = 'Cairo';
+  static const String cairo = 'Cairo';
+  static const String poppins = 'Poppins';
 
-  static const String poppinsEnglish = 'Poppins';
-
-  static String geLocalizedFontFamily() {
-    final currentLanguage = SharedPref().getString(PrefKeys.language);
-    if (currentLanguage == 'ar') {
-      return cairoArabic;
-    } else {
-      return poppinsEnglish;
+  static String getFontFamily([String? langCode]) {
+    if (langCode != null) {
+      return langCode == 'ar' ? cairo : poppins;
     }
+
+    final storedLang = SharedPref().getString(PrefKeys.language);
+    final lang = storedLang ?? 'ar';
+    
+    return lang == 'ar' ? cairo : poppins;
   }
 }

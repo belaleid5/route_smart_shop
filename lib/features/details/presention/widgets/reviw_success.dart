@@ -3,6 +3,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/details/presention/widgets/empty_state_review.dart';
 import 'package:route_smart/features/details/presention/widgets/horizinatoal_list_review.dart';
 import 'package:route_smart/features/reviews/data/models/reviews_response_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/reviews_response_entity.dart';
 
 class ReviewsSuccessState extends StatelessWidget {
   const ReviewsSuccessState({
@@ -11,7 +12,7 @@ class ReviewsSuccessState extends StatelessWidget {
     required this.colors,
   });
 
-  final ReviewsResponseModel response;
+  final ReviewsResponseEntity response;
   final MyColors colors;
 
   static const int previewLimit = 5;
@@ -20,11 +21,11 @@ class ReviewsSuccessState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (response.data.isEmpty) {
+    if (response.data!.isEmpty) {
       return EmptyStateReview(colors: colors);
     }
 
-    final preview = response.data.take(previewLimit).toList();
+    final preview = response.data!.take(previewLimit).toList();
 
     return HorizontalReviewsList(
       reviews: preview,

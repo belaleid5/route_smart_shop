@@ -1,16 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
-import 'package:route_smart/core/common/data/repo/all_data_products_repo.dart';
+import 'package:route_smart/core/common/domain/entites/product_entity.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
+import 'package:route_smart/core/common/domain/usease/get_products_use_case.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_event.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_state.dart';
-import 'package:route_smart/features/search/presention/manger/search_params.dart';
+
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
-  final AllDataProductsRepository _homeRepository;
+  final GetProductsUseCase _getProductsUseCase;
+
   int _currentPage = 1;
 
-  ProductsBloc(this._homeRepository) : super(const ProductsState.initial()) {
+
+  ProductsBloc(this._getProductsUseCase) : super(const ProductsInitial()) {
     on<GetProductsEvent>(_onGetProducts);
     on<RefreshProductsEvent>(_onRefreshProducts);
   }
@@ -19,60 +21,46 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     GetProductsEvent event,
     Emitter<ProductsState> emit,
   ) async {
-    // ✅ Guard: stop if already reached max
-    final bool reachedMax = state.maybeMap(
-      success: (s) => s.hasReachedMax,
-      orElse: () => false,
-    );
-    if (reachedMax) return;
 
-    // ✅ Only show loading on first page
-    final bool isSuccess = state.maybeMap(
-      success: (_) => true,
-      orElse: () => false,
-    );
-    if (!isSuccess) {
-      emit(const ProductsState.loading());
+    if (state case ProductsSuccess(hasReachedMax: true)) return;
+
+
+    if (state is! ProductsSuccess) {
+      emit(const ProductsLoading());
     }
 
-    final params = SearchFilterParams(page: _currentPage);
-    final result = await _homeRepository.getProduct(params);
-
-    result.when(
-      success: (response) {
-        final List<ProductDataModel> newItems = response.data ?? [];
-
-        state.maybeMap(
-          success: (s) {
-            emit(
-              s.copyWith(
-                products: s.products + newItems,
-                hasReachedMax: newItems.isEmpty,
-              ),
-            );
-          },
-          orElse: () {
-            emit(
-              ProductsState.success(
-                products: newItems,
-                hasReachedMax: newItems.isEmpty,
-              ),
-            );
-          },
-        );
-
-        _currentPage++; 
-      },
-      failure: (error) => emit(ProductsState.error(error)),
+    final result = await _getProductsUseCase(
+      GetProductsParams(page: _currentPage),
     );
+
+    switch (result) {
+      case Success(data: final newProducts):
+        final hasReachedMax = newProducts.isEmpty;
+
+        final currentProducts = state is ProductsSuccess
+            ? (state as ProductsSuccess).products
+            : <ProductEntity>[];
+
+        emit(ProductsSuccess(
+          products: [...currentProducts, ...newProducts],
+          hasReachedMax: hasReachedMax,
+        ));
+
+        if (!hasReachedMax) {
+          _currentPage++;
+        }
+
+      case Failure(message: final errorMsg):
+        emit(ProductsError(errorMsg));
+    }
   }
 
-  Future<void> _onRefreshProducts(
+  void _onRefreshProducts(
     RefreshProductsEvent event,
     Emitter<ProductsState> emit,
-  ) async {
-    _currentPage = 1; // ✅ reset page on refresh
-    emit(const ProductsState.initial());
+  ) {
+    _currentPage = 1;
+    emit(const ProductsInitial());
     add(const GetProductsEvent());
   }
 }

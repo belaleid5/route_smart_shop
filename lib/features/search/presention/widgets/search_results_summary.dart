@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart'; // ✅ أضف
 
 class SearchResultsSummary extends StatelessWidget {
   const SearchResultsSummary({
@@ -18,16 +20,17 @@ class SearchResultsSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      child: Text(
-        'Showing $_showing of $total products',
-        style: context.textStyle.copyWith(
-          fontSize: 12,
-          color:    context.color.textSecondary,
-        ),
-      ).animateRightLeft(
-        isFromStart: false,
-        duration: const Duration(milliseconds: 400),
-      ),
+      child:
+          Text(
+            "${context.translate(LangKeys.showingXOfY)},  $_showing, $total",
+            style: context.textStyle.copyWith(
+              fontSize: 12,
+              color: context.colors.textSecondary,
+            ),
+          ).animateRightLeft(
+            isFromStart: false,
+            duration: const Duration(milliseconds: 400),
+          ),
     );
   }
 }

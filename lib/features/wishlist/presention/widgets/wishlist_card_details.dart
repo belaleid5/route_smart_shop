@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';

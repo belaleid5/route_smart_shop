@@ -1,10 +1,8 @@
-// features/onboarding_feature/presention/widgets/splash_body.dart
-
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/custom_image.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
@@ -31,11 +29,12 @@ class _SplashBodyState extends State<SplashBody> {
 
       if (!mounted) return;
 
-      if (token != null) {
-        context.pushReplacementNamed(AppRoutesNames.mainScreen);
-      } else {
+      if (token == null || token.isEmpty) {
         context.pushReplacementNamed(AppRoutesNames.signIn);
+        return;
       }
+
+      context.pushReplacementNamed(AppRoutesNames.mainScreen);
     });
   }
 
@@ -51,7 +50,6 @@ class _SplashBodyState extends State<SplashBody> {
             imageType: ImagesType.svg,
             imagePath: AppImages.logoAppSvg,
           ).animateBottomToTop(duration: const Duration(milliseconds: 700)),
-
           Text(
             'Route Smart',
             style: context.textStyle.copyWith(
@@ -59,9 +57,7 @@ class _SplashBodyState extends State<SplashBody> {
               fontWeight: FontWeight.bold,
             ),
           ).animateBlur(duration: const Duration(milliseconds: 800)),
-
           verticalSpace(10),
-
           Text(
             'Smart Shopping Experience',
             style: context.textStyle.copyWith(

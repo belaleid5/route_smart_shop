@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/common/widgets/loading_widget.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class PaginatedGridView<T> extends StatefulWidget {
   const PaginatedGridView({
@@ -25,6 +25,7 @@ class PaginatedGridView<T> extends StatefulWidget {
     this.mainAxisSpacing = 8.0,
     this.crossAxisSpacing = 8.0,
   });
+
   final int itemCount;
   final EdgeInsets padding;
   final IndexedWidgetBuilder itemBuilder;
@@ -54,13 +55,14 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
 
   void _scrollListener() {
     if (skipPagination) return;
-
     if (!_controller.hasClients) return;
+
     if (widget.showScrollToTop) {
       setState(() {
         internalShowScrollToTop = _controller.offset > 200;
       });
     }
+
     if (_controller.offset >=
             _controller.position.maxScrollExtent - widget.preloadThreshold &&
         !_controller.position.outOfRange) {
@@ -94,7 +96,10 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
   bool get skipPagination => widget.isLoading || !widget.hasMore;
 
   void _checkInitialFill() {
+    if (!mounted) return; // ✅ تأكد إن الـ widget لسه موجود
     if (skipPagination) return;
+    if (!_controller.hasClients) return; // ✅ تأكد إن الـ controller متـ attach
+    if (_controller.positions.isEmpty) return; // ✅ guard إضافي
 
     if (_controller.position.maxScrollExtent == 0) {
       widget.loadMore?.call();
@@ -133,13 +138,13 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
-              backgroundColor: context.color.primary,
+              backgroundColor: context.colors.primary,
               onPressed: () => _controller.animateTo(
                 0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
               ),
-              child: Icon(Icons.arrow_upward, color: context.color.white),
+              child: Icon(Icons.arrow_upward, color: context.colors.white),
             ),
           ),
       ],
@@ -149,27 +154,28 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
       return widget.refreshCallback != null
           ? SafeArea(
               child: RefreshIndicator(
-                key: Key('_ux1'),
-                color: context.color.white,
-                backgroundColor: context.color.primary,
+                key: const Key('_ux1'),
+                color: context.colors.white,
+                backgroundColor: context.colors.primary,
                 onRefresh: widget.refreshCallback!,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
                 ),
               ),
             )
-          : SizedBox();
+          : const SizedBox();
     }
+
     return widget.refreshCallback != null
         ? SafeArea(
             child: RefreshIndicator(
-              key: Key('_ux2'),
-              color: context.color.white,
-              backgroundColor: context.color.primary,
+              key: const Key('_ux2'),
+              color: context.colors.white,
+              backgroundColor: context.colors.primary,
               onRefresh: widget.refreshCallback!,
               child: gridView,
             ),
@@ -179,20 +185,6 @@ class _PaginatedGridViewState extends State<PaginatedGridView<dynamic>> {
 }
 
 class CustomGridView extends StatelessWidget {
-  final ScrollController controller;
-  final int itemCount;
-  final bool hasMore;
-  final IndexedWidgetBuilder itemBuilder;
-  final Widget? loadingWidget;
-  final int? crossAxisCount;
-  final double? mainAxisSpacing;
-  final double? crossAxisSpacing;
-  final double? height;
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
-  final bool reverse;
-  final EdgeInsets padding;
-
   const CustomGridView({
     super.key,
     required this.controller,
@@ -210,6 +202,20 @@ class CustomGridView extends StatelessWidget {
     this.padding = EdgeInsets.zero,
   });
 
+  final ScrollController controller;
+  final int itemCount;
+  final bool hasMore;
+  final IndexedWidgetBuilder itemBuilder;
+  final Widget? loadingWidget;
+  final int? crossAxisCount;
+  final double? mainAxisSpacing;
+  final double? crossAxisSpacing;
+  final double? height;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  final bool reverse;
+  final EdgeInsets padding;
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -217,19 +223,17 @@ class CustomGridView extends StatelessWidget {
       shrinkWrap: shrinkWrap,
       padding: padding,
       reverse: reverse,
-      physics: physics ?? BouncingScrollPhysics(),
+      physics: physics ?? const BouncingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount ?? 2,
         mainAxisSpacing: mainAxisSpacing ?? 10.0,
         crossAxisSpacing: crossAxisSpacing ?? 10.0,
         childAspectRatio: height != null ? (1 / height!) : 1,
       ),
-
       itemBuilder: (context, index) {
         if (index < itemCount) {
           return itemBuilder(context, index);
         }
-
         return loadingWidget ?? Center(child: LoadingWidget(size: 15));
       },
       itemCount: itemCount + (hasMore ? 1 : 0),

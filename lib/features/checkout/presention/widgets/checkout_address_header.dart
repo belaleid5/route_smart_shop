@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class CheckoutAddressHeader extends StatelessWidget {
-  const CheckoutAddressHeader({super.key});
+  final VoidCallback? onAddAddress;
+
+  const CheckoutAddressHeader({
+    super.key,
+    this.onAddAddress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,21 +17,22 @@ class CheckoutAddressHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Address',
+          context.translate(LangKeys.address),
           style: context.textStyle.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
+
         GestureDetector(
-          onTap: () {},
+          onTap: onAddAddress,
           child: Text(
-            'Edit',
+            context.translate(LangKeys.addAddress),
             style: context.textStyle.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: context.color.primary,
+              color: context.colors.primary,
             ),
           ),
         ),

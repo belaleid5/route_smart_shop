@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/product_data_model.dart';
+import 'package:route_smart/core/common/domain/entites/product_entity.dart';
 import 'package:route_smart/core/common/widgets/product/product_card_item.dart';
 
 class FlashDealCard extends StatelessWidget {
@@ -11,7 +11,7 @@ class FlashDealCard extends StatelessWidget {
     this.onAddToCart,
   });
 
-  final ProductDataModel product;
+  final ProductEntity product;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteTap;
   final VoidCallback? onAddToCart;
@@ -19,12 +19,12 @@ class FlashDealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 140,
+      width: 150,
       child: ProductCardItem(
         product: product,
         onTap: onTap,
         onFavoriteTap: onFavoriteTap,
-        onAddToCart: onAddToCart, 
+        onAddToCart: onAddToCart,
       ),
     );
   }

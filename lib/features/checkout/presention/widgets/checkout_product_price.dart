@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class CheckoutProductPrice extends StatelessWidget {
   const CheckoutProductPrice({super.key, required this.price});
@@ -16,7 +17,7 @@ class CheckoutProductPrice extends StatelessWidget {
             style: context.textStyle.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: context.color.textSecondary,
+              color: context.colors.textSecondary,
             ),
           ),
           TextSpan(
@@ -24,7 +25,7 @@ class CheckoutProductPrice extends StatelessWidget {
             style: context.textStyle.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: context.color.textPrimary,
+              color: context.colors.textPrimary,
             ),
           ),
         ],

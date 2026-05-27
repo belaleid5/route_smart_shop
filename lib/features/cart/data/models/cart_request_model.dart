@@ -1,15 +1,21 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/helper/json_reader.dart';
 
-part 'cart_request_model.g.dart';
+final class CartRequestModel {
+  const CartRequestModel({
+    required this.productId,
+  });
 
-@JsonSerializable()
-class CartRequestModel {
   final String productId;
 
-  const CartRequestModel({required this.productId});
+  factory CartRequestModel.fromJson(Map<String, dynamic> json) {
+    return CartRequestModel(
+      productId: JsonReader.string(json['productId']),
+    );
+  }
 
-  factory CartRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$CartRequestModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CartRequestModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': productId,
+    };
+  }
 }

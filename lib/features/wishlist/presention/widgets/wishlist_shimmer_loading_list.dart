@@ -17,9 +17,7 @@ class WishlistLoadingShimmer extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-//  CARD SHIMMER  (SRP)
-// ─────────────────────────────────────────────
+
 class _WishlistCardShimmer extends StatelessWidget {
   const _WishlistCardShimmer();
 

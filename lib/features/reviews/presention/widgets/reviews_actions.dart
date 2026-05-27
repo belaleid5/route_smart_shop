@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_smart/features/reviews/data/models/review_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/review_entity.dart'; // ✅ تم التعديل
 import 'package:route_smart/features/reviews/presention/manger/review_events.dart';
 import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
 import 'package:route_smart/features/reviews/presention/widgets/add_fab_review.dart';
+import 'package:route_smart/features/reviews/presention/widgets/add_review_bottom_sheet.dart';
 
 enum ReviewActionType { edit, delete }
 
 class ReviewActions extends StatelessWidget {
   const ReviewActions({super.key, required this.review});
 
-  final ReviewModel review;
+  final ReviewEntity review; 
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +25,11 @@ class ReviewActions extends StatelessWidget {
 
           case ReviewActionType.delete:
             final confirmed = await _confirmDelete(context);
-            if (confirmed == true && context.mounted) {
+            if (confirmed == true && context.mounted && review.id != null && review.product != null) {
               context.read<ReviewsBloc>().add(
-                    ReviewsEvent.deleteReview(
-                      productId: review.product,
-                      reviewId: review.id,
+                    ReviewDeleteRequested( 
+                      productId: review.product!,
+                      reviewId: review.id!,
                     ),
                   );
             }
@@ -61,6 +62,8 @@ class ReviewActions extends StatelessWidget {
   }
 
   void _openEditBottomSheet(BuildContext context) {
+    if (review.product == null) return;
+    
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -68,7 +71,7 @@ class ReviewActions extends StatelessWidget {
       builder: (_) => BlocProvider.value(
         value: context.read<ReviewsBloc>(),
         child: AddReviewBottomSheet(
-          productId: review.product,
+          productId: review.product!,
           existingReview: review, 
         ),
       ),

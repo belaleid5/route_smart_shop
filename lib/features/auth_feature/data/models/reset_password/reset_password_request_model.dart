@@ -1,15 +1,18 @@
-import 'package:json_annotation/json_annotation.dart';
-part 'reset_password_request_model.g.dart';
-
-@JsonSerializable()
 class ResetPasswordRequestModel {
-  final String? email,newPassword;
+  final String? email;
+  final String? newPassword;
 
+  ResetPasswordRequestModel({this.email, this.newPassword});
 
+  factory ResetPasswordRequestModel.fromJson(Map<String, dynamic> json) {
+    return ResetPasswordRequestModel(
+      email: json['email'] as String?,
+      newPassword: json['newPassword'] as String?,
+    );
+  }
 
-  ResetPasswordRequestModel({this.email,this.newPassword});
-
-  factory ResetPasswordRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$ResetPasswordRequestModelFromJson(json);
-  Map<String, dynamic> toJson() => _$ResetPasswordRequestModelToJson(this);
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'newPassword': newPassword,
+      };
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
+// ✅ دمجنا LoadingContent و PaymentLoadingBody في widget واحد
 class LoadingContent extends StatelessWidget {
   const LoadingContent({super.key, required this.colors});
 
@@ -19,14 +23,14 @@ class LoadingContent extends StatelessWidget {
             color: colors.primary,
           ),
         ),
-        const SizedBox(height: 24),
+       verticalSpace( 24),
         Text(
-          'Processing your payment...',
+          context.translate(LangKeys.processingPayment),
           style: TextStyle(fontSize: 18, color: colors.textSecondary),
         ),
-        const SizedBox(height: 8),
+       verticalSpace( 8),
         Text(
-          'Please wait',
+          context.translate(LangKeys.pleaseWait), 
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

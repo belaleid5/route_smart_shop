@@ -1,7 +1,6 @@
-// features/auth_feature/data/repo/auth_repo.dart
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/errors/api_error_handler.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
 import 'package:route_smart/core/services/shared_pref/shared_keys.dart';
@@ -18,104 +17,91 @@ import 'package:route_smart/features/auth_feature/data/models/verfication_code_m
 
 class AuthRepositoryImpl {
   final AuthRemoteDataSource _remoteDataSource;
-  final SecureStorage _secureStorage;              
+  final SecureStorage _secureStorage;
 
-  AuthRepositoryImpl(
-    this._remoteDataSource,
-    this._secureStorage,                           
-  );
+  AuthRepositoryImpl(this._remoteDataSource, this._secureStorage);
 
-  Future<ApiResult<AuthResponseModel>> signIn(
-    SignInRequestModel signInRequest,
-  ) async {
+  Future<ApiResult<AuthResponseModel>> signIn(SignInRequestModel request) async {
     try {
-      final response = await _remoteDataSource.signIn(signInRequest);
+      final response = await _remoteDataSource.signIn(request);
+      await _saveAuthData(response);
+      return Success(response);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
 
-      final token = response.token;
-      if (token != null && token.isNotEmpty) {
-        await _secureStorage.setString(
-          PrefKeys.accessToken,
-          token,
-        );
-        debugPrint('✅ Token saved: $token');
+  Future<ApiResult<AuthResponseModel>> register(RegisterRequestModel request) async {
+    try {
+      final response = await _remoteDataSource.register(request);
+      await _saveAuthData(response);
+      return Success(response);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<ApiResult<MessageResponseModel>> forgotPassword(ForgotPasswordRequestModel request) async {
+    try {
+      final response = await _remoteDataSource.forgotPassword(request);
+      return Success(response);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<ApiResult<VerificationCodeResponseModel>> sendResetCode(VerificationCodeRequestModel request) async {
+    try {
+      final response = await _remoteDataSource.verifyCode(request);
+      return Success(response);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<ApiResult<ResetPasswordResponse>> resetPassword(ResetPasswordRequestModel request) async {
+    try {
+      final response = await _remoteDataSource.resetPassword(request);
+      return Success(response);
+    } catch (error) {
+      return _handleError(error);
+    }
+  }
+
+  Future<void> _saveAuthData(AuthResponseModel response) async {
+    final token = response.token;
+    if (token != null && token.isNotEmpty) {
+      await _secureStorage.write(PrefKeys.accessToken, token);
+
+      try {
+        final payload = Jwt.parseJwt(token);
+        final userId = payload['id'] as String?;
+        final exp = payload['exp'] as int?;
+
+        if (userId != null) {
+          await _secureStorage.write(PrefKeys.userId, userId);
+        }
+        if (exp != null) {
+          await _secureStorage.write(PrefKeys.tokenExpiry, exp.toString());
+        }
+      } catch (e) {
+        debugPrint('Token decode error: $e');
       }
+    }
 
-      return ApiResult.success(response);
-    } catch (error) {
-      final errorHandler = ErrorHandler.handle(error);
-      final errorMessage =
-          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
-      return ApiResult.failure(errorMessage);
+    final user = response.user;
+    if (user != null) {
+      await _secureStorage.write(PrefKeys.userName, user.name ?? '');
+      await _secureStorage.write(PrefKeys.userEmail, user.email ?? '');
     }
   }
 
-  Future<ApiResult<AuthResponseModel>> register(
-    RegisterRequestModel registerRequest,
-  ) async {
-    try {
-      final response = await _remoteDataSource.register(registerRequest);
-
-      final token = response.token;
-      if (token != null && token.isNotEmpty) {
-        await _secureStorage.setString(
-          PrefKeys.accessToken,
-          token,
-        );
-        debugPrint('✅ Token saved after register: $token');
-      }
-
-      return ApiResult.success(response);
-    } catch (error) {
-      final errorHandler = ErrorHandler.handle(error);
-      final errorMessage =
-          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
-      return ApiResult.failure(errorMessage);
+  ApiResult<T> _handleError<T>(Object error) {
+    debugPrint('Auth Error: $error');
+    if (error is DioException) {
+      final message = error.response?.data?['message'] ?? 'Network error';
+      return Failure(message);
     }
-  }
-
-  Future<ApiResult<MessageResponseModel>> forgotPassword(
-    ForgotPasswordRequestModel forgotPasswordRequest,
-  ) async {
-    try {
-      final response = await _remoteDataSource.forgotPassword(
-        forgotPasswordRequest,
-      );
-      return ApiResult.success(response);
-    } catch (error) {
-      final errorHandler = ErrorHandler.handle(error);
-      final errorMessage =
-          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
-      return ApiResult.failure(errorMessage);
-    }
-  }
-
-  Future<ApiResult<VerificationCodeResponseModel>> sendResetCode(
-    VerificationCodeRequestModel verifyCodedRequest,
-  ) async {
-    try {
-      final response = await _remoteDataSource.verifyCode(verifyCodedRequest);
-      return ApiResult.success(response);
-    } catch (error) {
-      final errorHandler = ErrorHandler.handle(error);
-      final errorMessage =
-          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
-      return ApiResult.failure(errorMessage);
-    }
-  }
-
-  Future<ApiResult<ResetPasswordResponse>> resetPassword(
-    ResetPasswordRequestModel resetPasswordRequest,
-  ) async {
-    try {
-      final response = await _remoteDataSource.resetPassword(
-        resetPasswordRequest,
-      );
-      return ApiResult.success(response);
-    } catch (error) {
-      final errorHandler = ErrorHandler.handle(error);
-      final errorMessage =
-          errorHandler.apiErrorModel.message ?? ResponseMessage.DEFAULT;
-      return ApiResult.failure(errorMessage);
-    }
+    return const Failure('An unexpected error occurred');
   }
 }

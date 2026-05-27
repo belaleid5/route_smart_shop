@@ -3,6 +3,7 @@ import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/details/presention/widgets/review_action_menu.dart';
 import 'package:route_smart/features/details/presention/widgets/user_avatar.dart';
 import 'package:route_smart/features/reviews/data/models/review_model.dart';
+import 'package:route_smart/features/reviews/domain/entites/review_entity.dart';
 import 'package:route_smart/features/reviews/presention/widgets/star_rating_widget.dart';
 
 class ReviewPreviewCard extends StatelessWidget {
@@ -13,7 +14,7 @@ class ReviewPreviewCard extends StatelessWidget {
     this.isMyReview = false,
   });
 
-  final ReviewModel review;
+  final ReviewEntity review;
   final MyColors colors;
   final bool isMyReview;
 
@@ -22,7 +23,7 @@ class ReviewPreviewCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: colors.white,
+        color: colors.secondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colors.divider.withOpacity(0.8)),
       ),
@@ -31,17 +32,20 @@ class ReviewPreviewCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              UserAvatar(name: review.user.name, colors: colors),
+              UserAvatar(name: review.user!.name!, colors: colors),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      review.user.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      review.user!.name!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: colors.textPrimary,
+                      ),
                     ),
-                    StarRatingWidget(rating: review.rating.toDouble()),
+                    StarRatingWidget(rating: review.rating!.toDouble()),
                   ],
                 ),
               ),
@@ -50,7 +54,7 @@ class ReviewPreviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            review.review,
+            review.review!,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(color: colors.textSecondary),

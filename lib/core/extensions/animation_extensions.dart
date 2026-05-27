@@ -1,10 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 extension WidgetAnimationExtension on Widget {
-  //? from place to another
-  //! to show any widget from right[start] to left[end]
-  /// from start to end with fade
+
   Widget animateRightLeft({
     Duration duration = const Duration(milliseconds: 500),
     bool isFromStart = true,
@@ -20,8 +19,7 @@ extension WidgetAnimationExtension on Widget {
         );
   }
 
-  ///! to show any widget from bottom to top
-  /// from bottom to top with fade
+
   Widget animateBottomToTop({
     Duration duration = const Duration(milliseconds: 500),
     bool isFromBottom = true,
@@ -37,9 +35,7 @@ extension WidgetAnimationExtension on Widget {
         );
   }
 
-  //? shine widget
-  //! like shimmer, but all widget is gray then normal color, repeatedly
-  /// from half gray to normal color repeated
+
   Widget animateHalfGrayToNormalColorRepeated({
     Duration duration = const Duration(milliseconds: 500),
   }) {
@@ -54,8 +50,7 @@ extension WidgetAnimationExtension on Widget {
     );
   }
 
-  ///! to buttons and colorful widgets, icons, حاجة بتلمع
-  /// make shimmer in the widget
+
   Widget animateShimmer({
     List<Color>? colors,
     Duration duration = const Duration(milliseconds: 1500),
@@ -65,9 +60,7 @@ extension WidgetAnimationExtension on Widget {
     ).shimmer(delay: 500.ms, duration: duration, colors: colors);
   }
 
-  //? be carful widget
-  //! to alarm things / errors / something wrong / wrong answers, عايز تنبه لحاجة
-  /// like alarm
+
   Widget animateShakeAlarm({
     Duration duration = const Duration(milliseconds: 500),
   }) {
@@ -76,9 +69,6 @@ extension WidgetAnimationExtension on Widget {
     ).shake(hz: 10, delay: 2500.ms, duration: duration);
   }
 
-  //? show from nowhere
-  //! to show texts, images, icons, etc, حاجة تظهر من النص وتبدأ تكبر
-  /// go from alignment [default=Center] to normal place vertically
   Widget animateFlipVertical({
     Duration duration = const Duration(milliseconds: 500),
     Alignment alignment = Alignment.center,
@@ -93,8 +83,7 @@ extension WidgetAnimationExtension on Widget {
     );
   }
 
-  ///! to show texts, images, icons, etc, حاجة تظهر من النص وتبدأ تكبر
-  /// go from alignment [default=Center] to normal place horizontally
+
   Widget animateFlipHorizontal({
     Duration duration = const Duration(milliseconds: 500),
     Alignment alignment = Alignment.center,
@@ -109,8 +98,6 @@ extension WidgetAnimationExtension on Widget {
     );
   }
 
-  ///! to show texts, images, icons, etc, حاجة تظهر بشقلبة
-  // بيشقلب
   Widget animateRotate({
     Duration duration = const Duration(seconds: 1),
     Alignment alignment = Alignment.center,
@@ -125,11 +112,9 @@ extension WidgetAnimationExtension on Widget {
     );
   }
 
-  ///! to show texts, images, icons, etc, حاجة تظهر من النص وتبدأ تكبر
-  /// become bigger vertically
-  Widget animateScaleNFadeVertical({
 
-Duration duration = const Duration(milliseconds: 1000),
+  Widget animateScaleNFadeVertical({
+    Duration duration = const Duration(milliseconds: 1000),
     Alignment alignment = Alignment.center,
   }) {
     return animate(onPlay: (controller) => controller.repeat(reverse: true))
@@ -144,8 +129,7 @@ Duration duration = const Duration(milliseconds: 1000),
         );
   }
 
-  ///! to show texts, images, icons, etc, حاجة تظهر من النص وتبدأ تكبر
-  /// become bigger horizontally
+
   Widget animateScaleNFadeHorizontal({
     Duration duration = const Duration(milliseconds: 1000),
     Alignment alignment = Alignment.center,
@@ -162,15 +146,12 @@ Duration duration = const Duration(milliseconds: 1000),
         );
   }
 
-  ///! so normal animation
   Widget animateSlideTopToNormal({
     Duration duration = const Duration(milliseconds: 500),
   }) {
     return animate().slide(delay: 500.ms, duration: duration);
   }
 
-  //? show to hide case
-  /// After a while it disappears
   Widget animateAfterDurationHide({
     Duration duration = const Duration(milliseconds: 500),
     bool maintain = false,
@@ -178,8 +159,7 @@ Duration duration = const Duration(milliseconds: 1000),
     return animate().hide(maintain: maintain, delay: 500.ms, duration: 500.ms);
   }
 
-  //? hide to visibility case
-  /// After a while it appears
+
   Widget animateAfterDurationVisibility({
     Duration duration = const Duration(milliseconds: 500),
     bool maintain = false,
@@ -191,8 +171,7 @@ Duration duration = const Duration(milliseconds: 1000),
     );
   }
 
-  //? blur to normal case
-  /// from blur to normal
+
   Widget animateBlur({Duration duration = const Duration(milliseconds: 500)}) {
     return animate().blur(
       end: const Offset(0, 0),

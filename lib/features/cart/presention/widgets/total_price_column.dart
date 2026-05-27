@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 class TotalPriceColumn extends StatelessWidget {
-  const TotalPriceColumn({super.key, required this.totalPrice});
+  const TotalPriceColumn({
+    super.key,
+    required this.totalPrice,
+  });
 
   final double totalPrice;
 
@@ -14,11 +19,10 @@ class TotalPriceColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.translate('total'),
+          context.translate(LangKeys.totalAmount),
           style: context.textStyle.copyWith(
-            fontSize: 12,
-            color: context.color.textPrimary.withOpacity(0.6),
-            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            color: context.colors.textPrimary.withValues(alpha: 0.6),
           ),
         ),
         verticalSpace(2),
@@ -29,15 +33,17 @@ class TotalPriceColumn extends StatelessWidget {
               begin: const Offset(0, 0.5),
               end: Offset.zero,
             ).animate(animation),
-            child: FadeTransition(opacity: animation, child: child),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
           ),
           child: Text(
             '\$${totalPrice.toStringAsFixed(2)}',
             key: ValueKey(totalPrice),
             style: context.textStyle.copyWith(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: context.color.textPrimary,
+              fontSize: 20,
+              color: context.colors.textPrimary,
             ),
           ),
         ),

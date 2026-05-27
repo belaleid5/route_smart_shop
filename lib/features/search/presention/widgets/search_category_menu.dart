@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/domain/entites/category_entity.dart';
 import 'package:route_smart/features/search/presention/widgets/search_bar_item.dart';
 import 'package:route_smart/features/search/presention/widgets/search_category_menu_overlay.dart';
 
@@ -11,7 +11,7 @@ class SearchCategoryMenu extends StatefulWidget {
     required this.onSelected,
   });
 
-  final List<CategoryData> categories;
+  final List<CategoryEntity> categories;
   final String? selectedId;
   final ValueChanged<String?> onSelected;
 

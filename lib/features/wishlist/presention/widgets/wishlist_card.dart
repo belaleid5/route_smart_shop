@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/features/wishlist/data/model/wishlist_response_model.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
+import 'package:route_smart/features/wishlist/domain/entites/wishlist_entity.dart';
 import 'wishlist_card_image.dart';
 import 'wishlist_card_details.dart';
 import 'wishlist_add_to_cart_button.dart';
@@ -12,7 +14,7 @@ class WishlistCard extends StatelessWidget {
     required this.onAddToCart,
   });
 
-  final WishlistItemModel item;
+  final WishlistEntity item;
   final VoidCallback onRemove;
   final VoidCallback onAddToCart;
 
@@ -23,9 +25,7 @@ class WishlistCard extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: const _SwipeBackground(),
       onDismissed: (_) => onRemove(),
-      confirmDismiss: (_) async {
-        return await _showDeleteConfirm(context);
-      },
+      confirmDismiss: (_) async => _showDeleteConfirm(context),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,12 +38,15 @@ class WishlistCard extends StatelessWidget {
             child: WishlistCardDetails(
               title: item.title,
               price: item.hasDiscount
-                  ? item.priceAfterDiscountDouble!
-                  : item.priceDouble,
-              oldPrice: item.hasDiscount ? item.priceDouble : null,
+                  ? item.priceAfterDiscount!
+                  : item.price,
+              oldPrice: item.hasDiscount ? item.price : null,
             ),
           ),
-          WishlistAddToCartButton(onTap: onAddToCart,   productId: item.id,),
+          WishlistAddToCartButton(
+            onTap: onAddToCart,
+            productId: item.id,
+          ),
         ],
       ),
     );
@@ -56,21 +59,22 @@ class WishlistCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: const Text('Remove Item'),
+        // ✅ localized strings
+        title: Text(context.translate(LangKeys.itemRemoved)),
         content: Text(
-          'Remove "${item.title}" from wishlist?',
+          '"${item.title}" ${context.translate(LangKeys.itemRemoved)}?',
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(context.translate(LangKeys.cancel)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Remove'),
+            child: Text(context.translate(LangKeys.yes)),
           ),
         ],
       ),

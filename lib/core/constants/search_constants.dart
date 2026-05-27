@@ -1,15 +1,18 @@
-// lib/features/search/core/search_constants.dart
-
 abstract final class SearchConstants {
-  static const String productsEndpoint   = '/api/v1/products';
-  static const String categoriesEndpoint = '/api/v1/categories';
-  static const String brandsEndpoint     = '/api/v1/brands';
+  SearchConstants._();
+
+  // Endpoints (Relative to baseUrl)
+  static const String productsEndpoint = 'v1/products';
+  static const String categoriesEndpoint = 'v1/categories';
+  static const String brandsEndpoint = 'v1/brands';
 
   static const int defaultLimit = 20;
+  static const int defaultPage = 1;
 
-  static const sortOptions = [
-    (label: 'Price ↓', value: '-price'),
-    (label: 'Price ↑', value: 'price'),
-    (label: 'A–Z',     value: 'title'),
+  static const List<Map<String, String>> sortOptions = [
+    {'label': 'Price: High to Low', 'value': '-price'},
+    {'label': 'Price: Low to High', 'value': 'price'},
+    {'label': 'Name: A-Z', 'value': 'title'},
+    {'label': 'Name: Z-A', 'value': '-title'},
   ];
 }

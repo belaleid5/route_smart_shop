@@ -1,6 +1,7 @@
 // lib/core/common/widgets/product_category_label.dart
 
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class ProductCategoryLabel extends StatelessWidget {
@@ -11,10 +12,10 @@ class ProductCategoryLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      name ?? 'Unknown',
+      name ?? '',
       style: context.textStyle.copyWith(
         fontSize: 10,
-        color: context.color.textSecondary,
+        color: context.colors.textSecondary,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,

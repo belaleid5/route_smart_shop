@@ -1,43 +1,60 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:route_smart/core/common/data/model/product_response_model.dart';
+// core/common/data/model/brand_response_model.dart
 
-part 'brand_response_model.g.dart';
+import 'package:route_smart/core/common/data/model/meta_data_model.dart';
+import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
 
-@JsonSerializable()
 class BrandResponseModel {
-  final int? results;
-  final Metadata? metadata;
-  final List<BrandData>? data;
-
-  const BrandResponseModel({this.results, this.metadata, this.data});
-
-  factory BrandResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$BrandResponseModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BrandResponseModelToJson(this);
-}
-
-@JsonSerializable()
-class BrandData {
-  @JsonKey(name: '_id')
-  final String? id;
-  final String? name;
-  final String? slug;
-  final String? image;
-  final String? createdAt;
-  final String? updatedAt;
-
-  const BrandData({
-    this.id,
-    this.name,
-    this.slug,
-    this.image,
-    this.createdAt,
-    this.updatedAt,
+  const BrandResponseModel({
+    this.results,
+    this.metadata,
+    this.data,
   });
 
-  factory BrandData.fromJson(Map<String, dynamic> json) =>
-      _$BrandDataFromJson(json);
+  final int? results;
+  final PaginationMetadataModel? metadata;
+  final List<BrandData>? data;
 
-  Map<String, dynamic> toJson() => _$BrandDataToJson(this);
+  factory BrandResponseModel.fromJson(Map<String, dynamic> json) {
+    return BrandResponseModel(
+      results: json['results'] as int?,
+      metadata: json['metadata'] == null
+          ? null
+          : PaginationMetadataModel.fromJson(
+              json['metadata'] as Map<String, dynamic>,
+            ),
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => BrandData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+class BrandData {
+  const BrandData({
+    required this.id,
+    required this.name,
+    this.slug,
+    this.image,
+  });
+
+  final String id;
+  final String name;
+  final String? slug;
+  final String? image;
+
+  factory BrandData.fromJson(Map<String, dynamic> json) {
+    return BrandData(
+      id: json['_id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      slug: json['slug'] as String?,
+      image: json['image'] as String?,
+    );
+  }
+
+  BrandEntity toEntity() => BrandEntity(
+        id: id,
+        name: name,
+        slug: slug,
+        image: image,
+      );
 }

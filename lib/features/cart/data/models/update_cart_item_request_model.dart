@@ -1,15 +1,21 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/helper/json_reader.dart';
 
-part 'update_cart_item_request_model.g.dart';
+final class UpdateCartItemRequestModel {
+  const UpdateCartItemRequestModel({
+    required this.count,
+  });
 
-@JsonSerializable()
-class UpdateCartItemRequestModel {
   final int count;
 
-  const UpdateCartItemRequestModel({required this.count});
+  factory UpdateCartItemRequestModel.fromJson(Map<String, dynamic> json) {
+    return UpdateCartItemRequestModel(
+      count: JsonReader.integer(json['count']),
+    );
+  }
 
-  factory UpdateCartItemRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$UpdateCartItemRequestModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UpdateCartItemRequestModelToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'count': count,
+    };
+  }
 }

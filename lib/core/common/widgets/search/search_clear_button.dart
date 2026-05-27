@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class SearchClearButton extends StatelessWidget {
-  const SearchClearButton({
-    super.key,
-    required this.onTap,
-  });
-
+  const SearchClearButton({super.key, required this.onTap});
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+   
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -18,16 +15,10 @@ class SearchClearButton extends StatelessWidget {
         height: 46,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: context.color.primary.withValues(alpha: 0.1),
-          border: Border.all(
-            color: context.color.primary.withValues(alpha: 0.3),
-          ),
+          color:context.colors.primary,
+          border: Border.all(color: context.colors.primary,),
         ),
-        child: Icon(
-          Icons.close_rounded,
-          size: 18,
-          color: context.color.primary,
-        ),
+        child: Icon(Icons.close_rounded, size: 18, color: context.colors.primary,),
       ),
     );
   }

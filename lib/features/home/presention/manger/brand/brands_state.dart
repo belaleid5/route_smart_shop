@@ -1,16 +1,43 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:route_smart/core/common/data/model/brand_response_model.dart';
-import 'package:route_smart/core/common/data/model/category_response_model.dart';
+import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
 
-part 'brands_state.freezed.dart';
+sealed class BrandsState {
+  const BrandsState();
+}
 
-@freezed
-class BrandsState with _$BrandsState {
-  const factory BrandsState.initial() = _Initial;
-  const factory BrandsState.loading() = _Loading; 
-  const factory BrandsState.success({
-    @Default([]) List<BrandData> brands,
-    @Default(false) bool hasReachedMax,
-  }) = _Success;
-  const factory BrandsState.error(String message) = _Error;
-}                     
+final class BrandsInitial extends BrandsState {
+  const BrandsInitial();
+}
+
+final class BrandsLoading extends BrandsState {
+  const BrandsLoading();
+}
+
+final class BrandsSuccess extends BrandsState {
+  const BrandsSuccess({
+    this.brands = const [],
+    this.hasReachedMax = false,
+  });
+
+  final List<BrandEntity> brands;
+  final bool hasReachedMax;
+
+  BrandsSuccess copyWith({
+    List<BrandEntity>? brands,
+    bool? hasReachedMax,
+  }) {
+    return BrandsSuccess(
+      brands: brands ?? this.brands,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
+
+  // ✅ تم حذف operator == و hashCode و helper functions
+  // السبب: Bloc بيقارن الـ states بـ == قبل الـ emit
+  // لو override بيرجع true → BlocBuilder مش بيعمل rebuild
+}
+
+final class BrandsError extends BrandsState {
+  const BrandsError(this.message);
+  final String message;
+
+}

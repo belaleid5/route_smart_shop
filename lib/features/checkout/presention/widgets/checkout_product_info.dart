@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart'; // ✅
 
 class CheckoutProductInfo extends StatelessWidget {
   const CheckoutProductInfo({
@@ -24,15 +26,15 @@ class CheckoutProductInfo extends StatelessWidget {
           style: context.textStyle.copyWith(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         verticalSpace(4),
         Text(
-          'Qty: $quantity',
+          '${context.translate(LangKeys.quantity)}: $quantity',
           style: context.textStyle.copyWith(
             fontSize: 12,
-            color: context.color.textSecondary,
+            color: context.colors.textSecondary,
           ),
         ),
       ],

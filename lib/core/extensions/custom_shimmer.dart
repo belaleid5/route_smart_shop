@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/helper/spacing.dart';
 import 'package:shimmer/shimmer.dart';
 
-/// Custom shimmer loading widget
-///
-/// Lightweight alternative to Skeletonizer with full gradient control
-/// Supports light/dark themes automatically
 class ShimmerWidget extends StatelessWidget {
   const ShimmerWidget({
     super.key,
@@ -19,7 +16,6 @@ class ShimmerWidget extends StatelessWidget {
     this.padding,
   });
 
-  /// Creates a rectangular shimmer with optional border radius
   const ShimmerWidget.rectangular({
     super.key,
     required this.height,
@@ -31,7 +27,6 @@ class ShimmerWidget extends StatelessWidget {
     this.padding,
   }) : child = null;
 
-  /// Creates a rounded shimmer with customizable corner radius
   ShimmerWidget.rounded({
     super.key,
     required this.height,
@@ -41,10 +36,9 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : borderRadius = BorderRadius.circular(radius),
-       child = null;
+  })  : borderRadius = BorderRadius.circular(radius),
+        child = null;
 
-  /// Creates a circular shimmer (avatar/profile picture)
   ShimmerWidget.circular({
     super.key,
     required double size,
@@ -52,12 +46,11 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : height = size,
-       width = size,
-       borderRadius = BorderRadius.circular(size / 2),
-       child = null;
+  })  : height = size,
+        width = size,
+        borderRadius = BorderRadius.circular(size / 2),
+        child = null;
 
-  /// Creates a square shimmer with equal width and height
   ShimmerWidget.square({
     super.key,
     required double size,
@@ -66,12 +59,11 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : height = size,
-       width = size,
-       borderRadius = radius != null ? BorderRadius.circular(radius) : null,
-       child = null;
+  })  : height = size,
+        width = size,
+        borderRadius = radius != null ? BorderRadius.circular(radius) : null,
+        child = null;
 
-  /// Creates a text-line shimmer (for single line text)
   ShimmerWidget.text({
     super.key,
     double width = double.infinity,
@@ -81,12 +73,11 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : height = height,
-       width = width,
-       borderRadius = BorderRadius.circular(radius),
-       child = null;
+  })  : height = height,
+        width = width,
+        borderRadius = BorderRadius.circular(radius),
+        child = null;
 
-  /// Creates a button shimmer
   ShimmerWidget.button({
     super.key,
     double width = 150,
@@ -96,12 +87,11 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : height = height,
-       width = width,
-       borderRadius = BorderRadius.circular(radius),
-       child = null;
+  })  : height = height,
+        width = width,
+        borderRadius = BorderRadius.circular(radius),
+        child = null;
 
-  /// Creates a card shimmer
   ShimmerWidget.card({
     super.key,
     double width = double.infinity,
@@ -111,10 +101,10 @@ class ShimmerWidget extends StatelessWidget {
     this.highlightColor,
     this.margin,
     this.padding,
-  }) : height = height,
-       width = width,
-       borderRadius = BorderRadius.circular(radius),
-       child = null;
+  })  : height = height,
+        width = width,
+        borderRadius = BorderRadius.circular(radius),
+        child = null;
 
   final double height;
   final double width;
@@ -127,28 +117,32 @@ class ShimmerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final brightness = colorScheme.brightness;
+    final colors = context.colors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Custom gradient or default based on theme
-    final gradient = _buildGradient(brightness);
+    final effectiveBaseColor = baseColor ??
+        (isDark
+            ? colors.fieldBackground.withOpacity(0.8)
+            : colors.stroke.withOpacity(0.7));
+
+    final effectiveHighlightColor = highlightColor ??
+        (isDark
+            ? colors.secondary.withOpacity(0.3)
+            : colors.shades.withOpacity(0.8));
 
     return Container(
       margin: margin,
       child: Shimmer(
-        gradient: gradient,
+        gradient: _buildGradient(
+          baseColor: effectiveBaseColor,
+          highlightColor: effectiveHighlightColor,
+        ),
         child: Container(
           height: height,
           width: width,
           padding: padding,
           decoration: BoxDecoration(
-            color:
-                baseColor ??
-                Color.lerp(
-                  colorScheme.surface,
-                  colorScheme.outlineVariant,
-                  0.5,
-                ),
+            color: effectiveBaseColor,
             borderRadius: borderRadius ?? BorderRadius.zero,
           ),
           child: child,
@@ -157,61 +151,78 @@ class ShimmerWidget extends StatelessWidget {
     );
   }
 
-  LinearGradient _buildGradient(Brightness brightness) {
-    // If custom colors provided, use them
-    if (baseColor != null && highlightColor != null) {
-      return LinearGradient(
-        colors: [baseColor!, highlightColor!, baseColor!],
-        stops: const [0.1, 0.3, 0.4],
-        begin: const Alignment(-1, -0.3),
-        end: const Alignment(1, 0.3),
-      );
-    }
-
-    // Default gradients
-    const shimmerGradientLight = LinearGradient(
-      colors: [Color(0xFFEBEBF4), Color(0xFFF4F4F4), Color(0xFFEBEBF4)],
-      stops: [0.1, 0.3, 0.4],
-      begin: Alignment(-1, -0.3),
-      end: Alignment(1, 0.3),
+  LinearGradient _buildGradient({
+    required Color baseColor,
+    required Color highlightColor,
+  }) {
+    return LinearGradient(
+      colors: [baseColor, highlightColor, baseColor],
+      stops: const [0.1, 0.3, 0.4],
+      begin: const Alignment(-1, -0.3),
+      end: const Alignment(1, 0.3),
     );
-
-    const shimmerGradientDark = LinearGradient(
-      colors: [Color(0xFF1C1C1C), Color(0xFF2C2C2C), Color(0xFF1C1C1C)],
-      stops: [0.1, 0.3, 0.4],
-      begin: Alignment(-1, -0.3),
-      end: Alignment(1, 0.3),
-    );
-
-    return brightness == Brightness.dark
-        ? shimmerGradientDark
-        : shimmerGradientLight;
   }
 }
 
-// ============================================
-// Ready-to-use Shimmer Patterns
-// ============================================
+// ====================== Shimmer Brand Item (مستطيل) ======================
 
-/// Brand carousel item shimmer
 class ShimmerBrandItem extends StatelessWidget {
-  const ShimmerBrandItem({super.key, this.size = 80});
+  const ShimmerBrandItem({
+    super.key,
+    this.width = 85,
+    this.height = 70,
+    this.nameWidth = 70,
+    this.showName = true,
+    this.radius = 12.0,
+  });
 
-  final double size;
+  final double width;
+  final double height;
+  final double nameWidth;
+  final bool showName;
+  final double radius;
+
+  static const double _nameSpacing = 10;
+  static const double _nameHeight = 14;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ShimmerWidget.circular(size: size),
-        verticalSpace(8),
-        ShimmerWidget.text(width: 60, height: 14),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final totalNeeded = height + (showName ? _nameSpacing + _nameHeight : 0.0);
+
+        final effectiveTotalHeight = constraints.hasBoundedHeight
+            ? constraints.maxHeight.clamp(0.0, totalNeeded)
+            : totalNeeded;
+
+        final effectiveLogoHeight = showName
+            ? (effectiveTotalHeight - _nameSpacing - _nameHeight).clamp(40.0, height)
+            : effectiveTotalHeight;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ShimmerWidget.rounded(
+              width: width,
+              height: effectiveLogoHeight,
+              radius: radius,
+            ),
+            if (showName) ...[
+              verticalSpace(_nameSpacing),
+              ShimmerWidget.text(
+                width: nameWidth,
+                height: _nameHeight,
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
 
-/// List tile shimmer (avatar + text lines)
+// ====================== باقي الـ Shimmer Widgets ======================
+
 class ShimmerListTile extends StatelessWidget {
   const ShimmerListTile({
     super.key,
@@ -229,10 +240,11 @@ class ShimmerListTile extends StatelessWidget {
       child: Row(
         children: [
           ShimmerWidget.circular(size: avatarSize),
-          const SizedBox(width: 12),
+          horizontalSpace(12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ShimmerWidget.text(width: 150),
                 if (showSubtitle) ...[
@@ -248,29 +260,157 @@ class ShimmerListTile extends StatelessWidget {
   }
 }
 
-/// Grid item shimmer (image + text)
-class ShimmerGridItem extends StatelessWidget {
-  const ShimmerGridItem({super.key, this.imageHeight = 14});
+class ShimmerCardTile extends StatelessWidget {
+  const ShimmerCardTile({
+    super.key,
+    this.avatarSize = 56,
+    this.showSubtitle = true,
+    this.avatarRadius,
+    this.titleWidthFactor = 0.55,
+    this.subtitleWidthFactor = 0.35,
+    this.showTrailing = true,
+    this.trailingSize = 36.0,
+    this.cardBorderRadius = 16.0,
+    this.contentPadding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 12,
+    ),
+    this.outerPadding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 6,
+    ),
+  });
 
-  final double imageHeight;
+  final double avatarSize;
+  final bool showSubtitle;
+  final double? avatarRadius;
+  final double titleWidthFactor;
+  final double subtitleWidthFactor;
+  final bool showTrailing;
+  final double trailingSize;
+  final double cardBorderRadius;
+  final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry outerPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadiusGeometry.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-          child: ShimmerWidget.card(height: imageHeight),
+    return Padding(
+      padding: outerPadding,
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.secondary,
+          borderRadius: BorderRadius.circular(cardBorderRadius),
+          border: Border.all(color: context.colors.stroke),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        verticalSpace(8),
-        ShimmerWidget.text(),
-        verticalSpace(8),
-        ShimmerWidget.text(width: 100, height: 12),
-      ],
+        padding: contentPadding,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildAvatar(),
+            horizontalSpace(14),
+            Expanded(
+              child: _buildTextLines(),
+            ),
+            if (showTrailing) ...[
+              horizontalSpace(8),
+              ShimmerWidget.rounded(
+                width: trailingSize,
+                height: trailingSize,
+                radius: 10,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar() {
+    if (avatarRadius == null) {
+      return ShimmerWidget.circular(size: avatarSize);
+    }
+    return ShimmerWidget.rounded(
+      width: avatarSize,
+      height: avatarSize,
+      radius: avatarRadius!,
+    );
+  }
+
+  Widget _buildTextLines() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ShimmerWidget.text(
+              width: availableWidth * titleWidthFactor,
+              height: 14,
+            ),
+            if (showSubtitle) ...[
+              verticalSpace(8),
+              ShimmerWidget.text(
+                width: availableWidth * subtitleWidthFactor,
+                height: 12,
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class ShimmerGridItem extends StatelessWidget {
+  const ShimmerGridItem({
+    super.key,
+    this.imageHeight = 160,
+    this.radius = 16,
+  });
+
+  final double imageHeight;
+  final double radius;
+
+  static const double _footerHeight = 12 + 16 + 8 + 14;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableImageHeight = constraints.hasBoundedHeight
+            ? (constraints.maxHeight - _footerHeight).clamp(0.0, imageHeight)
+            : imageHeight;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(radius),
+                topRight: Radius.circular(radius),
+              ),
+              child: ShimmerWidget(
+                height: availableImageHeight,
+                width: double.infinity,
+              ),
+            ),
+            verticalSpace(12),
+            ShimmerWidget.text(),
+            verticalSpace(8),
+            ShimmerWidget.text(width: 100, height: 14),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 import 'package:route_smart/core/routes/routes_names.dart';
 
 class ReviewsHeader extends StatelessWidget {
-  const ReviewsHeader({super.key, 
+  const ReviewsHeader({
+    super.key,
     required this.totalReviews,
     required this.productId,
     required this.colors,
@@ -19,14 +22,13 @@ class ReviewsHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Reviews ($totalReviews)',
+          '${context.translate(LangKeys.reviews)} ($totalReviews)',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: colors.textPrimary,
           ),
         ),
-
         GestureDetector(
           onTap: () => Navigator.of(
             context,
@@ -35,7 +37,7 @@ class ReviewsHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Review All',
+                context.translate(LangKeys.viewAllReviews),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -53,4 +55,5 @@ class ReviewsHeader extends StatelessWidget {
         ),
       ],
     );
-  }}
+  }
+}

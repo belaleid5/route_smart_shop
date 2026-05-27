@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
-import 'package:route_smart/features/home/presention/refacors/home_body.dart'
-    show HomeBody;
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/features/home/presention/refacors/home_body.dart';
 import 'package:route_smart/features/home/presention/widgets/home_app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,9 +9,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.color.white,
-      appBar: const HomeAppBar(), // 1. AppBar
-      body: HomeBody(),
+      backgroundColor: context.colors.background,
+      appBar: const HomeAppBar(),
+      body: const HomeBody(),
     );
   }
 }

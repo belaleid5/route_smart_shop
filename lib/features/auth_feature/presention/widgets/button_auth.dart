@@ -1,6 +1,7 @@
+import 'package:route_smart/core/app/theme/my_colors.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/functions/spink_kit.dart';
-import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class ButtonAuth extends StatelessWidget {
   const ButtonAuth({
@@ -19,8 +20,8 @@ class ButtonAuth extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? () {} : onSubmit,
       style: ElevatedButton.styleFrom(
-        backgroundColor: context.color.primary,
-        disabledBackgroundColor: context.color.primary,
+        backgroundColor: context.colors.primary,
+        disabledBackgroundColor: context.colors.primary,
         minimumSize: const Size(double.infinity, 56),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -29,7 +30,7 @@ class ButtonAuth extends StatelessWidget {
           : Text(
               text,
               style: context.textStyle.copyWith(
-                color: context.color.white,
+                color: context.colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),

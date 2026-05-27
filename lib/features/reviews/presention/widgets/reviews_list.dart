@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_smart/core/common/widgets/smooth_list_view.dart';
 import 'package:route_smart/features/details/presention/widgets/review_card.dart';
+import 'package:route_smart/features/reviews/domain/entites/review_entity.dart';
 
 import '../../../../core/app/theme/my_colors.dart';
 import '../../data/models/review_model.dart';
@@ -16,7 +17,7 @@ class VerticalReviewsList extends StatelessWidget {
   });
 
   final String productId; 
-  final List<ReviewModel> reviews;
+  final List<ReviewEntity> reviews;
   final MyColors colors;
   final double cardWidth;
   final String currentUserId;
@@ -34,7 +35,7 @@ class VerticalReviewsList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final review = reviews[index];
-        final isMyReview = currentUserId.isNotEmpty && review.user.id.trim() == currentUserId.trim();
+        final isMyReview = currentUserId.isNotEmpty && review.user!.id!.trim() == currentUserId.trim();
 
         return Align(
           alignment: Alignment.topCenter,

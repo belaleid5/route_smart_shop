@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 
 class CartCountBadge extends StatelessWidget {
-  const CartCountBadge({super.key, required this.count});
+  const CartCountBadge({
+    super.key,
+    required this.count,
+  });
 
   final int count;
 
@@ -12,17 +16,14 @@ class CartCountBadge extends StatelessWidget {
       width: 36,
       height: 36,
       decoration: BoxDecoration(
-        // ignore: deprecated_member_use
-        color: context.color.button.withOpacity(0.1),
+        color: context.colors.button.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
       child: Text(
         '$count',
-        style: context.textStyle.copyWith(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: context.color.textPrimary,
+        style: context.titleMedium.copyWith(
+          color: context.colors.textPrimary,
         ),
       ),
     );

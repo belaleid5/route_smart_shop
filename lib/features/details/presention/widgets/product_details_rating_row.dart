@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 
 class ProductDetailsRatingRow extends StatelessWidget {
   const ProductDetailsRatingRow({
@@ -22,7 +23,7 @@ class ProductDetailsRatingRow extends StatelessWidget {
           style: context.textStyle.copyWith(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         const SizedBox(width: 4),
@@ -30,7 +31,7 @@ class ProductDetailsRatingRow extends StatelessWidget {
           '($reviewCount ${context.translate('review')})',
           style: context.textStyle.copyWith(
             fontSize: 13,
-            color: context.color.textPrimary.withOpacity(0.5),
+            color: context.colors.textPrimary.withOpacity(0.5),
           ),
         ),
       ],

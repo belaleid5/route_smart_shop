@@ -1,10 +1,10 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'register_request_model.g.dart';
-
-/// Request body model for the user registration endpoint.
-@JsonSerializable()
 class RegisterRequestModel {
+  final String name;
+  final String email;
+  final String password;
+  final String rePassword;
+  final String phone;
+
   const RegisterRequestModel({
     required this.name,
     required this.email,
@@ -13,14 +13,21 @@ class RegisterRequestModel {
     required this.phone,
   });
 
-  final String name;
-  final String email;
-  final String password;
-  final String rePassword;
-  final String phone;
+  factory RegisterRequestModel.fromJson(Map<String, dynamic> json) {
+    return RegisterRequestModel(
+      name: json['name'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      rePassword: json['rePassword'] as String,
+      phone: json['phone'] as String,
+    );
+  }
 
-  factory RegisterRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$RegisterRequestModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RegisterRequestModelToJson(this);
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'email': email,
+        'password': password,
+        'rePassword': rePassword,
+        'phone': phone,
+      };
 }

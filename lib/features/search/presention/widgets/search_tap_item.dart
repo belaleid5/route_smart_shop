@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/features/search/presention/widgets/search_tab_badge.dart';
 import 'package:route_smart/features/search/presention/widgets/search_tab_label.dart';
 
@@ -20,14 +21,16 @@ class SearchTabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chipColor = isActive
-        ? context.color.primary
-        : context.color.fieldBackground;
+        ? context.colors.primary
+        : context.colors.fieldBackground;
 
-    final borderColor = isActive ? context.color.primary : context.color.stroke;
+    final borderColor = isActive
+        ? context.colors.primary
+        : context.colors.stroke;
 
     final labelColor = isActive
-        ? context.color.white
-        : context.color.textSecondary;
+        ? context.colors.white
+        : context.colors.textSecondary;
 
     return GestureDetector(
       onTap: onTap,

@@ -1,28 +1,35 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:route_smart/core/helper/json_reader.dart';
 
-part 'cart_product_model.g.dart';
-
-@JsonSerializable()
-class CartProductModel {
-  @JsonKey(name: '_id')
-  final String id;
-
-  final String title;
-
-  @JsonKey(name: 'imageCover')
-  final String? imageUrl;
-
-  final double price;
-
+final class CartProductModel {
   const CartProductModel({
     required this.id,
     required this.title,
-    this.imageUrl,
     required this.price,
+    this.imageUrl,
   });
 
-  factory CartProductModel.fromJson(Map<String, dynamic> json) =>
-      _$CartProductModelFromJson(json);
+  final String id;
+  final String title;
+  final double price;
+  final String? imageUrl;
 
-  Map<String, dynamic> toJson() => _$CartProductModelToJson(this);
+  factory CartProductModel.fromJson(Map<String, dynamic> json) {
+    return CartProductModel(
+      id: JsonReader.string(json['_id'] ?? json['id']),
+      title: JsonReader.string(json['title']),
+      price: JsonReader.decimal(json['price']),
+      imageUrl: JsonReader.nullableString(
+        json['imageCover'] ?? json['imageUrl'],
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'title': title,
+      'imageCover': imageUrl,
+      'price': price,
+    };
+  }
 }

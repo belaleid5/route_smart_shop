@@ -1,6 +1,10 @@
+// lib/features/checkout/presention/widgets/checkout_payment_method.dart
+
 import 'package:flutter/material.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
 
 enum PaymentMethod { cash, card }
 
@@ -11,7 +15,7 @@ class CheckoutPaymentMethod extends StatelessWidget {
     required this.onMethodChanged,
   });
 
-  final PaymentMethod selectedMethod;
+  final PaymentMethod? selectedMethod;
   final ValueChanged<PaymentMethod> onMethodChanged;
 
   @override
@@ -20,21 +24,30 @@ class CheckoutPaymentMethod extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Payment Method',
+          context.translate(LangKeys.paymentMethod),
           style: context.textStyle.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: context.color.textPrimary,
+            color: context.colors.textPrimary,
           ),
         ),
         verticalSpace(12),
-
+        _PaymentMethodCard(
+          icon: Icons.money_rounded,
+          iconColor: context.colors.button,
+          iconBg: context.colors.fieldBackground,
+          title: context.translate(LangKeys.cashOnDelivery),
+          subtitle: context.translate(LangKeys.payOnReceive),
+          isSelected: selectedMethod == PaymentMethod.cash,
+          onTap: () => onMethodChanged(PaymentMethod.cash),
+        ),
+        verticalSpace(12),
         _PaymentMethodCard(
           icon: Icons.credit_card_rounded,
-          iconColor: context.color.button,
-          iconBg: context.color.fieldBackground,
-          title: 'Credit Card',
-          subtitle: 'Pay securely with Stripe',
+          iconColor: context.colors.button,
+          iconBg: context.colors.fieldBackground,
+          title: context.translate(LangKeys.creditCard),
+          subtitle: context.translate(LangKeys.paySecurelyStripe),
           isSelected: selectedMethod == PaymentMethod.card,
           onTap: () => onMethodChanged(PaymentMethod.card),
         ),
@@ -72,17 +85,17 @@ class _PaymentMethodCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isSelected
-              ? context.color.fieldBackground.withValues(alpha: 0.5)
-              : context.color.shades,
+              ? context.colors.fieldBackground.withValues(alpha: 0.5)
+              : context.colors.shades,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? context.color.button : context.color.stroke,
+            color: isSelected ? context.colors.button : context.colors.stroke,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: context.color.button.withValues(alpha: 0.1),
+                    color: context.colors.button.withValues(alpha: 0.1),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -111,7 +124,7 @@ class _PaymentMethodCard extends StatelessWidget {
                     style: context.textStyle.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: context.color.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -119,7 +132,7 @@ class _PaymentMethodCard extends StatelessWidget {
                     subtitle,
                     style: context.textStyle.copyWith(
                       fontSize: 12,
-                      color: context.color.textSecondary,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ],
@@ -135,11 +148,11 @@ class _PaymentMethodCard extends StatelessWidget {
                 height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected ? context.color.button : Colors.transparent,
+                  color: isSelected ? context.colors.button : Colors.transparent,
                   border: Border.all(
                     color: isSelected
-                        ? context.color.button
-                        : context.color.textSecondary.withValues(alpha: 0.3),
+                        ? context.colors.button
+                        : context.colors.textSecondary.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),

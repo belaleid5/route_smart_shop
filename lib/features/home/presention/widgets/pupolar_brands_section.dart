@@ -1,73 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_smart/core/app/theme/my_colors.dart';
 import 'package:route_smart/core/extensions/animation_extensions.dart';
+import 'package:route_smart/core/extensions/context_extensions.dart';
 import 'package:route_smart/core/helper/spacing.dart';
+import 'package:route_smart/core/language/lang_keys.dart';
+import 'package:route_smart/core/routes/routes_names.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
-import 'package:route_smart/features/home/presention/manger/brand/brands_event.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_state.dart';
 import 'package:route_smart/features/home/presention/widgets/brand_loading_row.dart';
-import 'package:route_smart/features/home/presention/widgets/error_brand.dart';
 import 'package:route_smart/features/home/presention/widgets/header_section.dart';
 import 'package:route_smart/features/home/presention/widgets/prands_list.dart';
 
-class PopularBrandsSection extends StatefulWidget {
+class PopularBrandsSection extends StatelessWidget {
   const PopularBrandsSection({super.key});
-
-  @override
-  State<PopularBrandsSection> createState() => _PopularBrandsSectionState();
-}
-
-class _PopularBrandsSectionState extends State<PopularBrandsSection> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<BrandsBloc>().add(const BrandsEvent.getBrands());
-  }
-
-  bool _onScrollNotification(ScrollNotification notification) {
-    if (notification is! ScrollUpdateNotification) return false;
-    if (notification.metrics.axis != Axis.horizontal) return false;
-
-    final bool nearEnd =
-        notification.metrics.pixels >=
-        notification.metrics.maxScrollExtent - 150;
-
-    if (nearEnd) {
-      context.read<BrandsBloc>().add(const BrandsEvent.getBrands());
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HeaderSection(
-          title: 'Popular Brands',
+        HeaderSection(
+          title: context.translate(LangKeys.popularBrands),
+          onTapSeeAll: () => context.pushNamed(AppRoutesNames.allBrands),
         ).animateRightLeft(isFromStart: false),
-        verticalSpace(12),
-        BlocBuilder<BrandsBloc, BrandsState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const SizedBox.shrink(),
-              loading: () => const BrandsLoadingRow(),
-              success: (brands, hasReachedMax) =>
-                  NotificationListener<ScrollNotification>(
-                    onNotification: _onScrollNotification,
-                    child: BrandsList(
-                      brands: brands,
-                      hasReachedMax: hasReachedMax,
-                    ),
-                  ),
-              error: (message) => BrandsError(
-                message: message,
-                onRetry: () => context.read<BrandsBloc>().add(
-                  const BrandsEvent.getBrands(),
+
+        verticalSpace(16),
+
+        SizedBox(
+          height: 40,
+          child: BlocBuilder<BrandsBloc, BrandsState>(
+            builder: (context, state) {
+              return switch (state) {
+                BrandsInitial() => const SizedBox.shrink(),
+
+                BrandsLoading() => const BrandsLoadingRow(),
+
+                BrandsError(:final message) => Center(
+                  child: Text(message, style: TextStyle(color: Colors.red)),
                 ),
-              ).animateShakeAlarm(),
-            );
-          },
+
+                BrandsSuccess(:final brands) =>
+                  brands.isEmpty
+                      ? Center(
+                          child: Text(
+                            context.translate(LangKeys.noBrandsAvailable),
+                            style: TextStyle(
+                              color: context.colors.textSecondary,
+                            ),
+                          ),
+                        )
+                      : BrandsListLimited(brands: brands.take(6).toList()),
+              };
+            },
+          ),
         ),
       ],
     );

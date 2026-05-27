@@ -1,9 +1,21 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+// features/details/presentation/manager/product_details_event.dart
 
-part 'product_details_event.freezed.dart';
+sealed class ProductDetailsEvent {
+  const ProductDetailsEvent();
+}
 
-@freezed
-sealed class ProductDetailsEvent with _$ProductDetailsEvent {
-  const factory ProductDetailsEvent.getProductDetails(String productId) =
-      GetProductDetailsEvent;
+final class ProductDetailsRequested extends ProductDetailsEvent {
+  final String productId;
+
+  const ProductDetailsRequested(this.productId);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductDetailsRequested &&
+          runtimeType == other.runtimeType &&
+          productId == other.productId;
+
+  @override
+  int get hashCode => productId.hashCode;
 }
