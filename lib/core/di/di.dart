@@ -4,6 +4,7 @@ import 'package:route_smart/core/app/app_cubit/app_cubit_cubit.dart';
 import 'package:route_smart/core/common/data/data_source/all_products_data_source.dart';
 import 'package:route_smart/core/common/data/repo/brands_repository_impl.dart';
 import 'package:route_smart/core/common/data/repo/categories_repository_impl.dart';
+import 'package:route_smart/core/common/data/repo/search_catalog_repository_impl.dart';
 import 'package:route_smart/core/common/data/repo/products_repository_impl.dart';
 import 'package:route_smart/core/common/domain/usease/get_brands_use_case.dart';
 import 'package:route_smart/core/common/domain/usease/get_categories_use_case.dart';
@@ -12,7 +13,6 @@ import 'package:route_smart/core/constants/api_constants.dart';
 import 'package:route_smart/core/services/api/api_services.dart';
 import 'package:route_smart/core/services/api/auth_interceptor.dart';
 import 'package:route_smart/core/services/flutter_secure.dart';
-// Auth
 import 'package:route_smart/features/auth_feature/data/data_source/auth_data_source.dart';
 import 'package:route_smart/features/auth_feature/data/repo/auth_repo.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/forgot_password/forgot_password_bloc.dart';
@@ -20,7 +20,6 @@ import 'package:route_smart/features/auth_feature/presention/manger/reset_passwo
 import 'package:route_smart/features/auth_feature/presention/manger/sign_in/sign_in_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/sign_up/register_bloc.dart';
 import 'package:route_smart/features/auth_feature/presention/manger/verfiy_code/verify_code_bloc.dart';
-// Cart
 import 'package:route_smart/features/cart/data/data_source/cart_remote_data_source.dart';
 import 'package:route_smart/features/cart/data/repo/cart_repo_imp.dart';
 import 'package:route_smart/features/cart/domain/repo/cart_repository.dart';
@@ -37,16 +36,12 @@ import 'package:route_smart/features/category_details/domain/usecase/get_subcate
 import 'package:route_smart/features/category_details/presention/manger/category_details_cubit.dart';
 import 'package:route_smart/features/checkout/data/data_source/checkout_remote_datasource.dart';
 import 'package:route_smart/features/checkout/data/data_source/stripe_remote_datasource.dart';
-
 import 'package:route_smart/features/checkout/data/repo/checkout_repository_impl.dart';
 import 'package:route_smart/features/checkout/data/repo/stripe_repository_impl.dart';
-
 import 'package:route_smart/features/checkout/domain/repo/checkout_repository.dart';
 import 'package:route_smart/features/checkout/domain/repo/stripe_repository.dart';
 import 'package:route_smart/features/checkout/domain/usecase/checkout_usecases.dart';
-
 import 'package:route_smart/features/checkout/presention/manger/checkout_bloc.dart';
-// Product Details
 import 'package:route_smart/features/details/data/data_source/product_details_data_source.dart';
 import 'package:route_smart/features/details/data/repo/product_details_repo_imp.dart';
 import 'package:route_smart/features/details/domain/repo/product_details_repo.dart';
@@ -58,13 +53,11 @@ import 'package:route_smart/features/home/domain/repo/products_repository.dart';
 import 'package:route_smart/features/home/presention/manger/brand/brands_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/categroy/categories_bloc.dart';
 import 'package:route_smart/features/home/presention/manger/product/product_bloc.dart';
-// Profile
 import 'package:route_smart/features/profile/data/data_source/user_data_source.dart';
 import 'package:route_smart/features/profile/data/repo/user_repo.dart';
 import 'package:route_smart/features/profile/domain/usecase/get_profile_usecase.dart';
 import 'package:route_smart/features/profile/domain/repo/profile_repo.dart';
 import 'package:route_smart/features/profile/presention/manger/profile_bloc.dart';
-// Reviews
 import 'package:route_smart/features/reviews/data/data_source/reviews_remote_data_source.dart';
 import 'package:route_smart/features/reviews/data/repo/reviews_repository_impl.dart';
 import 'package:route_smart/features/reviews/domain/repo/reviews_repository.dart';
@@ -73,9 +66,8 @@ import 'package:route_smart/features/reviews/domain/usecase/delete_review_use_ca
 import 'package:route_smart/features/reviews/domain/usecase/get_product_reviews_use_case.dart';
 import 'package:route_smart/features/reviews/domain/usecase/update_review_use_case.dart';
 import 'package:route_smart/features/reviews/presention/manger/reviews_bloc.dart';
-// Search
+import 'package:route_smart/features/search/domain/repo/search_category_repo.dart';
 import 'package:route_smart/features/search/presention/manger/search_bloc.dart';
-// Wishlist
 import 'package:route_smart/features/wishlist/data/data_source/wishlist_remote_data_source.dart';
 import 'package:route_smart/features/wishlist/data/repo/wishlist_repository_impl.dart';
 import 'package:route_smart/features/wishlist/domain/repo/wishlist_repository.dart';
@@ -118,7 +110,6 @@ void _initCore() {
   );
 
   sl.registerLazySingleton<ApiService>(() => ApiService(sl<Dio>()));
-
   sl.registerLazySingleton<AppCubit>(() => AppCubit());
 }
 
@@ -134,7 +125,7 @@ void _initAuth() {
     ),
   );
 
-  sl.registerLazySingleton(() => SignInBloc(sl<AuthRepositoryImpl>()));
+  sl.registerFactory(() => SignInBloc(sl<AuthRepositoryImpl>()));
   sl.registerFactory(() => RegisterBloc(sl<AuthRepositoryImpl>()));
   sl.registerFactory(() => ForgotPasswordBloc(sl<AuthRepositoryImpl>()));
   sl.registerFactory(() => VerifyCodeBloc(sl<AuthRepositoryImpl>()));
@@ -184,11 +175,15 @@ void _initHome() {
 }
 
 void _initSearch() {
+  sl.registerLazySingleton<SearchCatalogRepository>(
+    () => SearchCatalogRepositoryImpl(
+      sl<AllDataProductsRemoteDataSource>(),
+    ),
+  );
+
   sl.registerLazySingleton(
     () => SearchBloc(
-      brandsRepository: sl<BrandsRepository>(),
-      categoriesRepository: sl<CategoriesRepository>(),
-      productsRepository: sl<ProductsRepository>(),
+      searchCatalogRepository: sl<SearchCatalogRepository>(),
     ),
   );
 }
@@ -230,12 +225,10 @@ void _initCart() {
 }
 
 void _initCheckout() {
-  // ── Data Sources ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<CheckoutRemoteDataSource>(
     () => CheckoutRemoteDataSourceImpl(sl<ApiService>()),
   );
 
-  // Stripe uses a plain Dio without the app's baseUrl or AuthInterceptor
   sl.registerLazySingleton<StripeRemoteDataSource>(
     () => StripeRemoteDataSourceImpl(
       ApiService(
@@ -249,7 +242,6 @@ void _initCheckout() {
     ),
   );
 
-  // ── Repositories ──────────────────────────────────────────────────────────
   sl.registerLazySingleton<CheckoutRepository>(
     () => CheckoutRepositoryImpl(sl<CheckoutRemoteDataSource>()),
   );
@@ -258,7 +250,6 @@ void _initCheckout() {
     () => StripeRepositoryImpl(sl<StripeRemoteDataSource>()),
   );
 
-  // ── Use Cases ─────────────────────────────────────────────────────────────
   sl.registerLazySingleton(
     () => GetAddressesUseCase(sl<CheckoutRepository>()),
   );
@@ -275,7 +266,6 @@ void _initCheckout() {
     () => MakeStripePaymentUseCase(sl<StripeRepository>()),
   );
 
-  // ── BLoC ──────────────────────────────────────────────────────────────────
   sl.registerFactory(
     () => CheckoutBloc(
       getAddresses: sl<GetAddressesUseCase>(),

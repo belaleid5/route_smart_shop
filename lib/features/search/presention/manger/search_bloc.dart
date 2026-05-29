@@ -4,45 +4,37 @@ import 'package:route_smart/core/common/domain/entites/brand_entity.dart';
 import 'package:route_smart/core/common/domain/entites/category_entity.dart';
 import 'package:route_smart/core/common/domain/entites/product_entity.dart';
 import 'package:route_smart/core/services/api/api_result.dart';
-import 'package:route_smart/features/home/domain/repo/brands_repository.dart';
-import 'package:route_smart/features/home/domain/repo/categories_repository.dart';
-import 'package:route_smart/features/home/domain/repo/products_repository.dart';
 import 'package:route_smart/features/search/domain/entites/search_params.dart';
+import 'package:route_smart/features/search/domain/repo/search_category_repo.dart';
 import 'search_event.dart';
 import 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({
-    required BrandsRepository brandsRepository,
-    required CategoriesRepository categoriesRepository,
-    required ProductsRepository productsRepository,
-  })  : _brandsRepository = brandsRepository,
-        _categoriesRepository = categoriesRepository,
-        _productsRepository = productsRepository,
+    required SearchCatalogRepository searchCatalogRepository,
+  })  : repo = searchCatalogRepository,
         super(const SearchInitial()) {
-    on<SearchEventSearch>(_onSearch);
-    on<SearchEventLoadNextPage>(_onLoadNextPage);
-    on<SearchEventCategorySelected>(_onCategorySelected);
-    on<SearchEventSortChanged>(_onSortChanged);
-    on<SearchEventCleared>(_onCleared);
-    on<SearchEventTabChanged>(_onTabChanged);
-    on<SearchEventKeywordChanged>(_onKeywordChanged);
+    on<SearchEventSearch>(onSearch);
+    on<SearchEventLoadNextPage>(onLoadNextPage);
+    on<SearchEventCategorySelected>(onCategorySelected);
+    on<SearchEventSortChanged>(onSortChanged);
+    on<SearchEventCleared>(onCleared);
+    on<SearchEventTabChanged>(onTabChanged);
+    on<SearchEventKeywordChanged>(onKeywordChanged);
   }
 
-  final BrandsRepository _brandsRepository;
-  final CategoriesRepository _categoriesRepository;
-  final ProductsRepository _productsRepository;
+  final SearchCatalogRepository repo;
 
-  final List<ProductEntity> _allFetchedProducts = [];
-  final List<BrandEntity> _allFetchedBrands = [];
-  final List<CategoryEntity> _allFetchedCategories = [];
+  final List<ProductEntity> allProducts = [];
+  final List<BrandEntity> allBrands = [];
+  final List<CategoryEntity> allCategories = [];
 
-  SearchFilterParams get _currentParams => switch (state) {
+  SearchFilterParams get currentParams => switch (state) {
         SearchSuccess(params: final p) => p,
         _ => const SearchFilterParams(),
       };
 
-  SearchSuccess _currentSuccessOrEmpty() => switch (state) {
+  SearchSuccess currentSuccessOrEmpty() => switch (state) {
         SearchSuccess() => state as SearchSuccess,
         _ => const SearchSuccess(
             params: SearchFilterParams(),
@@ -52,27 +44,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           ),
       };
 
-
-  Future<void> _onSearch(
+  Future<void> onSearch(
     SearchEventSearch event,
     Emitter<SearchState> emit,
   ) async {
     final params = event.params ?? const SearchFilterParams();
-
-    _allFetchedProducts.clear();
-    _allFetchedBrands.clear();
-    _allFetchedCategories.clear();
-
+    clearAll();
     emit(const SearchLoading());
-
     await Future.wait([
-      _fetchProducts(emit: emit, params: params),
-      _fetchBrands(emit: emit, params: params),
-      _fetchCategories(emit: emit, params: params),
+      fetchProducts(emit: emit, params: params),
+      fetchBrands(emit: emit, params: params),
+      fetchCategories(emit: emit, params: params),
     ]);
   }
 
-  Future<void> _onLoadNextPage(
+  Future<void> onLoadNextPage(
     SearchEventLoadNextPage event,
     Emitter<SearchState> emit,
   ) async {
@@ -81,230 +67,181 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if (current.hasReachedMax || current.isLoadingMore) return;
 
     emit(current.copyWith(isLoadingMore: true));
-
-    await _fetchProducts(
+    await fetchProducts(
       emit: emit,
       params: current.params.copyWith(page: current.params.page + 1),
     );
   }
 
-  Future<void> _onCategorySelected(
+  Future<void> onCategorySelected(
     SearchEventCategorySelected event,
     Emitter<SearchState> emit,
   ) async {
-    final newParams = _currentParams.copyWith(
+    final newParams = currentParams.copyWith(
       categoryId: event.categoryId,
       page: 1,
     );
-    _allFetchedProducts.clear();
+    allProducts.clear();
     emit(const SearchLoading());
-    await _fetchProducts(emit: emit, params: newParams);
+    await fetchProducts(emit: emit, params: newParams);
   }
 
-  Future<void> _onSortChanged(
+  Future<void> onSortChanged(
     SearchEventSortChanged event,
     Emitter<SearchState> emit,
   ) async {
-    final newParams = _currentParams.copyWith(sort: event.sort, page: 1);
-    _allFetchedProducts.clear();
+    final newParams = currentParams.copyWith(sort: event.sort, page: 1);
+    allProducts.clear();
     emit(const SearchLoading());
-    await _fetchProducts(emit: emit, params: newParams);
+    await fetchProducts(emit: emit, params: newParams);
   }
 
-  void _onKeywordChanged(
+  void onKeywordChanged(
     SearchEventKeywordChanged event,
     Emitter<SearchState> emit,
   ) {
-    final newParams = _currentParams.copyWith(
-      keyword: event.keyword,
-      page: 1,
-    );
-    _emitFiltered(emit, newParams);
+    final newParams = currentParams.copyWith(keyword: event.keyword, page: 1);
+    emitFiltered(emit, newParams);
   }
 
-  Future<void> _onCleared(
+  Future<void> onCleared(
     SearchEventCleared event,
     Emitter<SearchState> emit,
   ) async {
-    _allFetchedProducts.clear();
-    _allFetchedBrands.clear();
-    _allFetchedCategories.clear();
-
+    clearAll();
     const freshParams = SearchFilterParams();
     emit(const SearchLoading());
-
     await Future.wait([
-      _fetchProducts(emit: emit, params: freshParams),
-      _fetchBrands(emit: emit, params: freshParams),
-      _fetchCategories(emit: emit, params: freshParams),
+      fetchProducts(emit: emit, params: freshParams),
+      fetchBrands(emit: emit, params: freshParams),
+      fetchCategories(emit: emit, params: freshParams),
     ]);
   }
 
-  void _onTabChanged(
+  void onTabChanged(
     SearchEventTabChanged event,
     Emitter<SearchState> emit,
   ) {
     if (state is! SearchSuccess) return;
     final current = state as SearchSuccess;
-    emit(
-      current.copyWith(
-        params: current.params.copyWith(activeTab: event.tab),
-      ),
-    );
+    emit(current.copyWith(
+      params: current.params.copyWith(activeTab: event.tab),
+    ));
   }
 
- 
-  Future<void> _fetchProducts({
+  Future<void> fetchProducts({
     required Emitter<SearchState> emit,
     required SearchFilterParams params,
   }) async {
-    final filterParams = params.toFilterParams();
-    final result = await _productsRepository.getProducts(
-      page: filterParams.page,
-    );
+    final result = await repo.getProducts(params);
 
     switch (result) {
       case Success(:final data):
-        _allFetchedProducts.addAll(data);
-        final reachedMax = _hasReachedMax(data, params);
-        _emitFiltered(emit, params, hasReachedMax: reachedMax);
+        allProducts.addAll(data.products);
+        final reachedMax = data.products.length < params.limit;
+        emitFiltered(emit, params, hasReachedMax: reachedMax);
 
       case Failure(:final message):
         if (state is SearchSuccess) {
-          final current = state as SearchSuccess;
-          emit(current.copyWith(isLoadingMore: false));
+          emit((state as SearchSuccess).copyWith(isLoadingMore: false));
         } else {
           emit(SearchError(message));
         }
     }
   }
 
-  Future<void> _fetchBrands({
+  Future<void> fetchBrands({
     required Emitter<SearchState> emit,
     required SearchFilterParams params,
   }) async {
-    final result = await _brandsRepository.getBrands(
-      page: params.page,
-      limit: params.limit,
-    );
+    final result = await repo.getBrands(params: params);
 
     switch (result) {
       case Success(:final data):
-        _allFetchedBrands.addAll(data);
-        final current = _currentSuccessOrEmpty();
-        emit(
-          current.copyWith(
-            brands: List<BrandEntity>.from(_allFetchedBrands),
-          ),
-        );
+        allBrands.addAll(data.brands);
+        final current = currentSuccessOrEmpty();
+        emit(current.copyWith(brands: List<BrandEntity>.from(allBrands)));
 
       case Failure():
         break;
     }
   }
 
-  Future<void> _fetchCategories({
+  Future<void> fetchCategories({
     required Emitter<SearchState> emit,
     required SearchFilterParams params,
   }) async {
-    final result = await _categoriesRepository.getCategories(
-      page: params.page,
-      limit: params.limit,
-    );
+    final result = await repo.getCategories(params: params);
 
     switch (result) {
       case Success(:final data):
-        _allFetchedCategories.addAll(data);
-        final current = _currentSuccessOrEmpty();
-        emit(
-          current.copyWith(
-            categories: List<CategoryEntity>.from(_allFetchedCategories),
-          ),
-        );
+        allCategories.addAll(data.categories);
+        final current = currentSuccessOrEmpty();
+        emit(current.copyWith(
+            categories: List<CategoryEntity>.from(allCategories)));
 
       case Failure():
         break;
     }
   }
 
-
-  void _emitFiltered(
+  void emitFiltered(
     Emitter<SearchState> emit,
     SearchFilterParams params, {
     bool? hasReachedMax,
   }) {
     final query = params.keyword.trim().toLowerCase();
 
-    final filteredProducts = _applySorting(
-      _allFetchedProducts.where((product) {
+    final filteredProducts = applySorting(
+      allProducts.where((product) {
         if (query.isEmpty) return true;
-        return _matchesQuery(
-          query: query,
-          values: [
-            product.title,
-            product.brand?.name ?? '',
-            product.category?.name ?? '',
-          ],
-        );
+        return matchesQuery(query: query, values: [
+          product.title,
+          product.brand?.name ?? '',
+          product.category?.name ?? '',
+        ]);
       }).toList(),
       params.sort,
     );
 
-    final filteredBrands = _allFetchedBrands.where((brand) {
+    final filteredBrands = allBrands.where((brand) {
       if (query.isEmpty) return true;
-      return _matchesQuery(
-        query: query,
-        values: [brand.name],
-      );
+      return matchesQuery(query: query, values: [brand.name]);
     }).toList();
 
-    final filteredCategories = _allFetchedCategories.where((category) {
+    final filteredCategories = allCategories.where((category) {
       if (query.isEmpty) return true;
-      return _matchesQuery(
-        query: query,
-        values: [category.name],
-      );
+      return matchesQuery(query: query, values: [category.name]);
     }).toList();
 
-    final current = _currentSuccessOrEmpty();
-    final currentMax = hasReachedMax ?? current.hasReachedMax;
-
-    emit(
-      current.copyWith(
-        params: params,
-        products: filteredProducts,
-        brands: filteredBrands,
-        categories: filteredCategories,
-        isLoadingMore: false,
-        hasReachedMax: currentMax,
-      ),
-    );
+    final current = currentSuccessOrEmpty();
+    emit(current.copyWith(
+      params: params,
+      products: filteredProducts,
+      brands: filteredBrands,
+      categories: filteredCategories,
+      isLoadingMore: false,
+      hasReachedMax: hasReachedMax ?? current.hasReachedMax,
+    ));
   }
 
-bool _matchesQuery({
+  bool matchesQuery({
     required String query,
     required List<String> values,
   }) {
     for (final value in values) {
       final normalized = value.trim().toLowerCase();
-
       if (normalized.startsWith(query)) return true;
-
-      final words = normalized.split(RegExp(r'\s+'));
-      for (final word in words) {
+      for (final word in normalized.split(RegExp(r'\s+'))) {
         if (word.startsWith(query)) return true;
       }
     }
     return false;
   }
 
-  List<ProductEntity> _applySorting(
-    List<ProductEntity> products,
-    String? sort,
-  ) {
+  List<ProductEntity> applySorting(List<ProductEntity> products, String? sort) {
     if (sort == null) return products;
     final sorted = List<ProductEntity>.from(products);
-
     switch (sort) {
       case 'title':
         sorted.sort((a, b) => a.title.compareTo(b.title));
@@ -317,20 +254,17 @@ bool _matchesQuery({
       case '-sold':
         sorted.sort((a, b) => (b.sold ?? 0).compareTo(a.sold ?? 0));
       case '-rate':
-        sorted.sort(
-          (a, b) => (b.ratingsAverage ?? 0).compareTo(a.ratingsAverage ?? 0),
-        );
+        sorted.sort((a, b) =>
+            (b.ratingsAverage ?? 0).compareTo(a.ratingsAverage ?? 0));
       default:
-        if (kDebugMode) debugPrint('⚠️ Unknown sort value: $sort');
+        if (kDebugMode) debugPrint('Unknown sort: $sort');
     }
-
     return sorted;
   }
 
-  bool _hasReachedMax(
-    List<ProductEntity> newItems,
-    SearchFilterParams params,
-  ) {
-    return newItems.length < params.limit;
+  void clearAll() {
+    allProducts.clear();
+    allBrands.clear();
+    allCategories.clear();
   }
 }

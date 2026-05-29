@@ -9,31 +9,25 @@ class CategoriesRepositoryImpl implements CategoriesRepository {
 
   final AllDataProductsRemoteDataSource _remoteDataSource;
 
-@override
-Future<ApiResult<List<CategoryEntity>>> getCategories({
-  required int page,
-  required int limit,
-}) async {
-  try {
-    final response = await _remoteDataSource.getCategories(
-      page: page,
-      limit: limit,
-    );
+  @override
+  Future<ApiResult<List<CategoryEntity>>> getCategories({
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await _remoteDataSource.getCategories(
+        page: page,
+        limit: limit,
+      );
 
-    // ✅ أضف دول
-    print('📦 results: ${response.results}');
-    print('📦 data length: ${response.data?.length}');
-    print('📦 data: ${response.data}');
-
-    return Success(
-      response.data?.map((e) => e.toEntity()).toList() ?? <CategoryEntity>[],
-    );
-  } catch (error) {
-    print('❌ error: $error');
-    final failure = ErrorHandler.handle(error);
-    return Failure(
-      failure.apiErrorModel.message ?? 'Failed to load categories',
-    );
+      return Success(
+        response.data?.map((e) => e.toEntity()).toList() ?? <CategoryEntity>[],
+      );
+    } catch (error) {
+      final failure = ErrorHandler.handle(error);
+      return Failure(
+        failure.apiErrorModel.message ?? 'Failed to load categories',
+      );
+    }
   }
-}
 }

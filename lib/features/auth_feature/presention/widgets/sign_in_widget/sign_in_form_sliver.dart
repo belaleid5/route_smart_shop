@@ -39,7 +39,7 @@ class _SignInFormSliverState extends State<SignInFormSliver> {
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
-
+ if (context.read<SignInBloc>().isClosed) return;
     final request = SignInRequestModel(
       email: _emailController.text.trim(),
       password: _passwordController.text,
